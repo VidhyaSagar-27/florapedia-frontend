@@ -1933,21 +1933,23 @@ auth.doSignup = async function(){
         "Content-Type":"application/json"
       },
       body: JSON.stringify({
-        name:name,
-        email:email,
-        password:password
+        name,
+        email,
+        password
       })
     });
 
     const data = await response.json();
 
-    app.toast(data.message || "Signup successful");
+    if(response.ok){
+      app.toast("Signup successful");
+    }else{
+      app.toast(data.message || "Signup failed");
+    }
 
   }catch(error){
-
     console.log(error);
     app.toast("Server error");
-
   }
 
 };
