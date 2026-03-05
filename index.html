@@ -1919,6 +1919,8 @@ window.addEventListener('load', () => {
 const API = "https://florapedia-backend.onrender.com";
 
 // SIGNUP
+const API = "https://florapedia-backend.onrender.com/api";
+
 auth.doSignup = async function(){
 
   const name = document.getElementById("signupName").value;
@@ -1934,10 +1936,10 @@ auth.doSignup = async function(){
         "Content-Type":"application/json"
       },
       body: JSON.stringify({
-        name: name,
-        email: email,
-        password: password,
-        role: role
+        name:name,
+        email:email,
+        password:password,
+        role:role
       })
     });
 
