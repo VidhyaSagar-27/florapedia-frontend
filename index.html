@@ -863,7 +863,6 @@
             <span class="country-code">+91</span>
             <input id="phoneNumber" type="tel" class="form-input" placeholder="10-digit mobile number" maxlength="10">
             <input id="phoneNumber" type="tel" class="form-input" placeholder="10-digit mobile number">
-
 <div id="recaptcha-container"></div>
           </div>
         </div>
@@ -1925,20 +1924,20 @@ auth.doSignup = async function(){
   const name = document.getElementById("signupName").value;
   const email = document.getElementById("signupEmail").value;
   const password = document.getElementById("signupPassword").value;
-  const role = document.getElementById("signupRole")?.value || "customer";
+  const role = document.getElementById("signupRole").value;
 
   try{
 
-    const response = await fetch(API + "/api/auth/register",{
+    const response = await fetch(API + "/auth/register",{
       method:"POST",
       headers:{
         "Content-Type":"application/json"
       },
       body: JSON.stringify({
-        name:name,
-        email:email,
-        password:password,
-        role:role
+        name: name,
+        email: email,
+        password: password,
+        role: role
       })
     });
 
