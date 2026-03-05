@@ -1917,14 +1917,15 @@ window.addEventListener('load', () => {
 </script>
 <script>
 
-const API = "https://florapedia-backend.onrender.com/api";
+const API = "https://florapedia-backend.onrender.com";
 
+// SIGNUP
 auth.doSignup = async function(){
 
   const name = document.getElementById("signupName").value;
   const email = document.getElementById("signupEmail").value;
   const password = document.getElementById("signupPassword").value;
-  const role = document.getElementById("signupRole").value;
+  const role = document.getElementById("signupRole")?.value || "customer";
 
   try{
 
@@ -1934,9 +1935,10 @@ auth.doSignup = async function(){
         "Content-Type":"application/json"
       },
       body: JSON.stringify({
-        name: name,
-        email: email,
-        password: password
+        name:name,
+        email:email,
+        password:password,
+        role:role
       })
     });
 
@@ -1952,6 +1954,7 @@ auth.doSignup = async function(){
 };
 
 
+// LOGIN
 auth.doLogin = async function(){
 
   const email = document.getElementById("loginEmail").value;
@@ -1959,7 +1962,7 @@ auth.doLogin = async function(){
 
   try{
 
-    const response = await fetch(API + "/auth/login",{
+    const response = await fetch(API + "/api/auth/login",{
       method:"POST",
       headers:{
         "Content-Type":"application/json"
@@ -1976,7 +1979,6 @@ auth.doLogin = async function(){
 
       localStorage.setItem("token", data.token);
 
-      // Save user name safely
       if(data.user){
         document.getElementById("headerUserName").innerText = data.user.name;
       }else{
@@ -1988,7 +1990,7 @@ auth.doLogin = async function(){
 
     }else{
 
-      app.toast("Login failed");
+      app.toast(data.message || "Login failed");
 
     }
 
@@ -2001,6 +2003,8 @@ auth.doLogin = async function(){
 
 };
 
+
+// USER ICON CLICK
 auth.handleUserClick = function(){
 
   const token = localStorage.getItem("token");
@@ -2020,6 +2024,9 @@ auth.handleUserClick = function(){
   }
 
 };
+
+
+// LOGOUT
 auth.logout = function(){
 
   localStorage.removeItem("token");
@@ -2029,51 +2036,9 @@ auth.logout = function(){
   app.toast("Logged out");
 
 };
-auth.handleUserClick = function(){
 
-  const token = localStorage.getItem("token");
 
-  if(token){
-
-    auth.logout();
-
-  }else{
-
-    auth.openModal();
-
-  }
-
-};
-auth.handleUserClick = function(){
-
-  const token = localStorage.getItem("token");
-
-  if(token){
-
-    auth.logout();
-
-  }else{
-
-    auth.openModal();
-
-  }
-
-};
-auth.handleUserClick = function(){
-
-  const token = localStorage.getItem("token");
-
-  if(token){
-
-    auth.logout();
-
-  }else{
-
-    auth.openModal();
-
-  }
-
-};
+// SEND OTP
 auth.sendOTP = function(){
 
   const phone = document.getElementById("phoneNumber").value;
@@ -2087,18 +2052,24 @@ auth.sendOTP = function(){
   .then(function(confirmationResult){
 
       window.confirmationResult = confirmationResult;
+
       document.getElementById("otpSection").style.display="block";
+
       app.toast("OTP Sent");
 
   })
   .catch(function(error){
 
       console.log(error);
+
       app.toast("OTP Failed");
 
   });
 
-}
+};
+
+
+// VERIFY OTP
 auth.verifyOTP = function(){
 
   const otp = Array.from(document.querySelectorAll('.otp-input'))
@@ -2108,7 +2079,6 @@ auth.verifyOTP = function(){
   confirmationResult.confirm(otp)
   .then(function(result){
 
-      const user = result.user;
       app.toast("Phone verified");
 
       auth.closeModal();
@@ -2117,11 +2087,12 @@ auth.verifyOTP = function(){
   .catch(function(error){
 
       console.log(error);
+
       app.toast("Invalid OTP");
 
   });
 
-}
+};
 
 </script>
 <!-- Firebase -->
