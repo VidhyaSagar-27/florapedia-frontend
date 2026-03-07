@@ -786,7 +786,7 @@
 
   <h2 style="margin-bottom:20px;">Seller Dashboard</h2>
 
-  <button onclick="addProduct()" style="margin-bottom:20px;">Add Product</button>
+  <button onclick="addProduct()">Add Product</button>
 
   <div id="sellerProducts"></div>
 </div>
@@ -1998,15 +1998,25 @@ auth.doLogin = async function(){
 
       auth.closeModal();
 
-      if(data.role === "seller"){
+      const role = data.role ? data.role.toLowerCase() : "";
 
-        app.navigate("seller");
+if(role === "seller"){
 
-      }else if(data.role === "buyer"){
+  console.log("Redirecting to seller dashboard");
 
-        app.navigate("home");
+  setTimeout(()=>{
+    app.navigate("seller");
+  },100);
 
-      }
+}else{
+
+  console.log("Redirecting to home page");
+
+  setTimeout(()=>{
+    app.navigate("home");
+  },100);
+
+}
 
     }else{
 
