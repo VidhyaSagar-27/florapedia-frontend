@@ -2036,6 +2036,29 @@ window.addEventListener('load', () => {
   if(typeof renderCustomerProducts === "function"){
     renderCustomerProducts();
   }
+  window.addEventListener("load", () => {
+
+  const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if(savedUser){
+    app.currentUser = savedUser;
+  }
+
+  app.init();
+  renderSellerProducts();
+  renderCustomerProducts();
+
+});
+function addToCart(productId){
+
+  if(!app.currentUser){
+    alert("Please login first");
+    app.navigate("login");
+    return;
+  }
+
+  // continue adding to cart
+}
 
 });
 </script>
@@ -2416,6 +2439,29 @@ function updateCartCount(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   document.getElementById("globalCartCount").innerText = cart.length;
+
+}
+function loginUser(){
+
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const user = users.find(u => u.email === email && u.password === password);
+
+  if(!user){
+    alert("Invalid login credentials");
+    return;
+  }
+
+  app.currentUser = user;
+
+  localStorage.setItem("currentUser", JSON.stringify(user));
+
+  alert("Login successful");
+
+  app.navigate("home");
 
 }
 
