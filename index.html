@@ -679,7 +679,7 @@
           <div class="hero-heading">Send <span class="hero-highlight">fresh flowers</span> across India in hours</div>
           <div class="hero-sub">Curated roses, lilies, orchids and designer bouquets, hand-delivered by premium florists with real-time tracking and secure checkout.</div>
           <div class="hero-cta-row">
-            <button class="btn-primary" onclick="document.querySelector('.product-grid')?.scrollIntoView({behavior:'smooth'})">Shop Now</button>
+            <button class="btn-primary" onclick="document.getElementById('productGrid')?.scrollIntoView({behavior:'smooth'})">Shop Now</button>
             <button class="btn-ghost" onclick="app.filterCategory('Roses')">Popular Roses</button>
           </div>
           <div class="hero-meta">
@@ -819,7 +819,11 @@
     <h2 style="margin-bottom:20px;">My Account</h2>
     <div id="accountContent"></div>
   </div>
-  <!-- SELLER DASHBOARD PAGE -->
+  
+
+ </div>
+</div>
+<!-- SELLER DASHBOARD PAGE -->
   <div id="page-seller" class="page">
 
    <h2>Seller Dashboard</h2>
@@ -850,9 +854,6 @@
      <h3>Your Products</h3>
       <div id="sellerProducts"></div>
    </div>
-
- </div>
-</div>
 
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="authModal">
