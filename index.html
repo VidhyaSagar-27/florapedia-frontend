@@ -1957,6 +1957,7 @@ auth.doSignup = async function(){
   const name = document.getElementById("signupName").value;
   const email = document.getElementById("signupEmail").value;
   const password = document.getElementById("signupPassword").value;
+  const role = document.getElementById("signupRole").value;
 
   try{
 
@@ -1968,7 +1969,8 @@ auth.doSignup = async function(){
       body: JSON.stringify({
         name,
         email,
-        password
+        password,
+        role
       })
     });
 
