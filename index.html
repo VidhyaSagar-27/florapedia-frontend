@@ -663,6 +663,7 @@
         <div class="hero-badge">✨ Curated by expert florists</div>
       </div>
     </section>
+    
 
     <div class="category-strip" id="categoryStrip"></div>
 
@@ -776,7 +777,19 @@
     <div id="accountContent"></div>
   </div>
 </div>
+<!-- SELLER DASHBOARD PAGE -->
+<div id="page-seller" class="page">
+  <div class="breadcrumbs">
+    <span onclick="app.navigate('home')">Home</span> /
+    <span>Seller Dashboard</span>
+  </div>
 
+  <h2 style="margin-bottom:20px;">Seller Dashboard</h2>
+
+  <button onclick="addProduct()" style="margin-bottom:20px;">Add Product</button>
+
+  <div id="sellerProducts"></div>
+</div>
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-content">
@@ -863,8 +876,7 @@
           <div class="form-input-group phone-input">
             <span class="country-code">+91</span>
             <input id="phoneNumber" type="tel" class="form-input" placeholder="10-digit mobile number" maxlength="10">
-            <input id="phoneNumber" type="tel" class="form-input" placeholder="10-digit mobile number">
-<div id="recaptcha-container"></div>
+           <div id="recaptcha-container"></div>
           </div>
         </div>
         <button class="btn-submit" onclick="auth.sendOTP()">Send OTP</button>
@@ -1980,19 +1992,26 @@ auth.doLogin = async function(){
     if(data.token){
 
       localStorage.setItem("token", data.token);
-
-      if(data.user){
-        document.getElementById("headerUserName").innerText = data.user.name;
-      }else{
-        document.getElementById("headerUserName").innerText = "Account";
-      }
+      localStorage.setItem("role", data.user.role);
 
       app.toast("Login successful");
+
       auth.closeModal();
+
+      // ROLE BASED PAGE
+      if(data.user.role === "seller"){
+
+        app.navigate("seller");
+
+      }else{
+
+        app.navigate("home");
+
+      }
 
     }else{
 
-      app.toast(data.message || "Login failed");
+      app.toast("Login failed");
 
     }
 
@@ -2003,7 +2022,7 @@ auth.doLogin = async function(){
 
   }
 
-};
+}
 
 
 // USER ICON CLICK
@@ -2117,6 +2136,3 @@ firebase.initializeApp(firebaseConfig);
 </script>
 </body>
 </html>
-
-
-
