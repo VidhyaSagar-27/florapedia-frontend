@@ -1059,9 +1059,20 @@ const app = {
   navigate(page) {
 
   // hide all pages
+ app.navigate = function(page){
+
+  // hide all pages
   document.querySelectorAll(".page").forEach(function(p){
     p.classList.remove("active-page");
   });
+
+  // show selected page
+  const selectedPage = document.getElementById("page-" + page);
+  if(selectedPage){
+    selectedPage.classList.add("active-page");
+  }
+
+}
 
   // show selected page
   const target = document.getElementById("page-" + page);
@@ -2329,11 +2340,82 @@ function renderCustomerProducts(){
         <h3>${p.name}</h3>
         <p>₹${p.price}</p>
 
-        <button onclick="addToCart(${p.id})">Add to Cart</button>
+        <button onclick="addToCart(${product.id})" class="btn-chip-primary">
+Add to Cart
+</button>
       </div>
     `;
 
   });
+
+}
+function addToCart(productId){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const product = app.products.find(p => p.id === productId);
+
+  if(!product){
+    console.error("Product not found");
+    return;
+  }
+
+  const existing = cart.find(item => item.id === productId);
+
+  if(existing){
+    existing.qty += 1;
+  }else{
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      qty: 1
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+  showToast("Added to cart 🛒");
+
+}
+function addToCart(productId){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const product = app.products.find(p => p.id === productId);
+
+  if(!product){
+    console.error("Product not found");
+    return;
+  }
+
+  const existing = cart.find(item => item.id === productId);
+
+  if(existing){
+    existing.qty += 1;
+  }else{
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      qty: 1
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+  showToast("Added to cart 🛒");
+
+}
+function updateCartCount(){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  document.getElementById("globalCartCount").innerText = cart.length;
 
 }
 
