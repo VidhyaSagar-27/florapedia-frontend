@@ -776,8 +776,7 @@
     <h2 style="margin-bottom:20px;">My Account</h2>
     <div id="accountContent"></div>
   </div>
-</div>
-<!-- SELLER DASHBOARD PAGE -->
+  <!-- SELLER DASHBOARD PAGE -->
 <div id="page-seller" class="page">
   <div class="breadcrumbs">
     <span onclick="app.navigate('home')">Home</span> /
@@ -790,6 +789,8 @@
 
   <div id="sellerProducts"></div>
 </div>
+</div>
+
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-content">
@@ -853,7 +854,7 @@
     <label class="form-label">Account Type</label>
     <div class="form-input-group">
       <select id="signupRole" class="form-input">
-        <option value="customer">Customer</option>
+        <option value="buyer">Customer</option>
         <option value="seller">Seller</option>
       </select>
     </div>
@@ -983,6 +984,21 @@ const app = {
     document.getElementById('headerUserName').textContent = state.user ? state.user.name.split(' ')[0] : 'Login';
     saveState();
   },
+  navigate(page) {
+
+  // hide all pages
+  document.querySelectorAll(".page").forEach(function(p){
+    p.classList.remove("active-page");
+  });
+
+  // show selected page
+  const target = document.getElementById("page-" + page);
+
+  if(target){
+    target.classList.add("active-page");
+  }
+
+},
 
   navigate(page, productId = null) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
