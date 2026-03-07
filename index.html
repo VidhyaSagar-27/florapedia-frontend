@@ -1992,14 +1992,14 @@ auth.doLogin = async function(){
     if(data.token){
 
       localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.user.role);
+      localStorage.setItem("role", data.role);
 
       app.toast("Login successful");
 
       auth.closeModal();
 
       // ROLE BASED PAGE
-      if(data.user.role === "seller"){
+      if(data.role === "seller"){
 
         app.navigate("seller");
 
