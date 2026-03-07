@@ -1995,9 +1995,17 @@ function addProduct(){
 
 // INIT
 window.addEventListener('load', () => {
+
   app.init();
-  renderSellerProducts();
-renderCustomerProducts();
+
+  if(typeof renderSellerProducts === "function"){
+    renderSellerProducts();
+  }
+
+  if(typeof renderCustomerProducts === "function"){
+    renderCustomerProducts();
+  }
+
 });
 </script>
 <script>
