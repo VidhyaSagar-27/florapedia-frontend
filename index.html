@@ -968,6 +968,7 @@ function saveState() {
   localStorage.setItem('addresses', JSON.stringify(state.addresses));
 }
 
+
 // APP LOGIC
 const app = {
   init() {
@@ -1937,6 +1938,9 @@ const auth = {
     app.toast('Logged out');
   }
 };
+function addProduct(){
+  alert("Add product form will open here");
+}
 
 // INIT
 window.addEventListener('load', () => {
