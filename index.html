@@ -593,6 +593,37 @@
       .hero-cta-row button { width:100%; }
       .form-row { grid-template-columns:1fr; }
     }
+    .seller-card{
+     background:#fff;
+     padding:20px;
+     border-radius:10px;
+     margin-bottom:20px;
+     box-shadow:0 2px 10px rgba(0,0,0,0.08);
+   }
+
+   .seller-card input{
+     width:100%;
+     padding:10px;
+     margin:8px 0;
+     border:1px solid #ddd;
+     border-radius:6px;
+   }
+
+   .seller-card button{
+     background:#27ae60;
+     color:white;
+     border:none;
+     padding:10px 15px;
+     border-radius:6px;
+     cursor:pointer;
+   }
+
+   .product-card{
+     border:1px solid #eee;
+     padding:10px;
+     margin:10px;
+     border-radius:8px;
+   }      
   </style>
 </head>
 <body>
@@ -777,17 +808,37 @@
     <div id="accountContent"></div>
   </div>
   <!-- SELLER DASHBOARD PAGE -->
- <div id="page-seller" class="page">
-   <div class="breadcrumbs">
-    <span onclick="app.navigate('home')">Home</span> /
-    <span>Seller Dashboard</span>
-     </div>
+  <div id="page-seller" class="page">
 
-     <h2 style="margin-bottom:20px;">Seller Dashboard</h2>
+   <h2>Seller Dashboard</h2>
+
+   <div class="seller-card">
+     <h3>Store Details</h3>
+
+     <input id="storeName" placeholder="Store Name">
+     <input id="storeLocation" placeholder="Store Location">
+     <input id="storePhone" placeholder="Contact Number">
+
+     <button onclick="saveStore()">Save Store</button>
+   </div>
+
+
+   <div class="seller-card">
+     <h3>Add Product</h3>
+
+     <input id="productName" placeholder="Flower Name">
+     <input id="productPrice" placeholder="Price">
+     <input id="productImage" placeholder="Image URL">
 
      <button onclick="addProduct()">Add Product</button>
+   </div>
 
+
+   <div class="seller-card">
+     <h3>Your Products</h3>
       <div id="sellerProducts"></div>
+   </div>
+
  </div>
 </div>
 
@@ -1945,6 +1996,8 @@ function addProduct(){
 // INIT
 window.addEventListener('load', () => {
   app.init();
+  renderSellerProducts();
+renderCustomerProducts();
 });
 </script>
 <script>
@@ -2145,6 +2198,86 @@ auth.verifyOTP = function(){
   });
 
 };
+function saveStore(){
+
+  const store = {
+    name: document.getElementById("storeName").value,
+    location: document.getElementById("storeLocation").value,
+    phone: document.getElementById("storePhone").value
+  };
+
+  localStorage.setItem("sellerStore", JSON.stringify(store));
+
+  alert("Store saved successfully");
+
+}
+function addProduct(){
+
+  const name = document.getElementById("productName").value;
+  const price = document.getElementById("productPrice").value;
+  const image = document.getElementById("productImage").value;
+
+  const product = {
+    id: Date.now(),
+    name,
+    price,
+    image
+  };
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  products.push(product);
+
+  localStorage.setItem("products", JSON.stringify(products));
+
+  renderSellerProducts();
+  renderCustomerProducts();
+
+}
+function renderSellerProducts(){
+
+  const container = document.getElementById("sellerProducts");
+
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+
+  container.innerHTML = "";
+
+  products.forEach(p => {
+
+    container.innerHTML += `
+      <div class="product-card">
+        <img src="${p.image}" width="100">
+        <h4>${p.name}</h4>
+        <p>₹${p.price}</p>
+      </div>
+    `;
+
+  });
+
+}
+function renderCustomerProducts(){
+
+  const grid = document.getElementById("productGrid");
+
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+
+  grid.innerHTML = "";
+
+  products.forEach(p => {
+
+    grid.innerHTML += `
+      <div class="product-card">
+        <img src="${p.image}" width="150">
+        <h3>${p.name}</h3>
+        <p>₹${p.price}</p>
+
+        <button onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
+    `;
+
+  });
+
+}
 
 </script>
 <!-- Firebase -->
