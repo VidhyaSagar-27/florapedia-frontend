@@ -671,7 +671,7 @@
 <div class="page-container">
   <!-- HOME PAGE -->
   <div id="page-home" class="page active-page">
-    <div class="breadcrumbs"><span onclick="app.navigate('home')">Home</span> / <span>All Flowers</span></div>
+      <div class="breadcrumbs"><span onclick="app.navigate('home')">Home</span> / <span>All Flowers</span></div>
     
     <section class="hero">
       <div class="hero-main">
@@ -694,6 +694,18 @@
         <div class="hero-badge">✨ Curated by expert florists</div>
       </div>
     </section>
+    <!-- PRODUCT SECTION -->
+  <div class="product-area">
+
+    <div class="product-grid-header">
+      <b>All Flowers</b>
+    </div>
+
+    <div id="productGrid" class="product-grid"></div>
+
+  </div>
+
+</div>
     
 
     <div class="category-strip" id="categoryStrip"></div>
@@ -2242,23 +2254,53 @@ function addProduct(){
   renderCustomerProducts();
 
 }
-function renderSellerProducts(){
+function renderCustomerProducts(){
 
-  const container = document.getElementById("sellerProducts");
+  const grid = document.getElementById("productGrid");
+
+  if(!grid){
+    console.log("productGrid not found");
+    return;
+  }
 
   const products = JSON.parse(localStorage.getItem("products")) || [];
 
-  container.innerHTML = "";
+  grid.innerHTML = "";
 
-  products.forEach(p => {
+  if(products.length === 0){
+    grid.innerHTML = "<p>No products available</p>";
+    return;
+  }
 
-    container.innerHTML += `
+  products.forEach(product => {
+
+    const card = `
       <div class="product-card">
-        <img src="${p.image}" width="100">
-        <h4>${p.name}</h4>
-        <p>₹${p.price}</p>
+
+        <div class="prod-img-wrap">
+          <img src="${product.image}" alt="${product.name}">
+        </div>
+
+        <div class="prod-body">
+          <div class="prod-name">${product.name}</div>
+
+          <div class="price-row">
+            <span class="current">₹${product.price}</span>
+          </div>
+
+          <div class="prod-cta-row">
+            <button class="btn-chip btn-chip-primary"
+              onclick="addToCart(${product.id})">
+              Add to Cart
+            </button>
+          </div>
+
+        </div>
+
       </div>
     `;
+
+    grid.innerHTML += card;
 
   });
 
