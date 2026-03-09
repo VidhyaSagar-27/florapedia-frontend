@@ -1043,11 +1043,11 @@ function saveState() {
   localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
   localStorage.setItem('orders', JSON.stringify(state.orders));
   localStorage.setItem('addresses', JSON.stringify(state.addresses));
-}
+};
 
 
 // APP LOGIC
-const app = {
+var app = {
   init() {
     this.renderCategories();
     this.renderHome();
@@ -1944,7 +1944,7 @@ const account = {
 };
 
 // AUTH LOGIC
-const auth = {
+var auth = {
   openModal() {
     document.getElementById('authModal').classList.add('show');
   },
@@ -2466,6 +2466,29 @@ container.innerHTML += `
 `;
 
 });
+
+}
+
+function deleteProduct(productId){
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+products = products.filter(p => p.id !== productId);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+renderSellerProducts();
+
+}
+function deleteProduct(productId){
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+products = products.filter(p => p.id !== productId);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+renderSellerProducts();
 
 }
 function deleteProduct(productId){
