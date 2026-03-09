@@ -2020,14 +2020,18 @@ const auth = {
     app.toast('Logged out');
   }
 };
-function addProduct(){
-  alert("Add product form will open here");
-}
-
 // INIT
-window.addEventListener('load', () => {
+window.addEventListener("load", () => {
 
-  app.init();
+  const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if(savedUser){
+    app.currentUser = savedUser;
+  }
+
+  if(typeof app.init === "function"){
+    app.init();
+  }
 
   if(typeof renderSellerProducts === "function"){
     renderSellerProducts();
@@ -2036,28 +2040,43 @@ window.addEventListener('load', () => {
   if(typeof renderCustomerProducts === "function"){
     renderCustomerProducts();
   }
-  window.addEventListener("load", () => {
 
-  const savedUser = JSON.parse(localStorage.getItem("currentUser"));
-
-  if(savedUser){
-    app.currentUser = savedUser;
+  if(typeof updateCartCount === "function"){
+    updateCartCount();
   }
-
-  app.init();
-  renderSellerProducts();
-  renderCustomerProducts();
 
 });
 function addToCart(productId){
 
-  if(!app.currentUser){
-    alert("Please login first");
-    app.navigate("login");
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const product = products.find(p => p.id === productId);
+
+  if(!product){
+    console.error("Product not found");
     return;
   }
 
-  // continue adding to cart
+  const existing = cart.find(item => item.id === productId);
+
+  if(existing){
+    existing.qty += 1;
+  }else{
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      qty: 1
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+
+  app.toast("🛒 Added to cart");
 }
 
 });
@@ -2280,11 +2299,12 @@ function addProduct(){
   const image = document.getElementById("productImage").value;
 
   const product = {
-    id: Date.now(),
-    name,
-    price,
-    image
-  };
+  id: Date.now(),
+  name: name,
+  price: Number(price),
+  image: image,
+  createdAt: new Date().toISOString()
+};
 
   let products = JSON.parse(localStorage.getItem("products")) || [];
 
@@ -2295,7 +2315,32 @@ function addProduct(){
   renderSellerProducts();
   renderCustomerProducts();
 
+  document.getElementById("productName").value = "";
+  document.getElementById("productPrice").value = "";
+  document.getElementById("productImage").value = "";
+
+  app.toast("Product added successfully");
+
 }
+function deleteProduct(productId){
+
+  const confirmDelete = confirm("Are you sure you want to delete this product?");
+
+  if(!confirmDelete){
+    return;
+  }
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  products = products.filter(p => p.id !== productId);
+
+  localStorage.setItem("products", JSON.stringify(products));
+
+  renderSellerProducts();
+  renderCustomerProducts();
+
+}
+
 function renderCustomerProducts(){
 
   const grid = document.getElementById("productGrid");
@@ -2304,6 +2349,7 @@ function renderCustomerProducts(){
     console.log("productGrid not found");
     return;
   }
+  grid.innerHTML = "Loading products...";
 
   const products = JSON.parse(localStorage.getItem("products")) || [];
 
@@ -2314,25 +2360,25 @@ function renderCustomerProducts(){
     return;
   }
 
-  products.forEach(product => {
+  products.forEach(p => {
 
     const card = `
       <div class="product-card">
 
         <div class="prod-img-wrap">
-          <img src="${product.image}" alt="${product.name}">
+          <img src="${p.image}" alt="${p.name}">
         </div>
 
         <div class="prod-body">
-          <div class="prod-name">${product.name}</div>
+          <div class="prod-name">${p.name}</div>
 
           <div class="price-row">
-            <span class="current">₹${product.price}</span>
+            <span class="current">₹${p.price}</span>
           </div>
 
           <div class="prod-cta-row">
             <button class="btn-chip btn-chip-primary"
-              onclick="addToCart(${product.id})">
+              onclick="addToCart(${p.id})">
               Add to Cart
             </button>
           </div>
@@ -2347,98 +2393,111 @@ function renderCustomerProducts(){
   });
 
 }
-function renderCustomerProducts(){
+function renderSellerProducts(){
 
-  const grid = document.getElementById("productGrid");
+  const container = document.getElementById("sellerProducts");
+
+  if(!container){
+    return;
+  }
 
   const products = JSON.parse(localStorage.getItem("products")) || [];
 
-  grid.innerHTML = "";
+  container.innerHTML = "";
+
+  if(products.length === 0){
+    container.innerHTML = "<p>No products added yet</p>";
+    return;
+  }
 
   products.forEach(p => {
 
-    grid.innerHTML += `
-      <div class="product-card">
-        <img src="${p.image}" width="150">
-        <h3>${p.name}</h3>
+    container.innerHTML += `
+      <div class="seller-product">
+
+        <img src="${p.image}" width="100">
+
+        <h4>${p.name}</h4>
+
         <p>₹${p.price}</p>
 
-        <button onclick="addToCart(${product.id})" class="btn-chip-primary">
-Add to Cart
-</button>
+        <button onclick="deleteProduct(${p.id})">
+          Delete Product
+        </button>
+
       </div>
     `;
 
   });
 
 }
-function addToCart(productId){
+function deleteProduct(productId){
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  const product = app.products.find(p => p.id === productId);
+  products = products.filter(p => p.id !== productId);
 
-  if(!product){
-    console.error("Product not found");
-    return;
-  }
+  localStorage.setItem("products", JSON.stringify(products));
 
-  const existing = cart.find(item => item.id === productId);
+  renderSellerProducts();
+  renderCustomerProducts();
 
-  if(existing){
-    existing.qty += 1;
-  }else{
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      qty: 1
-    });
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  updateCartCount();
-  showToast("Added to cart 🛒");
-
-}
-function addToCart(productId){
-
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  const product = app.products.find(p => p.id === productId);
-
-  if(!product){
-    console.error("Product not found");
-    return;
-  }
-
-  const existing = cart.find(item => item.id === productId);
-
-  if(existing){
-    existing.qty += 1;
-  }else{
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      qty: 1
-    });
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  updateCartCount();
-  showToast("Added to cart 🛒");
+  alert("Product deleted");
 
 }
 function updateCartCount(){
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  document.getElementById("globalCartCount").innerText = cart.length;
+  let total = 0;
+
+  cart.forEach(item=>{
+    total += item.qty;
+  });
+
+  const cartCount = document.getElementById("globalCartCount");
+
+  if(cartCount){
+    cartCount.innerText = total;
+  }
+
+}
+function loadStore(){
+
+  const store = JSON.parse(localStorage.getItem("sellerStore"));
+
+  if(store){
+    document.getElementById("storeName").value = store.name;
+    document.getElementById("storeLocation").value = store.location;
+    document.getElementById("storePhone").value = store.phone;
+  }
+
+}
+function renderCart(){
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const container = document.getElementById("cartItems");
+
+  container.innerHTML = "";
+
+  if(cart.length === 0){
+    container.innerHTML = "<p>Your cart is empty 🛒</p>";
+    return;
+  }
+
+}
+function searchProducts(){
+
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(keyword)
+  );
+
+  renderFilteredProducts(filtered);
 
 }
 function loginUser(){
