@@ -1062,76 +1062,67 @@ const app = {
     document.getElementById('headerUserName').textContent = state.user ? state.user.name.split(' ')[0] : 'Login';
     saveState();
   },
-  navigate(page, productId = null) {
+  navigate(page, productId = null){
 
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+  // hide all pages
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active-page");
+  });
 
-  const pageEl = document.getElementById(`page-${page}`);
+  const pageEl = document.getElementById("page-" + page);
 
   if(pageEl){
-    pageEl.classList.add('active-page');
+    pageEl.classList.add("active-page");
   }
 
   window.scrollTo(0,0);
 
-  if(page === "home"){
-    this.renderHome();
-  }
+  switch(page){
 
-  if(page === "pdp"){
-    this.renderPDP(productId);
-  }
+    case "home":
+      this.renderHome();
+    break;
 
-  if(page === "cart"){
-    this.renderCart();
-  }
+    case "pdp":
+      this.renderPDP(productId);
+    break;
 
-  if(page === "wishlist"){
-    this.renderWishlist();
-  }
+    case "cart":
+      this.renderCart();
+    break;
 
-  if(page === "checkout"){
-    this.renderCheckout();
-  }
+    case "wishlist":
+      this.renderWishlist();
+    break;
 
-  if(page === "account"){
-    this.renderAccount();
-  }
+    case "checkout":
+      this.renderCheckout();
+    break;
 
-  if(page === "seller"){
-    renderSellerProducts();
+    case "account":
+      this.renderAccount();
+    break;
+
+    case "seller":
+
+      if(!state.user){
+        this.toast("Please login as seller");
+        auth.openModal();
+        return;
+      }
+
+      if(state.user.role !== "seller"){
+        this.toast("Only sellers can access dashboard");
+        return;
+      }
+
+      renderSellerProducts();
+
+    break;
+
   }
 
 }
-
-  navigate(page, productId = null) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-    const pageEl = document.getElementById(`page-${page}`);
-    if(pageEl) pageEl.classList.add('active-page');
-    window.scrollTo(0, 0);
-
-    if(page === 'home') this.renderHome();
-    if(page === 'pdp') this.renderPDP(productId);
-    if(page === 'cart') this.renderCart();
-    if(page === 'wishlist') this.renderWishlist();
-    if(page === 'checkout') this.renderCheckout();
-    if(page === 'account') this.renderAccount();
-    if(page === "seller"){
-
-  document.querySelectorAll(".page").forEach(p=>{
-    p.style.display = "none";
-  });
-
-  const sellerPage = document.getElementById("sellerPage");
-
-  if(sellerPage){
-    sellerPage.style.display = "block";
-  }
-
-  renderSellerProducts();
-
-}
-  },
 
   renderCategories() {
     const strip = document.getElementById('categoryStrip');
@@ -1409,22 +1400,31 @@ const app = {
     `;
   },
 
-  addToCart(productId) {
-    if(!state.user) {
-      this.toast('Please login first');
-      auth.openModal();
-      return;
-    }
-    
-    const existing = state.cart.find(item => item.productId === productId);
-    if(existing) {
-      existing.qty++;
-    } else {
-      state.cart.push({ productId, qty: 1 });
-    }
-    this.updateUI();
-    this.toast('✅ Added to cart');
-  },
+  addToCart(productId){
+
+  if(!state.user){
+    auth.openModal();
+    this.toast("Login required");
+    return;
+  }
+
+  const index = state.cart.findIndex(i=>i.productId===productId);
+
+  if(index>-1){
+    state.cart[index].qty +=1;
+  }else{
+    state.cart.push({
+      productId:productId,
+      qty:1
+    });
+  }
+
+  saveState();
+  this.updateUI();
+
+  this.toast("Added to cart");
+
+}
 
   buyNow(productId) {
     if(!state.user) {
@@ -2325,50 +2325,42 @@ function saveStore(){
   alert("Store saved successfully");
 
 }
-app.navigate = function(page){
 
-  const pages = document.querySelectorAll(".page");
-
-  pages.forEach(p=>{
-    p.style.display = "none";
-  });
-
-  const target = document.getElementById("page-" + page);
-
-  if(target){
-    target.style.display = "block";
-  }
-
-};
 function addProduct(){
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const token = localStorage.getItem("token");
 
-if(!currentUser){
-  alert("Please login first");
-  return;
-}
+  if(!token){
+    auth.openModal();
+    return;
+  }
 
-const name = document.getElementById("productName").value;
-const price = document.getElementById("productPrice").value;
-const image = document.getElementById("productImage").value;
+  const name = document.getElementById("productName").value;
+  const price = document.getElementById("productPrice").value;
+  const image = document.getElementById("productImage").value;
 
-const product = {
- id: Date.now(),
- name: name,
- price: Number(price),
- image: image,
- seller: currentUser.email
-};
+  if(!name || !price || !image){
+    alert("Fill all fields");
+    return;
+  }
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+  let products = JSON.parse(localStorage.getItem("products")) || [];
 
-products.push(product);
+  const newProduct = {
+    id: Date.now(),
+    name: name,
+    price: price,
+    image: image
+  };
 
-localStorage.setItem("products", JSON.stringify(products));
+  products.push(newProduct);
 
-renderSellerProducts();
-renderCustomerProducts();
+  localStorage.setItem("products", JSON.stringify(products));
+
+  renderSellerProducts();
+  renderCustomerProducts();
+
+  app.toast("Product added successfully");
 
 }
 function deleteProduct(productId){
@@ -2444,53 +2436,38 @@ function renderCustomerProducts(){
 }
 function renderSellerProducts(){
 
-const container = document.getElementById("sellerProducts");
+  const container = document.getElementById("sellerProducts");
 
-if(!container) return;
+  if(!container) return;
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const products = JSON.parse(localStorage.getItem("products")) || [];
 
-if(!currentUser) return;
+  if(products.length === 0){
+    container.innerHTML = "<p>No products yet</p>";
+    return;
+  }
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+  container.innerHTML = products.map(p=>`
 
-let myProducts = products.filter(p => p.seller === currentUser.email);
+  <div style="border:1px solid #eee;padding:12px;margin-bottom:12px;border-radius:10px">
 
-container.innerHTML = "";
+    <img src="${p.image}" 
+    style="width:80px;height:80px;object-fit:cover;border-radius:8px">
 
-myProducts.forEach(p => {
+    <h4>${p.name}</h4>
 
-container.innerHTML += `
-<div>
+    <p>₹${p.price}</p>
 
-<img src="${p.image}" width="80">
+    <button onclick="deleteProduct(${p.id})">
+      Delete
+    </button>
 
-<h4>${p.name}</h4>
+  </div>
 
-<p>₹${p.price}</p>
-
-<button onclick="deleteProduct(${p.id})">Delete</button>
-
-</div>
-`;
-
-});
+  `).join("");
 
 }
-function deleteProduct(productId){
 
-  let products = JSON.parse(localStorage.getItem("products")) || [];
-
-  products = products.filter(p => p.id !== productId);
-
-  localStorage.setItem("products", JSON.stringify(products));
-
-  renderSellerProducts();
-  renderCustomerProducts();
-
-  alert("Product deleted");
-
-}
 function updateCartCount(){
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -2525,12 +2502,34 @@ function renderCart(){
 
   const container = document.getElementById("cartItems");
 
+  if(!container) return;
+
   container.innerHTML = "";
 
   if(cart.length === 0){
     container.innerHTML = "<p>Your cart is empty 🛒</p>";
     return;
   }
+
+  cart.forEach(item=>{
+
+    const card = `
+      <div class="cart-item">
+
+        <img src="${item.image}" width="60">
+
+        <div>
+          <h4>${item.name}</h4>
+          <p>₹${item.price}</p>
+          <p>Qty: ${item.qty}</p>
+        </div>
+
+      </div>
+    `;
+
+    container.innerHTML += card;
+
+  });
 
 }
 function searchProducts(){
