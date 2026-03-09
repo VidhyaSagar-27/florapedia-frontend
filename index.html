@@ -1062,32 +1062,47 @@ const app = {
     document.getElementById('headerUserName').textContent = state.user ? state.user.name.split(' ')[0] : 'Login';
     saveState();
   },
-  navigate(page) {
+  navigate(page, productId = null) {
 
-  // hide all pages
- app.navigate = function(page){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
 
-  // hide all pages
-  document.querySelectorAll(".page").forEach(function(p){
-    p.classList.remove("active-page");
-  });
+  const pageEl = document.getElementById(`page-${page}`);
 
-  // show selected page
-  const selectedPage = document.getElementById("page-" + page);
-  if(selectedPage){
-    selectedPage.classList.add("active-page");
+  if(pageEl){
+    pageEl.classList.add('active-page');
+  }
+
+  window.scrollTo(0,0);
+
+  if(page === "home"){
+    this.renderHome();
+  }
+
+  if(page === "pdp"){
+    this.renderPDP(productId);
+  }
+
+  if(page === "cart"){
+    this.renderCart();
+  }
+
+  if(page === "wishlist"){
+    this.renderWishlist();
+  }
+
+  if(page === "checkout"){
+    this.renderCheckout();
+  }
+
+  if(page === "account"){
+    this.renderAccount();
+  }
+
+  if(page === "seller"){
+    renderSellerProducts();
   }
 
 }
-
-  // show selected page
-  const target = document.getElementById("page-" + page);
-
-  if(target){
-    target.classList.add("active-page");
-  }
-
-},
 
   navigate(page, productId = null) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
