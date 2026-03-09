@@ -1101,6 +1101,21 @@ const app = {
     if(page === 'wishlist') this.renderWishlist();
     if(page === 'checkout') this.renderCheckout();
     if(page === 'account') this.renderAccount();
+    if(page === "seller"){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.style.display = "none";
+  });
+
+  const sellerPage = document.getElementById("sellerPage");
+
+  if(sellerPage){
+    sellerPage.style.display = "block";
+  }
+
+  renderSellerProducts();
+
+}
   },
 
   renderCategories() {
@@ -2048,7 +2063,6 @@ if(typeof renderCustomerProducts === "function"){
 }
 
 if(typeof updateCartCount === "function"){
- updateCartCount();
 }
 
 });
@@ -2534,7 +2548,7 @@ function loginUser(){
   app.currentUser = user;
 
   localStorage.setItem("currentUser", JSON.stringify(user));
-
+app.currentUser = user;
   alert("Login successful");
 
   app.navigate("home");
