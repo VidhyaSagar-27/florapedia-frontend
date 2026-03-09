@@ -2029,27 +2029,27 @@ const auth = {
 // INIT
 window.addEventListener("load", () => {
 
-  const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+const savedUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  if(savedUser){
-    app.currentUser = savedUser;
-  }
+if(savedUser){
+ app.currentUser = savedUser;
+}
 
-  if(typeof app.init === "function"){
-    app.init();
-  }
+if(app && app.init){
+ app.init();
+}
 
-  if(typeof renderSellerProducts === "function"){
-    renderSellerProducts();
-  }
+if(typeof renderSellerProducts === "function"){
+ renderSellerProducts();
+}
 
-  if(typeof renderCustomerProducts === "function"){
-    renderCustomerProducts();
-  }
+if(typeof renderCustomerProducts === "function"){
+ renderCustomerProducts();
+}
 
-  if(typeof updateCartCount === "function"){
-    updateCartCount();
-  }
+if(typeof updateCartCount === "function"){
+ updateCartCount();
+}
 
 });
 function addToCart(productId){
@@ -2313,11 +2313,16 @@ app.navigate = function(page){
 };
 function addProduct(){
 
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+if(!currentUser){
+  alert("Please login first");
+  return;
+}
+
 const name = document.getElementById("productName").value;
 const price = document.getElementById("productPrice").value;
 const image = document.getElementById("productImage").value;
-
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 const product = {
  id: Date.now(),
@@ -2335,23 +2340,6 @@ localStorage.setItem("products", JSON.stringify(products));
 
 renderSellerProducts();
 renderCustomerProducts();
-
-}
-
-  let products = JSON.parse(localStorage.getItem("products")) || [];
-
-  products.push(product);
-
-  localStorage.setItem("products", JSON.stringify(products));
-
-  renderSellerProducts();
-  renderCustomerProducts();
-
-  document.getElementById("productName").value = "";
-  document.getElementById("productPrice").value = "";
-  document.getElementById("productImage").value = "";
-
-  app.toast("Product added successfully");
 
 }
 function deleteProduct(productId){
@@ -2427,24 +2415,26 @@ function renderCustomerProducts(){
 }
 function renderSellerProducts(){
 
+const container = document.getElementById("sellerProducts");
+
+if(!container) return;
+
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+if(!currentUser) return;
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
 let myProducts = products.filter(p => p.seller === currentUser.email);
-
-const container = document.getElementById("sellerProducts");
-
-if(!container) return;
 
 container.innerHTML = "";
 
 myProducts.forEach(p => {
 
 container.innerHTML += `
-<div class="product-card">
+<div>
 
-<img src="${p.image}" width="100">
+<img src="${p.image}" width="80">
 
 <h4>${p.name}</h4>
 
