@@ -2296,6 +2296,21 @@ function saveStore(){
   alert("Store saved successfully");
 
 }
+app.navigate = function(page){
+
+  const pages = document.querySelectorAll(".page");
+
+  pages.forEach(p=>{
+    p.style.display = "none";
+  });
+
+  const target = document.getElementById("page-" + page);
+
+  if(target){
+    target.style.display = "block";
+  }
+
+};
 function addProduct(){
 
   const name = document.getElementById("productName").value;
