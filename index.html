@@ -2332,34 +2332,41 @@ app.navigate = function(page){
 
 };
 function addProduct(){
+  console.log("Add product clicked");
+
+const name = document.getElementById("productName").value.trim();
+const price = document.getElementById("productPrice").value.trim();
+const image = document.getElementById("productImage").value.trim();
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 if(!currentUser){
-  alert("Please login first");
-  return;
+alert("Login required");
+return;
 }
 
-const name = document.getElementById("productName").value;
-const price = document.getElementById("productPrice").value;
-const image = document.getElementById("productImage").value;
-
-const product = {
- id: Date.now(),
- name: name,
- price: Number(price),
- image: image,
- seller: currentUser.email
-};
+if(!name || !price || !image){
+alert("Please fill all fields");
+return;
+}
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
-products.push(product);
+const newProduct = {
+id: Date.now(),
+name: name,
+price: Number(price),
+image: image,
+seller: currentUser.email
+};
+
+products.push(newProduct);
 
 localStorage.setItem("products", JSON.stringify(products));
 
 renderSellerProducts();
-renderCustomerProducts();
+
+alert("Product Added Successfully");
 
 }
 function deleteProduct(productId){
