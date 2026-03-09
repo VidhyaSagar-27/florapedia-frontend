@@ -2567,27 +2567,25 @@ function searchProducts(){
   renderFilteredProducts(filtered);
 
 }
-function loginUser(){
+function login(){
 
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
+const email = document.getElementById("loginEmail").value;
+const password = document.getElementById("loginPassword").value;
 
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  const user = users.find(u => u.email === email && u.password === password);
+const user = users.find(u => u.email === email && u.password === password);
 
-  if(!user){
-    alert("Invalid login credentials");
-    return;
-  }
+if(!user){
+alert("Invalid login");
+return;
+}
 
-  app.currentUser = user;
+localStorage.setItem("currentUser", JSON.stringify(user));
 
-  localStorage.setItem("currentUser", JSON.stringify(user));
-app.currentUser = user;
-  alert("Login successful");
+alert("Login successful");
 
-  app.navigate("home");
+app.navigate("home");
 
 }
 
