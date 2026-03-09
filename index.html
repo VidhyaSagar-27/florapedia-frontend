@@ -2313,17 +2313,30 @@ app.navigate = function(page){
 };
 function addProduct(){
 
-  const name = document.getElementById("productName").value;
-  const price = document.getElementById("productPrice").value;
-  const image = document.getElementById("productImage").value;
+const name = document.getElementById("productName").value;
+const price = document.getElementById("productPrice").value;
+const image = document.getElementById("productImage").value;
 
-  const product = {
-  id: Date.now(),
-  name: name,
-  price: Number(price),
-  image: image,
-  createdAt: new Date().toISOString()
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+const product = {
+ id: Date.now(),
+ name: name,
+ price: Number(price),
+ image: image,
+ seller: currentUser.email
 };
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+products.push(product);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+renderSellerProducts();
+renderCustomerProducts();
+
+}
 
   let products = JSON.parse(localStorage.getItem("products")) || [];
 
@@ -2414,40 +2427,35 @@ function renderCustomerProducts(){
 }
 function renderSellerProducts(){
 
-  const container = document.getElementById("sellerProducts");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  if(!container){
-    return;
-  }
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  const products = JSON.parse(localStorage.getItem("products")) || [];
+let myProducts = products.filter(p => p.seller === currentUser.email);
 
-  container.innerHTML = "";
+const container = document.getElementById("sellerProducts");
 
-  if(products.length === 0){
-    container.innerHTML = "<p>No products added yet</p>";
-    return;
-  }
+if(!container) return;
 
-  products.forEach(p => {
+container.innerHTML = "";
 
-    container.innerHTML += `
-      <div class="seller-product">
+myProducts.forEach(p => {
 
-        <img src="${p.image}" width="100">
+container.innerHTML += `
+<div class="product-card">
 
-        <h4>${p.name}</h4>
+<img src="${p.image}" width="100">
 
-        <p>₹${p.price}</p>
+<h4>${p.name}</h4>
 
-        <button onclick="deleteProduct(${p.id})">
-          Delete Product
-        </button>
+<p>₹${p.price}</p>
 
-      </div>
-    `;
+<button onclick="deleteProduct(${p.id})">Delete</button>
 
-  });
+</div>
+`;
+
+});
 
 }
 function deleteProduct(productId){
