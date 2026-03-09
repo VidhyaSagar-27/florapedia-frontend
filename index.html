@@ -1400,31 +1400,22 @@ const app = {
     `;
   },
 
-  addToCart(productId){
-
-  if(!state.user){
-    auth.openModal();
-    this.toast("Login required");
-    return;
-  }
-
-  const index = state.cart.findIndex(i=>i.productId===productId);
-
-  if(index>-1){
-    state.cart[index].qty +=1;
-  }else{
-    state.cart.push({
-      productId:productId,
-      qty:1
-    });
-  }
-
-  saveState();
-  this.updateUI();
-
-  this.toast("Added to cart");
-
-}
+  addToCart(productId) {
+    if(!state.user) {
+      this.toast('Please login first');
+      auth.openModal();
+      return;
+    }
+    
+    const existing = state.cart.find(item => item.productId === productId);
+    if(existing) {
+      existing.qty++;
+    } else {
+      state.cart.push({ productId, qty: 1 });
+    }
+    this.updateUI();
+    this.toast('✅ Added to cart');
+  },
 
   buyNow(productId) {
     if(!state.user) {
@@ -2325,42 +2316,50 @@ function saveStore(){
   alert("Store saved successfully");
 
 }
+app.navigate = function(page){
 
+  const pages = document.querySelectorAll(".page");
+
+  pages.forEach(p=>{
+    p.style.display = "none";
+  });
+
+  const target = document.getElementById("page-" + page);
+
+  if(target){
+    target.style.display = "block";
+  }
+
+};
 function addProduct(){
 
-  const token = localStorage.getItem("token");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  if(!token){
-    auth.openModal();
-    return;
-  }
+if(!currentUser){
+  alert("Please login first");
+  return;
+}
 
-  const name = document.getElementById("productName").value;
-  const price = document.getElementById("productPrice").value;
-  const image = document.getElementById("productImage").value;
+const name = document.getElementById("productName").value;
+const price = document.getElementById("productPrice").value;
+const image = document.getElementById("productImage").value;
 
-  if(!name || !price || !image){
-    alert("Fill all fields");
-    return;
-  }
+const product = {
+ id: Date.now(),
+ name: name,
+ price: Number(price),
+ image: image,
+ seller: currentUser.email
+};
 
-  let products = JSON.parse(localStorage.getItem("products")) || [];
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  const newProduct = {
-    id: Date.now(),
-    name: name,
-    price: price,
-    image: image
-  };
+products.push(product);
 
-  products.push(newProduct);
+localStorage.setItem("products", JSON.stringify(products));
 
-  localStorage.setItem("products", JSON.stringify(products));
-
-  renderSellerProducts();
-  renderCustomerProducts();
-
-  app.toast("Product added successfully");
+renderSellerProducts();
+renderCustomerProducts();
 
 }
 function deleteProduct(productId){
@@ -2436,38 +2435,53 @@ function renderCustomerProducts(){
 }
 function renderSellerProducts(){
 
-  const container = document.getElementById("sellerProducts");
+const container = document.getElementById("sellerProducts");
 
-  if(!container) return;
+if(!container) return;
 
-  const products = JSON.parse(localStorage.getItem("products")) || [];
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  if(products.length === 0){
-    container.innerHTML = "<p>No products yet</p>";
-    return;
-  }
+if(!currentUser) return;
 
-  container.innerHTML = products.map(p=>`
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  <div style="border:1px solid #eee;padding:12px;margin-bottom:12px;border-radius:10px">
+let myProducts = products.filter(p => p.seller === currentUser.email);
 
-    <img src="${p.image}" 
-    style="width:80px;height:80px;object-fit:cover;border-radius:8px">
+container.innerHTML = "";
 
-    <h4>${p.name}</h4>
+myProducts.forEach(p => {
 
-    <p>₹${p.price}</p>
+container.innerHTML += `
+<div>
 
-    <button onclick="deleteProduct(${p.id})">
-      Delete
-    </button>
+<img src="${p.image}" width="80">
 
-  </div>
+<h4>${p.name}</h4>
 
-  `).join("");
+<p>₹${p.price}</p>
+
+<button onclick="deleteProduct(${p.id})">Delete</button>
+
+</div>
+`;
+
+});
 
 }
+function deleteProduct(productId){
 
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  products = products.filter(p => p.id !== productId);
+
+  localStorage.setItem("products", JSON.stringify(products));
+
+  renderSellerProducts();
+  renderCustomerProducts();
+
+  alert("Product deleted");
+
+}
 function updateCartCount(){
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -2502,34 +2516,12 @@ function renderCart(){
 
   const container = document.getElementById("cartItems");
 
-  if(!container) return;
-
   container.innerHTML = "";
 
   if(cart.length === 0){
     container.innerHTML = "<p>Your cart is empty 🛒</p>";
     return;
   }
-
-  cart.forEach(item=>{
-
-    const card = `
-      <div class="cart-item">
-
-        <img src="${item.image}" width="60">
-
-        <div>
-          <h4>${item.name}</h4>
-          <p>₹${item.price}</p>
-          <p>Qty: ${item.qty}</p>
-        </div>
-
-      </div>
-    `;
-
-    container.innerHTML += card;
-
-  });
 
 }
 function searchProducts(){
