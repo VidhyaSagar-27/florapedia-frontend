@@ -2115,42 +2115,43 @@ function addToCart(productId){
 // SIGNUP
 const API = "https://florapedia-backend.onrender.com/api";
 
-auth.doSignup = async function(){
+auth.doSignup = function(){
 
-  const name = document.getElementById("signupName").value;
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
-  const role = document.getElementById("signupRole").value;
+const name = document.getElementById("signupName").value;
+const email = document.getElementById("signupEmail").value;
+const password = document.getElementById("signupPassword").value;
+const role = document.getElementById("signupRole").value;
 
-  try{
+if(!name || !email || !password){
+app.toast("Please fill all fields");
+return;
+}
 
-    const response = await fetch(API + "/auth/register",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        role
-      })
-    });
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const data = await response.json();
+const existing = users.find(u => u.email === email);
 
-    if(response.ok){
-      app.toast("Signup successful");
-    }else{
-      app.toast(data.message || "Signup failed");
-    }
+if(existing){
+app.toast("User already exists");
+return;
+}
 
-  }catch(error){
-    console.log(error);
-    app.toast("Server error");
-  }
-
+const newUser = {
+name: name,
+email: email,
+password: password,
+role: role
 };
+
+users.push(newUser);
+
+localStorage.setItem("users", JSON.stringify(users));
+
+app.toast("Signup successful");
+
+auth.switchTab("login");
+
+}
 
 
 // LOGIN
@@ -2520,6 +2521,41 @@ function loadStore(){
     document.getElementById("storeLocation").value = store.location;
     document.getElementById("storePhone").value = store.phone;
   }
+
+}
+function signup(){
+
+const name = document.getElementById("signupName").value;
+const email = document.getElementById("signupEmail").value;
+const password = document.getElementById("signupPassword").value;
+const role = document.getElementById("signupRole").value;
+
+if(!name || !email || !password){
+alert("Please fill all fields");
+return;
+}
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+const existing = users.find(u => u.email === email);
+
+if(existing){
+alert("User already exists");
+return;
+}
+
+const newUser = {
+name: name,
+email: email,
+password: password,
+role: role
+};
+
+users.push(newUser);
+
+localStorage.setItem("users", JSON.stringify(users));
+
+alert("Signup successful");
 
 }
 function renderCart(){
