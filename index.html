@@ -2188,8 +2188,13 @@ alert("Server error");
 // LOGIN
 auth.doLogin = async function(){
 
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+
+  if(!email || !password){
+    app.toast("Please enter email and password");
+    return;
+  }
 
   try{
 
@@ -2206,50 +2211,51 @@ auth.doLogin = async function(){
 
     const data = await response.json();
 
-    console.log(data);
+    console.log("LOGIN RESPONSE:", data);
 
-    if(data.token){
+    if(response.ok && data.token){
 
+      // save auth data
       localStorage.setItem("token", data.token);
-localStorage.setItem("role", data.role);
-localStorage.setItem("currentUser", JSON.stringify(data.user));
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-state.user = data.user;
-app.updateUI();
+      // update app state
+      state.user = data.user;
 
-auth.closeModal();
+      // refresh UI
+      app.updateUI();
 
-const role = data.role ? data.role.toLowerCase() : "";
+      // close modal
+      auth.closeModal();
 
-if(role === "seller"){
-  setTimeout(()=>{
-    app.navigate("seller");
-  },100);
-}else{
-  setTimeout(()=>{
-    app.navigate("home");
-  },100);
-}
+      // redirect user
+      const role = data.role ? data.role.toLowerCase() : "buyer";
+
+      if(role === "seller"){
+        console.log("Redirecting to seller dashboard");
+        app.toast("Seller login successful");
+        setTimeout(()=>{
+          app.navigate("seller");
+        },200);
       }else{
-
         console.log("Redirecting to home page");
-
+        app.toast("Login successful");
         setTimeout(()=>{
           app.navigate("home");
-        },100);
-
-      
+        },200);
+      }
 
     }else{
 
-      app.toast("Login failed");
+      app.toast(data.message || "Invalid email or password");
 
     }
 
   }catch(error){
 
-    console.log(error);
-    app.toast("Server error");
+    console.error("LOGIN ERROR:", error);
+    app.toast("Server connection error");
 
   }
 
