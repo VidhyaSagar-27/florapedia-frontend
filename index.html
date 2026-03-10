@@ -1137,26 +1137,25 @@ const FLOWERS_DB = [
 
 // STATE MANAGEMENT
 const state = {
-  user: JSON.parse(localStorage.getItem('currentUser') || "null"),
-  cart: JSON.parse(localStorage.getItem('cart') || "[]"),
-  wishlist: JSON.parse(localStorage.getItem('wishlist') || "[]"),
-  orders: JSON.parse(localStorage.getItem('orders') || "[]"),
-  addresses: JSON.parse(localStorage.getItem('addresses') || "[]"),
+
+  cart: JSON.parse(localStorage.getItem("cart") || "[]"),
+
+  wishlist: JSON.parse(localStorage.getItem("wishlist") || "[]"),
+
+  user: JSON.parse(localStorage.getItem("user") || "null"),
 
   filters: {
     category: [],
     occasion: [],
     price: null,
-    rating: null,
-    sort: 'relevance',
-    search: ''
+    rating: null
   },
 
-  selectedAddressIdx: null,
-  paymentType: 'cod',
-  deliveryType: 'standard'
-};
+  sort: "relevance",
 
+  products: []
+
+};
 // SAVE STATE
 function saveState() {
   localStorage.setItem('currentUser', JSON.stringify(state.user));
