@@ -1503,9 +1503,10 @@ let products = [...FLOWERS_DB, ...sellerProducts];
     }).join('');
 
     const subtotal = state.cart.reduce((sum, item) => {
-      const product = allProducts.find(p => p.id === item.productId);
-      return sum + product.price * item.qty;
-    }, 0);
+  const product = allProducts.find(p => p.id === item.productId);
+  if(!product) return sum;
+  return sum + product.price * item.qty;
+}, 0);
     const delivery = 99;
     const tax = Math.round(subtotal * 0.05);
     const total = subtotal + delivery + tax;
