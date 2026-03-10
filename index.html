@@ -2115,41 +2115,50 @@ function addToCart(productId){
 // SIGNUP
 const API = "https://florapedia-backend.onrender.com/api";
 
-auth.doSignup = function(){
+auth.doSignup = async function(){
 
-const name = document.getElementById("signupName").value;
-const email = document.getElementById("signupEmail").value;
-const password = document.getElementById("signupPassword").value;
-const role = document.getElementById("signupRole").value;
+const name = document.getElementById("signupName")?.value.trim();
+const email = document.getElementById("signupEmail")?.value.trim();
+const password = document.getElementById("signupPassword")?.value.trim();
+const role = document.getElementById("signupRole")?.value;
 
 if(!name || !email || !password){
-app.toast("Please fill all fields");
+alert("Fill all fields");
 return;
 }
 
-let users = JSON.parse(localStorage.getItem("users")) || [];
+try{
 
-const existing = users.find(u => u.email === email);
+const res = await fetch(API + "/auth/register",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name,
+email,
+password,
+role
+})
+});
 
-if(existing){
-app.toast("User already exists");
+const data = await res.json();
+
+console.log("SERVER RESPONSE:",data);
+
+if(!res.ok){
+alert(data.message || "Signup failed");
 return;
 }
 
-const newUser = {
-name: name,
-email: email,
-password: password,
-role: role
-};
+localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-users.push(newUser);
+alert("Signup successful");
 
-localStorage.setItem("users", JSON.stringify(users));
-
-app.toast("Signup successful");
-
-auth.switchTab("login");
+}catch(err){
+console.error(err);
+alert("Server error");
+}
 
 }
 
