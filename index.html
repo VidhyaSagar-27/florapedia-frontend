@@ -2070,8 +2070,19 @@ window.addEventListener("load", () => {
 const savedUser = JSON.parse(localStorage.getItem("currentUser"));
 
 if(savedUser){
- app.currentUser = savedUser;
+  state.user = savedUser;
 }
+
+if(app && app.init){
+  app.init();
+}
+
+renderCustomerProducts();
+renderSellerProducts();
+renderCart();
+updateCartCount();
+
+});
 
 if(app && app.init){
  app.init();
@@ -2201,21 +2212,25 @@ auth.doLogin = async function(){
     if(data.token){
 
       localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("currentUser", JSON.stringify(data.user));
+localStorage.setItem("role", data.role);
+localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-      auth.closeModal();
+state.user = data.user;
+app.updateUI();
 
-      const role = data.role ? data.role.toLowerCase() : "";
+auth.closeModal();
 
-      if(role === "seller"){
+const role = data.role ? data.role.toLowerCase() : "";
 
-        console.log("Redirecting to seller dashboard");
-
-        setTimeout(()=>{
-          app.navigate("seller");
-        },100);
-
+if(role === "seller"){
+  setTimeout(()=>{
+    app.navigate("seller");
+  },100);
+}else{
+  setTimeout(()=>{
+    app.navigate("home");
+  },100);
+}
       }else{
 
         console.log("Redirecting to home page");
