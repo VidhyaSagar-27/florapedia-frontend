@@ -2385,14 +2385,24 @@ const name = document.getElementById("productName").value;
 const price = Number(document.getElementById("productPrice").value);
 const image = document.getElementById("productImage").value;
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+// SAFE USER FETCH
+let currentUser = null;
 
-if(!currentUser){
-alert("Login required");
-return;
+try{
+  const stored = localStorage.getItem("currentUser");
+  if(stored && stored !== "undefined"){
+    currentUser = JSON.parse(stored);
+  }
+}catch(e){
+  console.error("User parse error", e);
 }
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+if(!currentUser){
+  alert("Login required");
+  return;
+}
+
+let products = JSON.parse(localStorage.getItem("products") || "[]");
 
 const newProduct = {
 id: Date.now(),
@@ -2415,6 +2425,7 @@ products.push(newProduct);
 localStorage.setItem("products", JSON.stringify(products));
 
 renderSellerProducts();
+renderCustomerProducts();
 
 alert("Product Added Successfully");
 
