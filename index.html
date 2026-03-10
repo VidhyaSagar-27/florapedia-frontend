@@ -1183,7 +1183,7 @@ this.updateUI();
     this.renderHome();
     
     if(query.length > 0) {
-      const suggestions = FLOWERS_DB.filter(f => 
+      const suggestions = allProducts.filter(f => 
         f.name.toLowerCase().includes(query) || 
         f.category.toLowerCase().includes(query)
       ).slice(0, 6);
@@ -1458,6 +1458,8 @@ let products = [...FLOWERS_DB, ...sellerProducts];
 
   renderCart() {
     const content = document.getElementById('cartContent');
+    const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+    const allProducts = [...FLOWERS_DB, ...sellerProducts];
     
     if(state.cart.length === 0) {
       content.innerHTML = `
@@ -1475,7 +1477,8 @@ let products = [...FLOWERS_DB, ...sellerProducts];
     }
 
     const cartItems = state.cart.map(item => {
-      const product = FLOWERS_DB.find(p => p.id === item.productId);
+      const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+       const product = [...FLOWERS_DB, ...sellerProducts].find(p => p.id === item.productId);
       const total = product.price * item.qty;
       return `
         <div class="cart-item">
@@ -1500,7 +1503,7 @@ let products = [...FLOWERS_DB, ...sellerProducts];
     }).join('');
 
     const subtotal = state.cart.reduce((sum, item) => {
-      const product = FLOWERS_DB.find(p => p.id === item.productId);
+      const product = allProducts.find(p => p.id === item.productId);
       return sum + product.price * item.qty;
     }, 0);
     const delivery = 99;
@@ -1576,7 +1579,11 @@ let products = [...FLOWERS_DB, ...sellerProducts];
     const grid = document.getElementById('wishlistGrid');
     const empty = document.getElementById('wishlistEmpty');
 
-    const wishlistProducts = FLOWERS_DB.filter(p => state.wishlist.includes(p.id));
+   const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+
+   const allProducts = [...FLOWERS_DB, ...sellerProducts];
+
+   const wishlistProducts = allProducts.filter(p => state.wishlist.includes(p.id));
 
     if(wishlistProducts.length === 0) {
       grid.innerHTML = '';
@@ -1618,7 +1625,7 @@ let products = [...FLOWERS_DB, ...sellerProducts];
     }
 
     const subtotal = state.cart.reduce((sum, item) => {
-      const product = FLOWERS_DB.find(p => p.id === item.productId);
+      const product = allProducts.find(p => p.id === item.productId);
       return sum + product.price * item.qty;
     }, 0);
     const delivery = state.deliveryType === 'express' ? 299 : 99;
@@ -1626,7 +1633,7 @@ let products = [...FLOWERS_DB, ...sellerProducts];
     const total = subtotal + delivery + tax;
 
     const cartItemsHtml = state.cart.map(item => {
-      const product = FLOWERS_DB.find(p => p.id === item.productId);
+      const product = allProducts.find(p => p.id === item.productId);
       return `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--border); font-size:12px;">
         <span>${product.name} × ${item.qty}</span>
         <strong>₹${product.price * item.qty}</strong>
@@ -1899,7 +1906,7 @@ const checkout = {
     const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     const itemCount = state.cart.length;
     const subtotal = state.cart.reduce((sum, item) => {
-      const product = FLOWERS_DB.find(p => p.id === item.productId);
+      const product = allProducts.find(p => p.id === item.productId);
       return sum + product.price * item.qty;
     }, 0);
     const delivery = state.deliveryType === 'express' ? 299 : 99;
