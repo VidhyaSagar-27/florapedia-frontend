@@ -2202,28 +2202,29 @@ auth.doLogin = async function(){
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
 
       auth.closeModal();
 
       const role = data.role ? data.role.toLowerCase() : "";
 
-if(role === "seller"){
+      if(role === "seller"){
 
-  console.log("Redirecting to seller dashboard");
+        console.log("Redirecting to seller dashboard");
 
-  setTimeout(()=>{
-    app.navigate("seller");
-  },100);
+        setTimeout(()=>{
+          app.navigate("seller");
+        },100);
 
-}else{
+      }else{
 
-  console.log("Redirecting to home page");
+        console.log("Redirecting to home page");
 
-  setTimeout(()=>{
-    app.navigate("home");
-  },100);
+        setTimeout(()=>{
+          app.navigate("home");
+        },100);
 
-}
+      }
 
     }else{
 
@@ -2584,8 +2585,9 @@ alert("Signup successful");
 function renderCart(){
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
   const container = document.getElementById("cartItems");
+
+  if(!container) return;
 
   container.innerHTML = "";
 
@@ -2593,6 +2595,90 @@ function renderCart(){
     container.innerHTML = "<p>Your cart is empty 🛒</p>";
     return;
   }
+
+  let subtotal = 0;
+
+  cart.forEach(item => {
+
+    const total = item.price * item.qty;
+    subtotal += total;
+
+    const row = `
+      <div class="cart-item">
+
+        <img src="${item.image}" width="80">
+
+        <div>
+          <h4>${item.name}</h4>
+          <p>₹${item.price}</p>
+
+          <div>
+            <button onclick="changeQty(${item.id},-1)">-</button>
+            <span>${item.qty}</span>
+            <button onclick="changeQty(${item.id},1)">+</button>
+          </div>
+
+          <button onclick="removeFromCart(${item.id})">
+            Remove
+          </button>
+
+        </div>
+
+        <div>
+          ₹${total}
+        </div>
+
+      </div>
+    `;
+
+    container.innerHTML += row;
+
+  });
+
+  const delivery = 99;
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + delivery + tax;
+
+  container.innerHTML += `
+    <hr>
+    <h3>Subtotal: ₹${subtotal}</h3>
+    <h3>Delivery: ₹${delivery}</h3>
+    <h3>Tax: ₹${tax}</h3>
+    <h2>Total: ₹${total}</h2>
+  `;
+
+}
+function changeQty(productId, change){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const item = cart.find(i => i.id === productId);
+
+  if(item){
+    item.qty += change;
+
+    if(item.qty <= 0){
+      cart = cart.filter(i => i.id !== productId);
+    }
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  renderCart();
+  updateCartCount();
+
+}
+
+function removeFromCart(productId){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart = cart.filter(i => i.id !== productId);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  renderCart();
+  updateCartCount();
 
 }
 function searchProducts(){
@@ -2606,27 +2692,6 @@ function searchProducts(){
   );
 
   renderFilteredProducts(filtered);
-
-}
-function login(){
-
-const email = document.getElementById("loginEmail").value;
-const password = document.getElementById("loginPassword").value;
-
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-const user = users.find(u => u.email === email && u.password === password);
-
-if(!user){
-alert("Invalid login");
-return;
-}
-
-localStorage.setItem("currentUser", JSON.stringify(user));
-
-alert("Login successful");
-
-app.navigate("home");
 
 }
 
