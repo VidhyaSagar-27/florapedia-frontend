@@ -3575,7 +3575,7 @@ function renderSellerProducts(){
 
   if(!container) return;
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
 
   if(!currentUser){
     container.innerHTML = "<p>Please login</p>";
@@ -3646,7 +3646,7 @@ function updateCartCount(){
 // =============================
 function loadStore(){
 
-  const store = JSON.parse(localStorage.getItem("sellerStore"));
+  const store = JSON.parse(localStorage.getItem("sellerStore") || "null");
 
   if(!store) return;
 
