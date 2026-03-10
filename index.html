@@ -1206,7 +1206,9 @@ this.updateUI();
   },
 
   getFilteredProducts() {
-    let products = FLOWERS_DB.slice();
+    let sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+
+     let products = [...FLOWERS_DB, ...sellerProducts];
 
     if(state.filters.search) {
       products = products.filter(p => 
@@ -2349,11 +2351,10 @@ app.navigate = function(page){
 
 };
 function addProduct(){
-  console.log("Add product clicked");
 
-const name = document.getElementById("productName").value.trim();
-const price = document.getElementById("productPrice").value.trim();
-const image = document.getElementById("productImage").value.trim();
+const name = document.getElementById("productName").value;
+const price = Number(document.getElementById("productPrice").value);
+const image = document.getElementById("productImage").value;
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -2362,18 +2363,21 @@ alert("Login required");
 return;
 }
 
-if(!name || !price || !image){
-alert("Please fill all fields");
-return;
-}
-
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
 const newProduct = {
 id: Date.now(),
 name: name,
-price: Number(price),
-image: image,
+price: price,
+oldPrice: price + 100,
+image: image || "https://via.placeholder.com/300",
+category: "Flowers",
+rating: 4.5,
+reviews: 1,
+occasion: ["General"],
+description: name + " fresh flowers bouquet.",
+care: "Keep in water and away from heat.",
+meaning: "Symbol of beauty and freshness.",
 seller: currentUser.email
 };
 
