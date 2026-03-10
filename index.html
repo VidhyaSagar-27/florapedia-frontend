@@ -1208,7 +1208,7 @@ this.updateUI();
   getFilteredProducts() {
     let sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
 
-     let products = [...FLOWERS_DB, ...sellerProducts];
+let products = [...FLOWERS_DB, ...sellerProducts];
 
     if(state.filters.search) {
       products = products.filter(p => 
@@ -1293,7 +1293,7 @@ this.updateUI();
               <span class="off">${discount}% off</span>
             </div>
             <div class="prod-footer">
-              <span>${p.occasion.join(' • ')}</span>
+              <span>${(p.occasion || ["General"]).join(' • ')}</span>
               <span>${p.reviews}+ reviews</span>
             </div>
             <div class="prod-cta-row">
