@@ -1069,7 +1069,7 @@ this.updateUI();
     document.getElementById('globalWishlistCount').textContent = wishlistCount > 0 ? wishlistCount : '0';
     const username = state.user?.name || state.user?.email || "Login";
 
-document.getElementById("headerUserName").textContent =username === "Login" ? "Login" : username.split("@")[0];
+    document.getElementById("headerUserName").textContent =username === "Login" ? "Login" : username.split("@")[0];
     saveState();
   },
   navigate(page, productId = null){
