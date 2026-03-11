@@ -3015,7 +3015,7 @@ function addToCart(productId){
   const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
   const allProducts = [...FLOWERS_DB, ...sellerProducts];
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
   const product = allProducts.find(p => p.id === productId);
 
@@ -3040,13 +3040,21 @@ function addToCart(productId){
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
+  // update cart badge
   if(typeof updateCartCount === "function"){
     updateCartCount();
   }
 
+  // toast message
   if(app && app.toast){
     app.toast("🛒 Added to cart");
   }
+
+  // refresh cart page if it is open
+  if(app && app.renderCart){
+    app.renderCart();
+  }
+
 }
 
 
@@ -3776,7 +3784,7 @@ function renderCart(){
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const container = document.getElementById("cartItems");
+  const container = document.getElementById("cartContent");
 
   if(!container) return;
 
