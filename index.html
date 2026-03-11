@@ -3533,9 +3533,9 @@ function addProduct(){
     renderSellerProducts();
   }
 
-  if(typeof renderCustomerProducts === "function"){
-    renderCustomerProducts();
-  }
+  if(app && app.renderHome){
+  app.renderHome();
+}
 
   alert("Product Added Successfully");
 
