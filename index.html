@@ -3146,6 +3146,8 @@ auth.doLogin = async function(){
     const data = await response.json();
 
     console.log("LOGIN RESPONSE:", data);
+    state.user = data.user || data;
+    localStorage.setItem("user", JSON.stringify(state.user));
 
     if(response.ok && data.token){
 
