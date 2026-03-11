@@ -3096,7 +3096,7 @@ auth.doSignup = async function(){
     }
 
     if(data.user){
-      state.user = data.user;
+      state.user = data.user || data;
       localStorage.setItem("currentUser", JSON.stringify(data.user));
     }
 
@@ -3157,7 +3157,7 @@ auth.doLogin = async function(){
       localStorage.setItem("currentUser", JSON.stringify(data.user));
 
       // Update app state
-      state.user = data.user;
+      state.user = data.user || data;
 
       // Refresh UI
       if(app && app.updateUI){
