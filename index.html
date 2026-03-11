@@ -1230,7 +1230,7 @@ var app = {
     }
 
   }
-  updateSellerUI();
+ updateSellerUI(page);
 
   // ----- PAGE SWITCH -----
   document.querySelectorAll(".page").forEach(p=>{
@@ -3419,26 +3419,22 @@ function updateSellerButton(){
   }
 
 }
-function updateSellerUI(){
+function updateSellerUI(page){
 
   const searchBar = document.getElementById("searchBar");
   const cartBtn = document.getElementById("cartBtn");
   const wishlistBtn = document.getElementById("wishlistBtn");
 
-  if(!state.user) return;
+  if(!searchBar || !cartBtn || !wishlistBtn) return;
 
-  if(state.user.role === "seller"){
-
-    if(searchBar) searchBar.style.display = "none";
-    if(cartBtn) cartBtn.style.display = "none";
-    if(wishlistBtn) wishlistBtn.style.display = "none";
-
+  if(page === "seller"){
+    searchBar.style.visibility = "hidden";
+    cartBtn.style.visibility = "hidden";
+    wishlistBtn.style.visibility = "hidden";
   } else {
-
-    if(searchBar) searchBar.style.display = "block";
-    if(cartBtn) cartBtn.style.display = "flex";
-    if(wishlistBtn) wishlistBtn.style.display = "flex";
-
+    searchBar.style.visibility = "visible";
+    cartBtn.style.visibility = "visible";
+    wishlistBtn.style.visibility = "visible";
   }
 
 }
