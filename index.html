@@ -667,7 +667,7 @@
   </div>
 
   <!-- SELLER DASHBOARD BUTTON -->
-<div class="nav-pill" onclick="app.navigate('seller')">
+<div class="nav-pill" id="sellerBtn" onclick="app.navigate('seller')">
   <span class="icon">🏪</span>
   <span class="text-label">Seller</span>
 </div>
@@ -1186,6 +1186,7 @@ var app = {
     this.renderCategories();
     this.renderHome();
     this.updateUI();
+    updateSellerButton(); 
 
   },
 
@@ -1214,7 +1215,7 @@ var app = {
 
   navigate(page, productId = null){
 
-  // SECURITY CHECK FIRST
+  // ----- ROLE PROTECTION -----
   if(page === "seller"){
 
     if(!state.user){
@@ -1230,7 +1231,7 @@ var app = {
 
   }
 
-  // PAGE SWITCH
+  // ----- PAGE SWITCH -----
   document.querySelectorAll(".page").forEach(p=>{
     p.classList.remove("active-page");
   });
@@ -1243,6 +1244,7 @@ var app = {
 
   window.scrollTo(0,0);
 
+  // ----- PAGE LOGIC -----
   switch(page){
 
     case "home":
@@ -1259,7 +1261,6 @@ var app = {
       }
 
       this.renderPDP(productId);
-
     break;
 
     case "cart":
@@ -3399,6 +3400,24 @@ app.navigate = function(page){
   }
 
 };
+function updateSellerButton(){
+
+  const sellerBtn = document.getElementById("sellerBtn");
+
+  if(!sellerBtn) return;
+
+  if(!state.user){
+    sellerBtn.style.display = "none";
+    return;
+  }
+
+  if(state.user.role === "seller"){
+    sellerBtn.style.display = "flex";
+  }else{
+    sellerBtn.style.display = "none";
+  }
+
+}
 
 
 
@@ -3706,6 +3725,7 @@ function signup(){
   users.push(newUser);
 
   localStorage.setItem("users", JSON.stringify(users));
+  updateSellerButton();
 
   alert("Signup successful");
 
