@@ -3045,14 +3045,14 @@ function addToCart(productId){
     updateCartCount();
   }
 
-  // toast message
+  // toast
   if(app && app.toast){
     app.toast("🛒 Added to cart");
   }
 
-  // refresh cart page if it is open
-  if(app && app.renderCart){
-    app.renderCart();
+  // refresh cart UI instantly
+  if(typeof renderCart === "function"){
+    renderCart();
   }
 
 }
@@ -3784,75 +3784,124 @@ function renderCart(){
 
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  const container = document.getElementById("cartItems") || document.getElementById("cartContent");
+  const container =
+    document.getElementById("cartItems") ||
+    document.getElementById("cartContent");
 
   if(!container) return;
 
-  if(cart.length === 0){
-    container.innerHTML = "<p>Your cart is empty 🛒</p>";
-    return;
-  }
-
   const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
   const allProducts = [...FLOWERS_DB, ...sellerProducts];
+
+  if(cart.length === 0){
+    container.innerHTML = "<h3>Your cart is empty 🛒</h3>";
+    return;
+  }
 
   let subtotal = 0;
   let html = "";
 
   cart.forEach(item => {
 
-    const product = allProducts.find(p => p.id === item.id) || item;
+    const product = allProducts.find(p => p.id === item.id);
 
-    const name = product.name || "Flower";
-    const price = product.price || 0;
-    const image = product.image || "https://via.placeholder.com/80";
+    if(!product) return;
 
-    const total = price * item.qty;
+    const total = product.price * item.qty;
 
     subtotal += total;
 
     html += `
-      <div class="cart-item">
+    <div class="cart-item">
 
-        <img src="${image}" width="80">
+      <img src="${product.image}" class="cart-img">
 
-        <div>
-          <h4>${name}</h4>
-          <p>₹${price}</p>
+      <div class="cart-info">
+        <h3>${product.name}</h3>
+        <p class="cart-price">₹${product.price}</p>
 
-          <div>
-            <button onclick="changeQty(${item.id},-1)">-</button>
-            <span>${item.qty}</span>
-            <button onclick="changeQty(${item.id},1)">+</button>
-          </div>
-
-          <button onclick="removeFromCart(${item.id})">
-            Remove
-          </button>
+        <div class="cart-qty">
+          <button onclick="changeQty(${product.id},-1)">−</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${product.id},1)">+</button>
         </div>
 
-        <div>
-          ₹${total}
-        </div>
-
+        <button class="remove-btn" onclick="removeFromCart(${product.id})">
+          Remove
+        </button>
       </div>
+
+      <div class="cart-total">
+        ₹${total}
+      </div>
+
+    </div>
     `;
 
   });
 
-  const delivery = 99;
+  const delivery = subtotal > 999 ? 0 : 99;
   const tax = Math.round(subtotal * 0.05);
   const total = subtotal + delivery + tax;
 
   html += `
-    <hr>
-    <h3>Subtotal: ₹${subtotal}</h3>
-    <h3>Delivery: ₹${delivery}</h3>
-    <h3>Tax: ₹${tax}</h3>
-    <h2>Total: ₹${total}</h2>
+  <div class="cart-summary">
+
+    <h3>Subtotal : ₹${subtotal}</h3>
+    <h3>Delivery : ₹${delivery}</h3>
+    <h3>Tax : ₹${tax}</h3>
+
+    <h2>Total : ₹${total}</h2>
+
+  </div>
   `;
 
   container.innerHTML = html;
+}
+function changeQty(productId, change){
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const item = cart.find(i => i.id === productId);
+
+  if(!item) return;
+
+  item.qty += change;
+
+  if(item.qty <= 0){
+    cart = cart.filter(i => i.id !== productId);
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+
+  renderCart();
+}
+function removeFromCart(productId){
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  cart = cart.filter(item => item.id !== productId);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+
+  renderCart();
+
+}
+function updateCartCount(){
+
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const count = cart.reduce((sum,item)=> sum + item.qty,0);
+
+  const badge = document.getElementById("globalCartCount");
+
+  if(badge){
+    badge.innerText = count;
+  }
 
 }
 // =============================
@@ -3933,6 +3982,13 @@ function searchProducts(){
   }
 
 }
+document.addEventListener("DOMContentLoaded", () => {
+
+  updateCartCount();
+
+  renderCart();
+
+});
 
 </script>
 <!-- Firebase -->
