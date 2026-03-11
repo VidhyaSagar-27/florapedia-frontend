@@ -1214,73 +1214,77 @@ var app = {
 
   navigate(page, productId = null){
 
-    document.querySelectorAll(".page").forEach(p=>{
-      p.classList.remove("active-page");
-    });
+  // SECURITY CHECK FIRST
+  if(page === "seller"){
 
-    const pageEl = document.getElementById("page-" + page);
-
-    if(pageEl){
-      pageEl.classList.add("active-page");
+    if(!state.user){
+      this.toast("Please login as seller");
+      auth.openModal();
+      return;
     }
 
-    window.scrollTo(0,0);
-
-    switch(page){
-
-      case "home":
-        this.renderHome();
-      break;
-
-      case "pdp":
-        if(!productId){
-         console.error("Product ID missing");
-         this.toast("Product not found");
-        this.navigate("home");
+    if(state.user.role !== "seller"){
+      this.toast("Only sellers can access dashboard");
       return;
-   }
+    }
+
+  }
+
+  // PAGE SWITCH
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active-page");
+  });
+
+  const pageEl = document.getElementById("page-" + page);
+
+  if(pageEl){
+    pageEl.classList.add("active-page");
+  }
+
+  window.scrollTo(0,0);
+
+  switch(page){
+
+    case "home":
+      this.renderHome();
+    break;
+
+    case "pdp":
+
+      if(!productId){
+        console.error("Product ID missing");
+        this.toast("Product not found");
+        this.navigate("home");
+        return;
+      }
 
       this.renderPDP(productId);
 
-      break;
+    break;
 
-      case "cart":
-        this.renderCart();
-      break;
+    case "cart":
+      this.renderCart();
+    break;
 
-      case "wishlist":
-        this.renderWishlist();
-      break;
+    case "wishlist":
+      this.renderWishlist();
+    break;
 
-      case "checkout":
-        this.renderCheckout();
-      break;
+    case "checkout":
+      this.renderCheckout();
+    break;
 
-      case "account":
-        this.renderAccount();
-      break;
+    case "account":
+      this.renderAccount();
+    break;
 
-      case "seller":
+    case "seller":
+      renderSellerProducts();
+    break;
 
-        if(!state.user){
-          this.toast("Please login as seller");
-          auth.openModal();
-          return;
-        }
+  }
 
-        if(state.user?.role !== "seller"){
-          this.toast("Only sellers can access dashboard");
-          return;
-        }
-
-        renderSellerProducts();
-
-      break;
-
-    }
-
-  },
-
+},
  renderCategories(){
 
   const strip = document.getElementById("categoryStrip");
