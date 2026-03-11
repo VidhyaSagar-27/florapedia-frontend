@@ -3782,9 +3782,9 @@ function signup(){
 // =============================
 function renderCart(){
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  const container = document.getElementById("cartContent");
+  const container = document.getElementById("cartItems") || document.getElementById("cartContent");
 
   if(!container) return;
 
@@ -3793,22 +3793,32 @@ function renderCart(){
     return;
   }
 
+  const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+  const allProducts = [...FLOWERS_DB, ...sellerProducts];
+
   let subtotal = 0;
   let html = "";
 
   cart.forEach(item => {
 
-    const total = item.price * item.qty;
+    const product = allProducts.find(p => p.id === item.id) || item;
+
+    const name = product.name || "Flower";
+    const price = product.price || 0;
+    const image = product.image || "https://via.placeholder.com/80";
+
+    const total = price * item.qty;
+
     subtotal += total;
 
     html += `
       <div class="cart-item">
 
-        <img src="${item.image}" width="80">
+        <img src="${image}" width="80">
 
         <div>
-          <h4>${item.name}</h4>
-          <p>₹${item.price}</p>
+          <h4>${name}</h4>
+          <p>₹${price}</p>
 
           <div>
             <button onclick="changeQty(${item.id},-1)">-</button>
