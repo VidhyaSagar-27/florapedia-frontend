@@ -631,14 +631,7 @@
 .active-page{
   display:block;
 } 
-/* Seller dashboard mode */
 
-body.seller-mode #searchBar,
-body.seller-mode #cartBtn,
-body.seller-mode #wishlistBtn{
-  opacity:0;
-  pointer-events:none;
-}   
   </style>
 </head>
 <body>
@@ -1238,12 +1231,6 @@ var app = {
     }
 
   }
-  if(page === "seller"){
-  document.body.classList.add("seller-mode");
-}else{
-  document.body.classList.remove("seller-mode");
-}
- 
 
   // ----- PAGE SWITCH -----
   document.querySelectorAll(".page").forEach(p=>{
