@@ -638,6 +638,7 @@
 
 <header>
   <div class="header-inner">
+
     <div class="logo" onclick="app.navigate('home')">
       <div class="logo-mark">F</div>
       <div>
@@ -645,42 +646,46 @@
         <div class="logo-text-sub">Premium Blooms</div>
       </div>
     </div>
-    <div class="search-wrapper" id="searchBar"></div>
+
+    <div class="search-wrapper" id="searchBar">
       <input id="mainSearch" placeholder="Search roses, lilies, orchids, bouquets…" oninput="app.handleSearch(this.value)">
       <span class="search-icon">🔍</span>
       <div class="search-suggestions" id="searchSuggestions"></div>
     </div>
-   <div class="nav-links">
-  <div class="nav-pill" onclick="goHome()"></div>
-    <span class="icon">🏡</span>
-    <span class="text-label">Home</span>
-  </div>
 
-  <div class="nav-pill" id="wishlistBtn" onclick="app.navigate('wishlist')"></div>
-    <span class="icon">❤️</span>
-    <span class="text-label">Wishlist</span>
-    <span class="pill-badge" id="globalWishlistCount">0</span>
-  </div>
+    <div class="nav-links">
 
-  <div class="nav-pill" onclick="auth.handleUserClick()">
-    <span class="icon">👤</span>
-    <span id="headerUserName">Login</span>
-  </div>
+      <div class="nav-pill" onclick="app.navigate('home')">
+        <span class="icon">🏡</span>
+        <span class="text-label">Home</span>
+      </div>
 
-  <!-- SELLER DASHBOARD BUTTON -->
-<div class="nav-pill" id="sellerBtn" onclick="app.navigate('seller')">
-  <span class="icon">🏪</span>
-  <span class="text-label">Seller</span>
-</div>
+      <div class="nav-pill" id="wishlistBtn" onclick="app.navigate('wishlist')">
+        <span class="icon">❤️</span>
+        <span class="text-label">Wishlist</span>
+        <span class="pill-badge" id="globalWishlistCount">0</span>
+      </div>
 
-<div class="nav-pill" id="cartBtn" onclick="app.navigate('cart')"></div>
-  <span class="icon">🛒</span>
-  <span class="text-label">Cart</span>
-  <span class="pill-badge" id="globalCartCount">0</span>
-</div>
-</div>
+      <div class="nav-pill" onclick="auth.handleUserClick()">
+        <span class="icon">👤</span>
+        <span id="headerUserName">Login</span>
+      </div>
+
+      <div class="nav-pill" id="sellerBtn" onclick="app.navigate('seller')">
+        <span class="icon">🏪</span>
+        <span class="text-label">Seller</span>
+      </div>
+
+      <div class="nav-pill" id="cartBtn" onclick="app.navigate('cart')">
+        <span class="icon">🛒</span>
+        <span class="text-label">Cart</span>
+        <span class="pill-badge" id="globalCartCount">0</span>
+      </div>
+
+    </div>
+
   </div>
-</header>
+</header>>
 
 <div class="page-container">
   <!-- HOME PAGE -->
