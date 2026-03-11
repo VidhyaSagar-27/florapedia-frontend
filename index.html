@@ -685,7 +685,7 @@
     </div>
 
   </div>
-</header>>
+</header>
 
 <div class="page-container">
   <!-- HOME PAGE -->
@@ -1392,87 +1392,69 @@ handleSearch(query){
 
   getFilteredProducts(){
 
-  const sellerProducts =
-    JSON.parse(localStorage.getItem("products") || "[]");
+  // default flowers
+  const defaultProducts = FLOWERS_DB || [];
 
-  const baseProducts =
-    typeof FLOWERS_DB !== "undefined" ? FLOWERS_DB : [];
+  // seller added products
+  const sellerProducts = JSON.parse(localStorage.getItem("products") || "[]");
 
-  let products = [...baseProducts, ...sellerProducts];
+  // merge both
+  const allProducts = [...defaultProducts, ...sellerProducts];
 
-  if(state.filters.search){
-
-    const q = state.filters.search.toLowerCase();
-
-    products = products.filter(p =>
-      (p.name || "").toLowerCase().includes(q) ||
-      (p.category || "").toLowerCase().includes(q)
-    );
-
+  // no filters applied yet
+  if(!this.filters){
+    return allProducts;
   }
 
-  if(state.filters.category?.length){
-    products = products.filter(p =>
-      state.filters.category.includes(p.category)
+  let filtered = [...allProducts];
+
+  // CATEGORY FILTER
+  if(this.filters.category?.length){
+    filtered = filtered.filter(p =>
+      this.filters.category.includes(p.category)
     );
   }
 
-  if(state.filters.occasion?.length){
-    products = products.filter(p =>
-      (p.occasion || []).some(o =>
-        state.filters.occasion.includes(o)
-      )
+  // OCCASION FILTER
+  if(this.filters.occasion?.length){
+    filtered = filtered.filter(p =>
+      p.occasion?.some(o => this.filters.occasion.includes(o))
     );
   }
 
-  if(state.filters.price){
-    const [min,max] = state.filters.price;
-    products = products.filter(p =>
-      p.price >= min && p.price <= max
+  // PRICE FILTER
+  if(this.filters.price){
+    filtered = filtered.filter(p =>
+      p.price >= this.filters.price[0] &&
+      p.price <= this.filters.price[1]
     );
   }
 
-  if(state.filters.rating){
-    products = products.filter(p =>
-      (p.rating || 0) >= state.filters.rating
+  // RATING FILTER
+  if(this.filters.rating){
+    filtered = filtered.filter(p =>
+      (p.rating || 4) >= this.filters.rating
     );
   }
 
-  switch(state.filters.sort){
+  return filtered;
 
-    case "price-asc":
-      products.sort((a,b)=>a.price-b.price);
-    break;
-
-    case "price-desc":
-      products.sort((a,b)=>b.price-a.price);
-    break;
-
-    case "rating":
-      products.sort((a,b)=>(b.rating||0)-(a.rating||0));
-    break;
-
-    case "popularity":
-      products.sort((a,b)=>(b.reviews||0)-(a.reviews||0));
-    break;
-
-  }
-
-  return products;
-
-},
+}
 
 
 
 renderHome(){
 
-  const products = this.getFilteredProducts();
+  const products = this.getFilteredProducts() || [];
 
   const grid = document.getElementById("mainProductGrid");
   const empty = document.getElementById("emptyState");
   const count = document.getElementById("productCount");
 
-  if(!grid) return;
+  if(!grid){
+    console.warn("mainProductGrid not found");
+    return;
+  }
 
   if(products.length === 0){
 
@@ -1481,23 +1463,31 @@ renderHome(){
     if(empty) empty.style.display = "block";
     if(count) count.textContent = "0 items";
 
-    this.renderActiveFilters();
-    return;
+    if(this.renderActiveFilters){
+      this.renderActiveFilters();
+    }
 
+    return;
   }
 
   if(empty) empty.style.display = "none";
-  if(count) count.textContent = products.length + " items found";
+
+  if(count){
+    count.textContent = products.length + " items found";
+  }
 
   grid.innerHTML = products.map(p=>{
 
+    const image = p.image || "https://via.placeholder.com/300";
+
     const oldPrice = p.oldPrice || (p.price + 100);
 
-    const discount =
-      oldPrice ? Math.round((1 - p.price / oldPrice) * 100) : 0;
+    const discount = oldPrice
+      ? Math.round((1 - p.price / oldPrice) * 100)
+      : 0;
 
     const inWishlist =
-      state.wishlist?.includes(p.id);
+      state?.wishlist?.includes(p.id) || false;
 
     return `
 
@@ -1507,12 +1497,11 @@ renderHome(){
         <span class="prod-badge">${discount}% OFF</span>
 
         <span class="wishlist-heart ${inWishlist ? "active":""}"
-              onclick="event.stopPropagation();
-              app.toggleWishlist(${p.id})">❤</span>
+          onclick="event.stopPropagation();
+          app.toggleWishlist(${p.id})">❤</span>
 
         <div class="prod-img-wrap">
-          <img src="${p.image || "https://via.placeholder.com/300"}"
-               alt="${p.name}">
+          <img src="${image}" alt="${p.name}">
         </div>
 
         <div class="prod-body">
@@ -1539,7 +1528,7 @@ renderHome(){
 
             <button class="btn-chip"
               onclick="event.stopPropagation();
-              app.addToCart(${p.id})">
+              addToCart(${p.id})">
               Add
             </button>
 
@@ -1559,9 +1548,11 @@ renderHome(){
 
   }).join("");
 
-  this.renderActiveFilters();
+  if(this.renderActiveFilters){
+    this.renderActiveFilters();
+  }
 
-},
+}
 
   renderActiveFilters(){
 
@@ -3585,6 +3576,11 @@ function deleteProduct(productId){
 function renderCustomerProducts(){
 
   const grid = document.getElementById("productGrid");
+
+if(!grid){
+  console.warn("productGrid not found");
+  return;
+}
 
   if(!grid){
     console.log("productGrid not found");
