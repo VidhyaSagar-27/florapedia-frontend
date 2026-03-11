@@ -1142,7 +1142,13 @@ const state = {
 
   wishlist: JSON.parse(localStorage.getItem("wishlist") || "[]"),
 
-  user: JSON.parse(localStorage.getItem("user") || "null"),
+ user: (() => {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch (e) {
+    return null;
+  }
+})(),
 
   filters: {
     category: [],
