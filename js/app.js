@@ -2,7 +2,7 @@
    FLORAPEDIA APP CONTROLLER
 ========================================= */
 
-import { state, loadState, saveState } from "./state/state.js";
+import { state, loadState, saveState } from "./state.js";
 
 import { renderHome } from "./pages/home.js";
 import { renderPDP } from "./pages/product.js";
@@ -11,8 +11,7 @@ import { renderWishlist } from "./pages/wishlist.js";
 import { renderCheckout } from "./pages/checkout.js";
 import { renderAccount } from "./pages/account.js";
 
-import { getProducts } from "./api/apiClient.js";
-
+import { getProducts } from "./api.js";
 
 /* =========================================
    MAIN APP
