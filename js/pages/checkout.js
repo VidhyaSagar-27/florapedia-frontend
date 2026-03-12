@@ -2,10 +2,9 @@
    CHECKOUT PAGE CONTROLLER
 ====================================================== */
 
-import { state } from "../state/state.js";
+import { state } from "../state.js";
 import { createOrder } from "../controllers/orderController.js";
-import { PAYMENT, DELIVERY } from "../config/config.js";
-
+import { PAYMENT, DELIVERY } from "../config.js";
 
 /* ======================================================
    SELECT ADDRESS

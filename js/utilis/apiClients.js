@@ -3,9 +3,8 @@
    Advanced backend communication layer
 ====================================================== */
 
-import { ENV, API } from "./config.js";
-import { state, persistState } from "./state.js";
-
+import { ENV, API } from "../config.js";
+import { state, persistState } from "../state.js";
 
 /* ======================================================
    CONFIG

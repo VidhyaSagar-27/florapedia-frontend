@@ -2,10 +2,9 @@
    CART CONTROLLER
 ====================================================== */
 
-import { state } from "../state/state.js";
+import { state } from "../state.js";
 import * as cartService from "../services/cartService.js";
 import { createCartItem } from "../components/cartItem.js";
-
 
 /* ======================================================
    LOAD CART
