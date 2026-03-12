@@ -4,7 +4,7 @@
 
 import { state } from "../state.js";
 import * as cartService from "../services/cartService.js";
-import { createCartItem } from "../components/cartItems.js";
+import { renderCartItem } from "../components/cartItems.js";
 
 /* ======================================================
    LOAD CART
@@ -57,7 +57,7 @@ export function renderCart(){
 
   state.cart.forEach(item => {
 
-    const el = createCartItem(item);
+    const el = renderCartItem(item);
 
     container.appendChild(el);
 
