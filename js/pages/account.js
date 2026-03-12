@@ -2,8 +2,8 @@
    ACCOUNT PAGE CONTROLLER
 ========================================= */
 
-import { state } from "../state/state.js";
-import { OrderCard } from "../components/OrderCard.js";
+import { state } from "../state.js";
+import { OrderCard } from "../components/orderCard.js";
 
 
 export function renderAccount(){

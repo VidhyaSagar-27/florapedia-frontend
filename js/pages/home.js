@@ -2,8 +2,8 @@
    HOME PAGE
 ========================================= */
 
-import { state } from "../state/state.js";
-import { ProductCard } from "../components/ProductCard.js";
+import { state } from "../state.js";
+import { ProductCard } from "../components/productCard.js";
 
 
 /* =========================================

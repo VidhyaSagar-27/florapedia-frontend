@@ -4,7 +4,7 @@
 ====================================================== */
 
 import { cartService } from "../services/cartService.js";
-import { formatCurrency, getImage } from "../utils/helpers.js";
+import { formatCurrency, getImage } from "../utilis/helpers.js";
 import { state } from "../state.js";
 
 

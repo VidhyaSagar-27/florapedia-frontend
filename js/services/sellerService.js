@@ -4,8 +4,8 @@
 ====================================================== */
 
 import { state } from "../state.js";
-import { sellerAPI } from "../apiClient.js";
-import { generateId } from "../utils/helpers.js";
+import { sellerAPI } from "../utilis/apiClients.js";
+import { generateId } from "../utilis/helpers.js";
 import { orderService } from "./orderService.js";
 
 

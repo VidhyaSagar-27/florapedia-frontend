@@ -5,7 +5,7 @@
 
 import { state } from "../state.js";
 import { productService } from "./productService.js";
-import { calculateCart } from "../utils/helpers.js";
+import { calculateCart } from "../utilis/helpers.js";
 
 
 class CartService {

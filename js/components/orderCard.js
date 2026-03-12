@@ -3,7 +3,7 @@
    UI for displaying orders in account dashboard
 ====================================================== */
 
-import { formatCurrency } from "../utils/helpers.js";
+import { formatCurrency } from "../utilis/helpers.js";
 
 
 export function renderOrderCard(order){

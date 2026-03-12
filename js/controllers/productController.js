@@ -6,7 +6,7 @@
 import { state } from "../state/state.js";
 import * as productService from "../services/productService.js";
 import { createProductCard } from "../components/productCard.js";
-import { debounce } from "../utils/helpers.js";
+import { debounce } from "../utilis/helpers.js";
 
 
 /* ======================================================

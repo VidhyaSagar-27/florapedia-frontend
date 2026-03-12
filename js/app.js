@@ -11,7 +11,7 @@ import { renderWishlist } from "./pages/wishlist.js";
 import { renderCheckout } from "./pages/checkout.js";
 import { renderAccount } from "./pages/account.js";
 
-import { getProducts } from "./api.js";
+import { getProducts } from "./services/productService.js";
 
 /* =========================================
    MAIN APP

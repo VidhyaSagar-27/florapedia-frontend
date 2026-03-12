@@ -4,9 +4,9 @@
 ====================================================== */
 
 import { state } from "../state.js";
-import { orderAPI, paymentAPI } from "../apiClient.js";
+import { orderAPI, paymentAPI } from "../utilis/apiClients.js";
 import { cartService } from "./cartService.js";
-import { generateId, formatDate } from "../utils/helpers.js";
+import { generateId, formatDate } from "../utilis/helpers.js";
 
 
 class OrderService {

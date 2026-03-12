@@ -4,8 +4,7 @@
 ====================================================== */
 
 import { state } from "../state.js";
-import { authAPI } from "../apiClient.js";
-
+import { authAPI } from "../utilis/apiClients.js";
 
 class AuthService {
 

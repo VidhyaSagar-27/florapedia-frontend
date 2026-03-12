@@ -3,15 +3,14 @@
    Handles all product catalog logic
 ====================================================== */
 
-import { productAPI } from "../apiClient.js";
+import { productAPI } from "../utilis/apiClients.js";
 import { state } from "../state.js";
 import {
   searchProducts,
   filterProducts,
   sortProducts,
   randomItems
-} from "../utils/helpers.js";
-
+} from "../utilis/helpers.js";
 
 class ProductService {
 
