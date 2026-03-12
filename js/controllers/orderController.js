@@ -2,7 +2,7 @@
    ORDER CONTROLLER
 ====================================================== */
 
-import { state } from "../state/state.js";
+import { state } from "../state.js";
 import * as orderService from "../services/orderService.js";
 import { createOrderCard } from "../components/orderCard.js";
 
