@@ -3,8 +3,7 @@
 ========================================= */
 
 import { state } from "../state.js";
-import { ProductCard } from "../components/productCard.js";
-
+import { renderProductCard } from "../components/productCard.js";
 
 /* =========================================
    RENDER HOME
