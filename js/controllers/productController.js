@@ -6,7 +6,7 @@
 
 import { state } from "../state.js";
 import * as productService from "../services/productService.js";
-import { createProductCard } from "../components/productCard.js";
+import { renderProductCard } from "../components/productCard.js";
 import { debounce } from "../utilis/helpers.js";
 
 
@@ -174,7 +174,7 @@ export function renderProducts(){
 
   products.forEach(product => {
 
-    const card = createProductCard(product);
+    const card = renderProductCard(product);
 
     grid.appendChild(card);
 
