@@ -252,3 +252,35 @@ function showToast(msg){
   },2000);
 
 }
+/* ======================================================
+   RENDER CHECKOUT PAGE
+====================================================== */
+
+export function renderCheckout(){
+
+  const root = document.getElementById("app");
+
+  if(!root) return;
+
+  const totals = calculateTotals();
+
+  root.innerHTML = `
+    <div class="checkout-page">
+
+      <h2>Checkout</h2>
+
+      <div class="checkout-summary">
+        <p>Subtotal: ₹${totals.subtotal}</p>
+        <p>Delivery: ₹${totals.delivery}</p>
+        <p>Tax: ₹${totals.tax}</p>
+        <h3>Total: ₹${totals.total}</h3>
+      </div>
+
+      <button onclick="placeOrder()">
+        Place Order
+      </button>
+
+    </div>
+  `;
+
+}
