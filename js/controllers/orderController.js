@@ -4,7 +4,7 @@
 
 import { state } from "../state.js";
 import * as orderService from "../services/orderService.js";
-import { createOrderCard } from "../components/orderCard.js";
+import { renderOrderCard } from "../components/orderCard.js";
 
 
 /* ======================================================
@@ -58,7 +58,7 @@ export function renderOrders(){
 
   state.orders.forEach(order => {
 
-    const el = createOrderCard(order);
+    const el = renderOrderCard(order);
 
     container.appendChild(el);
 
