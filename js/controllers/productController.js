@@ -3,7 +3,8 @@
    Handles product loading, filtering, sorting, rendering
 ====================================================== */
 
-import { state } from "../state/state.js";
+
+import { state } from "../state.js";
 import * as productService from "../services/productService.js";
 import { createProductCard } from "../components/productCard.js";
 import { debounce } from "../utilis/helpers.js";
