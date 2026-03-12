@@ -1,62 +1,45 @@
-const app = {};
-const state = {
-  user: null
-};
+/* =========================================
+   FLORAPEDIA MAIN ENTRY
+========================================= */
 
-// ======================
-// PAGE NAVIGATION
-// ======================
-app.navigate = function(page){
+import { app } from "./app.js";
+import { loadState } from "./state/state.js";
 
-  const pages = document.querySelectorAll(".page");
 
-  pages.forEach(p=>{
-    p.style.display = "none";
-  });
+/* =========================================
+   APPLICATION BOOTSTRAP
+========================================= */
 
-  const target = document.getElementById("page-" + page);
+document.addEventListener("DOMContentLoaded", async () => {
 
-  if(target){
-    target.style.display = "block";
+  try{
+
+    /* Load saved local state */
+    loadState();
+
+    /* Initialize main app */
+    await app.init();
+
   }
+  catch(err){
 
-};
+    console.error("App initialization failed",err);
 
-// ======================
-// HOME REDIRECT
-// ======================
-function goHome(){
-
-  if(state.user && state.user.role === "seller"){
-    app.navigate("seller");
-  }else{
-    app.navigate("home");
-  }
-
-}
-
-// ======================
-// INITIAL LOAD
-// ======================
-document.addEventListener("DOMContentLoaded", function(){
-
-  updateCartCount();
-
-  if(typeof renderCustomerProducts === "function"){
-    renderCustomerProducts();
-  }
-
-  if(typeof renderCart === "function"){
-    renderCart();
   }
 
 });
-function goHome(){
 
-  if(state.user && state.user.role === "seller"){
-    app.navigate("seller");
-  }else{
+
+/* =========================================
+   GLOBAL HOME FUNCTION
+========================================= */
+
+window.goHome = function(){
+
+  if(app && app.navigate){
+
     app.navigate("home");
+
   }
 
-}
+};
