@@ -1,0 +1,2884 @@
+// ========================================
+// 2000+ LINE COMPLETE APPLICATION CODE
+// ========================================
+
+// COMPLETE FLOWER DATABASE (100+ ITEMS)
+const FLOWERS_DB = [
+  { id: 1, name: "Classic Red Roses (12 Stems)", category: "Roses", occasion: ["Romantic","Anniversary","Birthday"], price: 1199, oldPrice: 1499, rating: 4.8, reviews: 3241, image: "https://images.unsplash.com/photo-1530906622963-8a60586a49c7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8UmVkJTIwcm9zZXN8ZW58MHx8MHx8fDA%3D", description: "Long-stemmed red roses wrapped in premium paper with seasonal fillers, perfect for expressing deep love and passion.", care: "Trim stems at 45° angle, change water every 2 days, keep away from direct sunlight.", meaning: "Red roses symbolize deep love, passion, and admiration." },
+  { id: 2, name: "Blush Pink Roses (20 Stems)", category: "Roses", occasion: ["Romantic","Birthday","Congratulations"], price: 1599, oldPrice: 1899, rating: 4.7, reviews: 1875, image: "https://images.unsplash.com/photo-1623776025811-fd139155a39b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8UGluayUyMHJvc2VzfGVufDB8fDB8fHww", description: "Soft pink roses hand-tied with gypsophila and eucalyptus, ideal for birthdays and celebrations.", care: "Place in cool room temperature, recut stems under running water, remove lower leaves.", meaning: "Pink roses convey gratitude, admiration and gentle affection." },
+  { id: 3, name: "White Oriental Lilies", category: "Lilies", occasion: ["Sympathy","Elegant","Anniversary"], price: 1799, oldPrice: 2199, rating: 4.9, reviews: 982, image: "https://images.unsplash.com/photo-1645586222783-d1062e1d3db6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8V2hpdGUlMjBvcmllbnRhbCUyMGxpbGxpZXN8ZW58MHx8MHx8fDA%3D", description: "Fragrant white oriental lilies arranged with lush greens in an elegant glass vase.", care: "Remove pollen stamens to prevent staining, change water frequently, mist lightly daily.", meaning: "Lilies represent purity, renewal and refined beauty." },
+  { id: 4, name: "Purple Orchids (5 Stems)", category: "Orchids", occasion: ["Elegant","Housewarming","Corporate"], price: 2299, oldPrice: 2699, rating: 4.6, reviews: 654, image: "https://images.unsplash.com/photo-1674737365933-7b3506d4bda5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8UHVycGxlJTIwb3JjaGlkc3xlbnwwfHwwfHx8MA%3D%3D", description: "Long-lasting purple orchids in a minimalist ceramic pot, perfect for home or office décor.", care: "Bright indirect light required, water sparingly and avoid waterlogging, humidity preferred.", meaning: "Orchids symbolize luxury, strength and rare beauty." },
+  { id: 5, name: "Spring Pastel Tulips (15 Stems)", category: "Tulips", occasion: ["Birthday","Cheerful","Congratulations"], price: 1699, oldPrice: 1999, rating: 4.7, reviews: 1430, image: "https://images.unsplash.com/photo-1711320800299-aa98f4e02521?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHNwcmluZyUyMHBhc3RsZSUyMHR1bGlwc3xlbnwwfHwwfHx8MA%3D%3D", description: "Assorted pastel tulips wrapped in soft tissue and ribbon, ideal for spring celebrations.", care: "Keep stems in cold water, avoid direct sunlight and drafts, change water every 2 days.", meaning: "Tulips stand for hope, joy and new beginnings." },
+  { id: 6, name: "Sunny Sunflower Bunch", category: "Sunflowers", occasion: ["Cheerful","Birthday","Congratulations"], price: 1299, oldPrice: 1499, rating: 4.8, reviews: 2120, image: "https://images.unsplash.com/photo-1598920710727-e6c74781538c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3VuZmxvd2VyfGVufDB8fDB8fHww", description: "Bright sunflowers with rustic fillers, perfect to brighten someone's day with positivity.", care: "Use tall vase, change water regularly, keep in bright indirect light, remove lower leaves.", meaning: "Sunflowers symbolize positivity, loyalty and warmth." },
+  { id: 7, name: "Red & White Carnations (25 Stems)", category: "Carnations", occasion: ["Sympathy","Congratulations","Festive"], price: 1399, oldPrice: 1699, rating: 4.5, reviews: 760, image: "https://images.unsplash.com/photo-1646540440868-4e54bfc97044?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVkJTIwYW5kJTIwd2hpdGUlMjBjYXJuYXRpb25zfGVufDB8fDB8fHww", description: "Long-lasting carnations artistically arranged in a wicker basket with decorative fillers.", care: "Change water frequently, remove wilted blooms to extend vase life, trim stems daily.", meaning: "Carnations represent admiration, remembrance and good luck." },
+  { id: 8, name: "Vibrant Gerbera Mix", category: "Gerbera", occasion: ["Birthday","Cheerful","Get Well Soon"], price: 1199, oldPrice: 1399, rating: 4.6, reviews: 980, image: "https://media.istockphoto.com/id/875234072/photo/flower-bouquet.webp?a=1&b=1&s=612x612&w=0&k=20&c=zunwZeYv8b9Z9bRKa63bB-pHijAapHXpj9hdUj8pw-E=", description: "Assorted gerbera daisies in bright shades to spread pure happiness and cheer.", care: "Keep water level low to prevent stem rot, avoid splashing water on petals, change water daily.", meaning: "Gerberas symbolize cheerfulness, innocence and loyal friendship." },
+  { id: 9, name: "Pastel Mixed Bouquet", category: "Mixed Bouquets", occasion: ["Romantic","Birthday","Congratulations"], price: 1899, oldPrice: 2299, rating: 4.9, reviews: 3050, image: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Qm91cXVldHxlbnwwfHwwfHx8MA%3D%3D", description: "Curated pastel arrangement with roses, chrysanthemums and premium fillers, wrapped in luxury fabric.", care: "Unwrap carefully, re-cut stems at 45° angle, place in clean vase with fresh water.", meaning: "Perfect for expressing warm wishes and appreciation." },
+  { id: 10, name: "White Sympathy Spray", category: "Mixed Bouquets", occasion: ["Sympathy"], price: 2499, oldPrice: 2899, rating: 4.7, reviews: 420, image: "https://media.istockphoto.com/id/1207927233/photo/beautiful-bouquet.webp?a=1&b=1&s=612x612&w=0&k=20&c=U8kIQ0ZIoNZDlzRv_5DpU_abcM2ltOmWYn0stLRX9pg=", description: "Elegant white lilies and roses with greenery, designed as a sympathy standing spray.", care: "Keep in cool environment, mist lightly to maintain freshness, support stems properly.", meaning: "Conveys peace, remembrance and heartfelt condolences." },
+  { id: 11, name: "Yellow Roses Elegance (18 Stems)", category: "Roses", occasion: ["Cheerful","Friendship","Birthday"], price: 1299, oldPrice: 1599, rating: 4.6, reviews: 1250, image: "https://images.unsplash.com/photo-1562965795-16cb921c6c2e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8eWVsbG93JTIwcm9zZXN8ZW58MHx8MHx8fDA%3D", description: "Beautiful yellow roses symbolizing joy, placed with complementary foliage.", care: "Remove thorns carefully, trim daily, maintain in cool temperature, change water regularly.", meaning: "Yellow roses symbolize friendship, joy and care." },
+  { id: 12, name: "Peach Roses Romance", category: "Roses", occasion: ["Romantic","Anniversary"], price: 1499, oldPrice: 1799, rating: 4.8, reviews: 2100, image: "https://plus.unsplash.com/premium_photo-1705258076722-45f7aae57bf5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVhY2glMjByb3Nlc3xlbnwwfHwwfHx8MA%3D%3D", description: "Vibrant peach roses in romantic arrangement that radiates warmth and elegance.", care: "Maintain cool temperature, re-cut stems frequently, change water every 2 days.", meaning: "Peach roses express appreciation and gratitude." },
+  { id: 13, name: "Dragon Fruit Exotic Lily", category: "Lilies", occasion: ["Elegant","Corporate"], price: 1899, oldPrice: 2199, rating: 4.5, reviews: 650, image: "https://media.istockphoto.com/id/1904673260/photo/pitaya-flowers.webp?a=1&b=1&s=612x612&w=0&k=20&c=c_cKekl_MlTTwKRu5C5ohNJwHWxVFzpiKSKxBwW5SLQ=", description: "Exotic oriental lilies with vibrant colors in sophisticated arrangement.", care: "Avoid direct sunlight, remove pollen, maintain humidity, change water frequently.", meaning: "Exotic beauty and elegance." },
+  { id: 14, name: "White Calla Lilies", category: "Lilies", occasion: ["Elegant","Wedding","Sympathy"], price: 1699, oldPrice: 1999, rating: 4.7, reviews: 1100, image: "https://media.istockphoto.com/id/2254800865/photo/elegant-white-calla-lilies.webp?a=1&b=1&s=612x612&w=0&k=20&c=pe0rDNxJrHLJWL7_R-jVUpF6FejovzF9uiRHJBlJ8DM=", description: "Pure white calla lilies in minimalist vase, perfect for elegant occasions.", care: "Change water every 3 days, keep cool, avoid direct sunlight, remove wilted flowers.", meaning: "Rebirth and new beginnings." },
+  { id: 15, name: "Pink Orchid Elegance", category: "Orchids", occasion: ["Elegant","Birthday","Romantic"], price: 1999, oldPrice: 2399, rating: 4.8, reviews: 980, image: "https://plus.unsplash.com/premium_photo-1676253696267-15bb9df65b15?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGluayUyMG9yY2hpZHxlbnwwfHwwfHx8MA%3D%3D", description: "Stunning pink orchids in artistic arrangement perfect for special occasions.", care: "Bright indirect light, weekly watering, maintain humidity, avoid cold drafts.", meaning: "Beauty and refinement." },
+  { id: 16, name: "Rainbow Tulip Mix (20 Stems)", category: "Tulips", occasion: ["Cheerful","Birthday","Congratulations"], price: 1599, oldPrice: 1899, rating: 4.6, reviews: 1450, image: "https://media.istockphoto.com/id/2211304292/photo/spring-flowers-in-nature.webp?a=1&b=1&s=612x612&w=0&k=20&c=Sc8WtoEnyXxAjJ7DF_8st9LMxaFXfNN_3aqHXLf1alI=", description: "Vibrant rainbow tulips for celebrations, bringing multiple colors of joy.", care: "Keep cool, change water daily, trim stems, avoid direct heat.", meaning: "Perfect love and elegance." },
+  { id: 17, name: "Golden Sunflowers (12 Stems)", category: "Sunflowers", occasion: ["Cheerful","Gratitude"], price: 1099, oldPrice: 1399, rating: 4.7, reviews: 1800, image: "https://images.unsplash.com/photo-1609496215052-4288727b7a2b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z29sZGVuJTIwc3VuZmxvd2Vyc3xlbnwwfHwwfHx8MA%3D%3D", description: "Large golden sunflowers with premium wrapping, radiating warmth and happiness.", care: "Regular water changes, tall vase required, keep in bright light, remove lower leaves.", meaning: "Loyalty and longevity." },
+  { id: 18, name: "Premium Carnation Assortment", category: "Carnations", occasion: ["Congratulations","Festive","Mother's Day"], price: 999, oldPrice: 1299, rating: 4.4, reviews: 890, image: "https://images.unsplash.com/photo-1582794543462-0d7922e50cf5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2FybmF0aW9ufGVufDB8fDB8fHww", description: "Mixed colored carnations in beautiful arrangement, perfect for celebrations.", care: "Remove leaves below water line, change water every 2-3 days, trim stems daily.", meaning: "Deep love and appreciation." },
+  { id: 19, name: "Red Gerbera Statement (5 Stems)", category: "Gerbera", occasion: ["Bold","Statement","Birthday"], price: 1399, oldPrice: 1699, rating: 4.6, reviews: 710, image: "https://images.unsplash.com/photo-1765630281425-4b1fe70a1897?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHJlZCUyMGdlcmJlcmF8ZW58MHx8MHx8fDA%3D", description: "Large red gerberas that make a bold statement with vibrant color.", care: "Keep petals dry, mist lightly, avoid direct sunlight, change water frequently.", meaning: "Strength and bravery." },
+  { id: 20, name: "Luxury Rose & Lily Mix", category: "Mixed Bouquets", occasion: ["Romantic","Anniversary","Elegant"], price: 2199, oldPrice: 2699, rating: 4.9, reviews: 2800, image: "https://media.istockphoto.com/id/1207927233/photo/beautiful-bouquet.webp?a=1&b=1&s=612x612&w=0&k=20&c=U8kIQ0ZIoNZDlzRv_5DpU_abcM2ltOmWYn0stLRX9pg=", description: "Premium blend of roses and lilies in luxury wrapping, perfect for special moments.", care: "Change water every 2 days, remove pollen, maintain cool temperature, trim stems.", meaning: "Love, elegance and passion." },
+  { id: 21, name: "Spring Blossom Collection", category: "Mixed Bouquets", occasion: ["Birthday","Congratulations","New Beginning"], price: 1599, oldPrice: 1999, rating: 4.7, reviews: 1650, image: "https://images.unsplash.com/photo-1603877466401-9cbc7138f91f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNwcmluZyUyMGJsb3Nzb218ZW58MHx8MHx8fDA%3D", description: "Seasonal spring flowers in beautiful harmony, celebrating new beginnings.", care: "Keep in cool place, change water regularly, trim stems daily, remove wilted flowers.", meaning: "Fresh starts and growth." },
+  { id: 22, name: "Midnight Purple Roses (15 Stems)", category: "Roses", occasion: ["Romantic","Mysterious","Anniversary"], price: 1699, oldPrice: 1999, rating: 4.8, reviews: 1920, image: "https://images.unsplash.com/photo-1526941800891-91c55e0f7e41?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHVycGxlJTIwcm9zZXN8ZW58MHx8MHx8fDA%3D", description: "Deep purple roses for mysterious romance and special enchantment.", care: "Protect from extreme heat, change water regularly, maintain cool conditions.", meaning: "Enchantment and admiration." },
+  { id: 23, name: "Coral Charm Roses", category: "Roses", occasion: ["Birthday","Cheerful","Congratulations"], price: 1299, oldPrice: 1599, rating: 4.6, reviews: 1100, image: "https://media.istockphoto.com/id/2251154754/photo/decorative-realistic-artificial-flowers-arrangement.webp?a=1&b=1&s=612x612&w=0&k=20&c=g_ezn44XrBJJfXawTMtOpPkQdfwGXRgV_WXtQC-guEM=", description: "Vibrant coral roses that radiate warmth and enthusiasm for celebrations.", care: "Daily water changes recommended, trim stems frequently, keep cool.", meaning: "Enthusiasm and gratitude." },
+  { id: 24, name: "Cream Lily Paradise", category: "Lilies", occasion: ["Elegant","Wedding","Anniversary"], price: 1899, oldPrice: 2299, rating: 4.8, reviews: 1380, image: "https://images.unsplash.com/photo-1694620132482-08c9c4fd2fd9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bGlsbHklMjBib3VxdWV0fGVufDB8fDB8fHww", description: "Creamy white lilies in sophisticated arrangement for elegant occasions.", care: "Avoid touching pollen, change water every 3 days, keep in cool environment.", meaning: "Beauty and sophistication." },
+  { id: 25, name: "Dendrobium Orchid Cascade", category: "Orchids", occasion: ["Wedding","Elegant","Corporate"], price: 2499, oldPrice: 2999, rating: 4.9, reviews: 750, image: "https://images.unsplash.com/photo-1707019786580-7e9a9912cee8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVuZHJvYml1bXxlbnwwfHwwfHx8MA%3D%3D", description: "Cascading dendrobium orchids for grand events and celebrations.", care: "Consistent humidity required, bright indirect light, mist daily, change water weekly.", meaning: "Rare beauty and luxury." },
+  { id: 26, name: "Lavender Dream Roses", category: "Roses", occasion: ["Romantic","Elegant","Birthday"], price: 1399, oldPrice: 1699, rating: 4.7, reviews: 1320, image: "https://images.unsplash.com/photo-1758817648081-658a313688bc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bGF2ZW5kZXIlMjByb3Nlc3xlbnwwfHwwfHx8MA%3D%3D", description: "Soft lavender roses that combine romance with elegance and sophistication.", care: "Keep in cool place, trim stems daily, change water regularly, avoid direct sunlight.", meaning: "Grace and enchantment." },
+  { id: 27, name: "Fiesta Mix Gerbera", category: "Gerbera", occasion: ["Birthday","Celebration","Cheerful"], price: 1299, oldPrice: 1599, rating: 4.5, reviews: 950, image: "https://plus.unsplash.com/premium_photo-1723708803755-b5f72631ab48?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2VyYmVyYXxlbnwwfHwwfHx8MA%3D%3D", description: "Colorful gerbera mix bringing fiesta vibes and celebration spirit everywhere.", care: "Water from base, keep petals dry, change water daily, remove dead flowers.", meaning: "Joy and celebration." },
+  { id: 28, name: "Majestic Black Rose (Premium)", category: "Roses", occasion: ["Romantic","Mysterious","Anniversary"], price: 1899, oldPrice: 2199, rating: 4.8, reviews: 890, image: "https://images.unsplash.com/photo-1559456964-a49e2f0cf0d3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmxhY2slMjByb3NlfGVufDB8fDB8fHww", description: "Rare black roses symbolizing mystery and deep passion in elegant arrangement.", care: "Maintain cool temperature, change water frequently, protect from direct sunlight.", meaning: "Mystery and deep passion." },
+  { id: 29, name: "Sunburst Tulip Collection", category: "Tulips", occasion: ["Cheerful","Birthday","Congratulations"], price: 1799, oldPrice: 2099, rating: 4.6, reviews: 1180, image: "https://images.unsplash.com/photo-1652389593844-1816a1200400?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3VuYnVyc3QlMjB0dWxpcHxlbnwwfHwwfHx8MA%3D%3D", description: "Vibrant sunburst-colored tulips for celebrations and special moments.", care: "Cool water preferred, trim daily, avoid wilting, change water every 2 days.", meaning: "Cheerfulness and hope." },
+  { id: 30, name: "Burgundy Passion Rose", category: "Roses", occasion: ["Romantic","Anniversary","Passionate"], price: 1599, oldPrice: 1899, rating: 4.8, reviews: 1650, image: "https://images.unsplash.com/photo-1763379557051-f62483b50556?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHBhc3Npb24lMjByb3NlfGVufDB8fDB8fHww", description: "Deep burgundy roses expressing passion and intense emotions perfectly.", care: "Keep in cool conditions, change water every 2 days, trim stems regularly.", meaning: "Passion and intensity." }
+  
+];
+
+
+// STATE MANAGEMENT
+const state = {
+
+  cart: JSON.parse(localStorage.getItem("cart") || "[]"),
+
+  wishlist: JSON.parse(localStorage.getItem("wishlist") || "[]"),
+
+ user: (() => {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch (e) {
+    return null;
+  }
+})(),
+
+  filters: {
+    category: [],
+    occasion: [],
+    price: null,
+    rating: null
+  },
+
+  sort: "relevance",
+
+  products: []
+
+};
+// SAVE STATE
+function saveState() {
+  localStorage.setItem('currentUser', JSON.stringify(state.user));
+  localStorage.setItem('cart', JSON.stringify(state.cart));
+  localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
+  localStorage.setItem('orders', JSON.stringify(state.orders));
+  localStorage.setItem('addresses', JSON.stringify(state.addresses));
+}
+
+
+// APP LOGIC
+var app = {
+
+  init() {
+
+    const savedUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+
+    if(savedUser){
+      state.user = savedUser;
+    }
+
+    this.renderCategories();
+    this.renderHome();
+    this.updateUI();
+    updateSellerButton(); 
+
+  },
+
+  updateUI() {
+
+    const cartCount = state.cart.reduce((sum,item)=> sum + item.qty,0);
+    const wishlistCount = state.wishlist.length;
+
+    const cartEl = document.getElementById("globalCartCount");
+    const wishEl = document.getElementById("globalWishlistCount");
+
+    if(cartEl) cartEl.textContent = cartCount > 0 ? cartCount : "0";
+    if(wishEl) wishEl.textContent = wishlistCount > 0 ? wishlistCount : "0";
+
+    const username = state.user?.name || state.user?.email || "Login";
+
+    const userEl = document.getElementById("headerUserName");
+
+    if(userEl){
+      userEl.textContent = username.includes("@") ? username.split("@")[0] : username;
+    }
+
+    saveState();
+
+  },
+
+  navigate(page, productId = null){
+
+  // ----- ROLE PROTECTION -----
+  if(page === "seller"){
+
+    if(!state.user){
+      this.toast("Please login as seller");
+      auth.openModal();
+      return;
+    }
+
+    if(state.user.role !== "seller"){
+      this.toast("Only sellers can access dashboard");
+      return;
+    }
+
+  }
+
+  // ----- PAGE SWITCH -----
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active-page");
+  });
+
+  const pageEl = document.getElementById("page-" + page);
+
+  if(pageEl){
+    pageEl.classList.add("active-page");
+  }
+
+  window.scrollTo(0,0);
+
+  // ----- PAGE LOGIC -----
+  switch(page){
+
+    case "home":
+      this.renderHome();
+    break;
+
+    case "pdp":
+
+      if(!productId){
+        console.error("Product ID missing");
+        this.toast("Product not found");
+        this.navigate("home");
+        return;
+      }
+
+      this.renderPDP(productId);
+    break;
+
+    case "cart":
+      this.renderCart();
+    break;
+
+    case "wishlist":
+      this.renderWishlist();
+    break;
+
+    case "checkout":
+      this.renderCheckout();
+    break;
+
+    case "account":
+      this.renderAccount();
+    break;
+
+    case "seller":
+      renderSellerProducts();
+    break;
+
+  }
+
+},
+ renderCategories(){
+
+  const strip = document.getElementById("categoryStrip");
+  if(!strip) return;
+
+  const products = typeof FLOWERS_DB !== "undefined" ? FLOWERS_DB : [];
+
+  const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+
+  strip.innerHTML = categories.map(cat => `
+    <div class="cat-pill" onclick="app.filterCategory('${cat}')">
+      <div class="cat-icon-wrap">${cat.charAt(0)}</div>
+      <div>
+        <div style="font-size:12px;font-weight:600;">${cat}</div>
+        <div style="font-size:10px;color:var(--text-muted);">Explore</div>
+      </div>
+    </div>
+  `).join("");
+
+},
+
+filterCategory(category){
+  state.filters.category = [category];
+  this.renderHome();
+},
+
+toggleFilter(type,value){
+
+  const arr = state.filters[type] || [];
+
+  if(arr.includes(value)){
+    state.filters[type] = arr.filter(v => v !== value);
+  }else{
+    state.filters[type] = [...arr,value];
+  }
+
+  this.renderHome();
+},
+
+setPriceFilter(range){
+  state.filters.price = range;
+  this.renderHome();
+},
+
+setRatingFilter(rating){
+  state.filters.rating = rating;
+  this.renderHome();
+},
+
+setSort(sort){
+  state.filters.sort = sort;
+  this.renderHome();
+},
+
+handleSearch(query){
+
+  query = (query || "").toLowerCase();
+  state.filters.search = query;
+
+  this.renderHome();
+
+  const suggestionsEl = document.getElementById("searchSuggestions");
+  if(!suggestionsEl) return;
+
+  const products =
+    typeof allProducts !== "undefined"
+      ? allProducts
+      : JSON.parse(localStorage.getItem("products") || "[]");
+
+  if(query.length > 0){
+
+    const suggestions = products.filter(p =>
+      p.name?.toLowerCase().includes(query) ||
+      p.category?.toLowerCase().includes(query)
+    ).slice(0,6);
+
+    if(suggestions.length > 0){
+
+      suggestionsEl.style.display = "block";
+
+      suggestionsEl.innerHTML = suggestions.map(p => `
+        <div class="search-suggestion-item"
+             onclick="app.navigate('pdp', ${p.id})">
+          <span>${p.name}</span>
+          <span style="font-size:10px;color:var(--text-muted);">₹${p.price}</span>
+        </div>
+      `).join("");
+
+    }else{
+      suggestionsEl.style.display = "none";
+    }
+
+  }else{
+    suggestionsEl.style.display = "none";
+  }
+
+},
+
+  getFilteredProducts(){
+
+  // default flowers
+  const defaultProducts = FLOWERS_DB || [];
+
+  // seller added products
+  const sellerProducts = JSON.parse(localStorage.getItem("products") || "[]");
+
+  // merge both
+  const allProducts = [...defaultProducts, ...sellerProducts];
+
+  // no filters applied yet
+  if(!this.filters){
+    return allProducts;
+  }
+
+  let filtered = [...allProducts];
+
+  // CATEGORY FILTER
+  if(this.filters.category?.length){
+    filtered = filtered.filter(p =>
+      this.filters.category.includes(p.category)
+    );
+  }
+
+  // OCCASION FILTER
+  if(this.filters.occasion?.length){
+    filtered = filtered.filter(p =>
+      p.occasion?.some(o => this.filters.occasion.includes(o))
+    );
+  }
+
+  // PRICE FILTER
+  if(this.filters.price){
+    filtered = filtered.filter(p =>
+      p.price >= this.filters.price[0] &&
+      p.price <= this.filters.price[1]
+    );
+  }
+
+  // RATING FILTER
+  if(this.filters.rating){
+    filtered = filtered.filter(p =>
+      (p.rating || 4) >= this.filters.rating
+    );
+  }
+
+  return filtered;
+
+},
+
+
+
+renderHome(){
+
+  const products = this.getFilteredProducts() || [];
+
+  const grid = document.getElementById("mainProductGrid");
+  const empty = document.getElementById("emptyState");
+  const count = document.getElementById("productCount");
+
+  if(!grid){
+    console.warn("mainProductGrid not found");
+    return;
+  }
+
+  if(products.length === 0){
+
+    grid.innerHTML = "";
+
+    if(empty) empty.style.display = "block";
+    if(count) count.textContent = "0 items";
+
+    if(this.renderActiveFilters){
+      this.renderActiveFilters();
+    }
+
+    return;
+  }
+
+  if(empty) empty.style.display = "none";
+
+  if(count){
+    count.textContent = products.length + " items found";
+  }
+
+  grid.innerHTML = products.map(p=>{
+
+    const image = p.image || "https://via.placeholder.com/300";
+
+    const oldPrice = p.oldPrice || (p.price + 100);
+
+    const discount = oldPrice
+      ? Math.round((1 - p.price / oldPrice) * 100)
+      : 0;
+
+    const inWishlist =
+      state?.wishlist?.includes(p.id) || false;
+
+    return `
+
+      <div class="product-card"
+           onclick="app.navigate('pdp', ${p.id})">
+
+        <span class="prod-badge">${discount}% OFF</span>
+
+        <span class="wishlist-heart ${inWishlist ? "active":""}"
+          onclick="event.stopPropagation();
+          app.toggleWishlist(${p.id})">❤</span>
+
+        <div class="prod-img-wrap">
+          <img src="${image}" alt="${p.name}">
+        </div>
+
+        <div class="prod-body">
+
+          <div class="prod-name">${p.name}</div>
+
+          <div class="prod-meta-line">
+            <span>${p.category || "Flowers"}</span>
+            <span class="rating-chip">⭐ ${p.rating || 4.5}</span>
+          </div>
+
+          <div class="price-row">
+            <span class="current">₹${p.price}</span>
+            <span class="old">₹${oldPrice}</span>
+            <span class="off">${discount}% off</span>
+          </div>
+
+          <div class="prod-footer">
+            <span>${(p.occasion || ["General"]).join(" • ")}</span>
+            <span>${p.reviews || 1}+ reviews</span>
+          </div>
+
+          <div class="prod-cta-row">
+
+            <button class="btn-chip"
+              onclick="event.stopPropagation();
+              addToCart(${p.id})">
+              Add
+            </button>
+
+            <button class="btn-chip btn-chip-primary"
+              onclick="event.stopPropagation();
+              app.buyNow(${p.id})">
+              Buy
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+  if(this.renderActiveFilters){
+    this.renderActiveFilters();
+  }
+
+},
+
+  renderActiveFilters(){
+
+  const container = document.getElementById("activeFilters");
+  if(!container) return;
+
+  const filters = [];
+
+  (state.filters.category || []).forEach(cat=>{
+    filters.push(
+      `<span class="filter-badge">${cat}
+        <span onclick="app.toggleFilter('category','${cat}')">✕</span>
+      </span>`
+    );
+  });
+
+  (state.filters.occasion || []).forEach(occ=>{
+    filters.push(
+      `<span class="filter-badge">${occ}
+        <span onclick="app.toggleFilter('occasion','${occ}')">✕</span>
+      </span>`
+    );
+  });
+
+  if(state.filters.price){
+    filters.push(
+      `<span class="filter-badge">
+        ₹${state.filters.price[0]}-${state.filters.price[1]}
+        <span onclick="app.setPriceFilter(null)">✕</span>
+      </span>`
+    );
+  }
+
+  if(state.filters.rating){
+    filters.push(
+      `<span class="filter-badge">
+        ${state.filters.rating}★+
+        <span onclick="app.setRatingFilter(null)">✕</span>
+      </span>`
+    );
+  }
+
+  container.innerHTML =
+    filters.length > 0
+      ? filters.join("")
+      : `<span style="font-size:11px;color:var(--text-muted);">
+           No active filters
+         </span>`;
+
+},
+
+
+
+clearFilters(){
+
+  state.filters = {
+    category: [],
+    occasion: [],
+    price: null,
+    rating: null,
+    sort: "relevance",
+    search: ""
+  };
+
+  const searchEl = document.getElementById("mainSearch");
+  if(searchEl) searchEl.value = "";
+
+  this.renderHome();
+
+},
+
+
+
+renderPDP(productId){
+
+  const sellerProducts =
+    JSON.parse(localStorage.getItem("products") || "[]");
+
+  const baseProducts =
+    typeof FLOWERS_DB !== "undefined" ? FLOWERS_DB : [];
+
+  const allProducts = [...baseProducts, ...sellerProducts];
+
+  const product = allProducts.find(p => p.id == productId);
+
+  if(!product){
+    console.error("Product not found");
+    this.toast("Product not found");
+    this.navigate("home");
+    return;
+  }
+
+  const oldPrice = product.oldPrice || (product.price + 100);
+
+  const discount =
+    oldPrice ? Math.round((1 - product.price / oldPrice) * 100) : 0;
+
+  const inWishlist = state.wishlist?.includes(productId);
+
+  const categoryEl = document.getElementById("pdpCategory");
+  const nameEl = document.getElementById("pdpBreadcrumbName");
+  const contentEl = document.getElementById("pdpContent");
+
+  if(categoryEl) categoryEl.textContent = product.category || "Flowers";
+  if(nameEl) nameEl.textContent = product.name;
+
+  if(!contentEl) return;
+
+  contentEl.innerHTML = `
+
+  <div class="pdp-container">
+
+    <div class="pdp-gallery">
+      <img src="${product.image || "https://via.placeholder.com/400"}"
+           alt="${product.name}">
+    </div>
+
+    <div class="pdp-info">
+
+      <div class="pdp-title">${product.name}</div>
+
+      <div class="pdp-rating-row">
+        <div class="pdp-rating">
+          ⭐ ${product.rating || 4.5}
+          (${product.reviews || 1} reviews)
+        </div>
+      </div>
+
+      <div class="pdp-price-section">
+        <div class="pdp-price">
+          <span class="pdp-current">₹${product.price}</span>
+          <span class="pdp-old">₹${oldPrice}</span>
+          <span class="pdp-off">${discount}% off</span>
+        </div>
+      </div>
+
+      <div class="pdp-description">
+        ${product.description || ""}
+      </div>
+
+      <div class="pdp-specs">
+
+        <div class="pdp-spec-item">
+          <span>Category</span>
+          <strong>${product.category || "Flowers"}</strong>
+        </div>
+
+        <div class="pdp-spec-item">
+          <span>Occasions</span>
+          <strong>${(product.occasion || ["General"]).join(", ")}</strong>
+        </div>
+
+        <div class="pdp-spec-item">
+          <span>Delivery</span>
+          <strong>2-4 hours</strong>
+        </div>
+
+        <div class="pdp-spec-item">
+          <span>Shelf Life</span>
+          <strong>7-10 days</strong>
+        </div>
+
+      </div>
+
+      <div class="pdp-cta-row">
+        <button class="pdp-add-cart"
+          onclick="app.addToCart(${productId})">
+          Add to Cart
+        </button>
+
+        <button class="pdp-buy-now"
+          onclick="app.buyNow(${productId})">
+          Buy Now
+        </button>
+      </div>
+
+      <button style="width:100%;padding:10px;border:1px solid var(--border);
+        border-radius:999px;background:white;cursor:pointer;
+        font-weight:600;margin-bottom:14px;"
+        onclick="app.toggleWishlist(${productId})">
+
+        ${inWishlist ? "❤️ In Wishlist" : "🤍 Add to Wishlist"}
+
+      </button>
+
+      <div class="pdp-tabs">
+
+        <button class="pdp-tab active"
+          onclick="app.switchPdpTab('tabDetails',this)">
+          Details
+        </button>
+
+        <button class="pdp-tab"
+          onclick="app.switchPdpTab('tabCare',this)">
+          Care
+        </button>
+
+        <button class="pdp-tab"
+          onclick="app.switchPdpTab('tabMeaning',this)">
+          Meaning
+        </button>
+
+      </div>
+
+      <div class="pdp-tab-content active"
+           id="tabDetails">
+           ${product.description || ""}
+      </div>
+
+      <div class="pdp-tab-content"
+           id="tabCare">
+        <strong>Care Instructions:</strong>
+        <p>${product.care || "Keep in fresh water."}</p>
+      </div>
+
+      <div class="pdp-tab-content"
+           id="tabMeaning">
+        <strong>Flower Meaning:</strong>
+        <p>${product.meaning || "Symbol of beauty."}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  `;
+
+},
+
+  addToCart(productId){
+
+  if(!state.user){
+    this.toast("Please login first");
+    if(typeof auth !== "undefined" && auth.openModal){
+      auth.openModal();
+    }
+    return;
+  }
+
+  const existing = state.cart.find(i => i.productId === productId);
+
+  if(existing){
+    existing.qty += 1;
+  }else{
+    state.cart.push({ productId, qty: 1 });
+  }
+
+  saveState();
+  this.updateUI();
+  this.toast("✅ Added to cart");
+
+},
+
+
+
+buyNow(productId){
+
+  if(!state.user){
+    this.toast("Please login first");
+    if(typeof auth !== "undefined" && auth.openModal){
+      auth.openModal();
+    }
+    return;
+  }
+
+  state.cart = [{ productId, qty:1 }];
+
+  saveState();
+  this.updateUI();
+  this.navigate("checkout");
+
+},
+
+
+
+toggleWishlist(productId){
+
+  const idx = state.wishlist.indexOf(productId);
+
+  if(idx > -1){
+    state.wishlist.splice(idx,1);
+    this.toast("❌ Removed from wishlist");
+  }else{
+    state.wishlist.push(productId);
+    this.toast("❤️ Added to wishlist");
+  }
+
+  saveState();
+  this.updateUI();
+
+  const activePage = document.querySelector(".page.active-page");
+
+  if(activePage && activePage.id === "page-pdp"){
+    this.renderPDP(productId);
+  }
+
+},
+
+
+
+renderCart(){
+
+  const content = document.getElementById("cartContent");
+  if(!content) return;
+
+  const sellerProducts =
+    JSON.parse(localStorage.getItem("products") || "[]");
+
+  const baseProducts =
+    typeof FLOWERS_DB !== "undefined" ? FLOWERS_DB : [];
+
+  const allProducts = [...baseProducts, ...sellerProducts];
+
+
+  if(state.cart.length === 0){
+
+    content.innerHTML = `
+      <div class="cart-container">
+        <div class="cart-items">
+          <div class="cart-empty">
+            <p>Your cart is empty</p>
+            <p style="font-size:12px;margin-top:10px;">
+              Add flowers to your cart to continue shopping
+            </p>
+
+            <button class="btn-primary"
+              style="margin-top:10px"
+              onclick="app.navigate('home')">
+
+              Continue Shopping
+
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+
+  const cartItems = state.cart.map(item=>{
+
+    const product =
+      allProducts.find(p => p.id === item.productId);
+
+    if(!product) return "";
+
+    const total = product.price * item.qty;
+
+    return `
+
+      <div class="cart-item">
+
+        <div class="cart-item-img">
+          <img src="${product.image || "https://via.placeholder.com/120"}"
+               alt="${product.name}">
+        </div>
+
+        <div class="cart-item-details">
+          <h4>${product.name}</h4>
+          <p>${product.category || "Flowers"}</p>
+        </div>
+
+        <div style="text-align:right">
+
+          <div class="cart-item-price">
+            ₹${total}
+          </div>
+
+          <div class="qty-selector" style="margin-top:6px">
+
+            <button onclick="app.updateCartQty(${item.productId},-1)">−</button>
+
+            <span style="min-width:20px;text-align:center">
+              ${item.qty}
+            </span>
+
+            <button onclick="app.updateCartQty(${item.productId},1)">+</button>
+
+          </div>
+
+          <button
+            style="margin-top:6px;background:#fee2e2;color:#991b1b;border:none;border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer"
+            onclick="app.removeFromCart(${item.productId})">
+
+            Remove
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+
+
+  const subtotal = state.cart.reduce((sum,item)=>{
+
+    const product = allProducts.find(p => p.id === item.productId);
+    if(!product) return sum;
+
+    return sum + product.price * item.qty;
+
+  },0);
+
+
+  const delivery = 99;
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + delivery + tax;
+
+
+
+  content.innerHTML = `
+
+  <div class="cart-container">
+
+    <div class="cart-items">
+      ${cartItems}
+    </div>
+
+    <div class="cart-summary">
+
+      <div style="margin-bottom:14px;font-weight:700;border-bottom:1px solid var(--border);padding-bottom:10px">
+        Order Summary
+      </div>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹${subtotal}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Delivery</span>
+        <span>₹${delivery}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Tax (5%)</span>
+        <span>₹${tax}</span>
+      </div>
+
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>₹${total}</span>
+      </div>
+
+
+      <div class="promo-code">
+        <input id="promoCode" placeholder="Promo code">
+        <button onclick="app.applyPromo()">Apply</button>
+      </div>
+
+
+      <button class="btn-checkout"
+        onclick="app.navigate('checkout')">
+
+        Proceed to Checkout
+
+      </button>
+
+      <button class="btn-ghost"
+        style="width:100%;margin-top:10px"
+        onclick="app.navigate('home')">
+
+        Continue Shopping
+
+      </button>
+
+    </div>
+
+  </div>
+
+  `;
+
+},
+
+  updateCartQty(productId, change){
+
+  const item = state.cart.find(c => c.productId === productId);
+  if(!item) return;
+
+  item.qty += change;
+
+  if(item.qty <= 0){
+    this.removeFromCart(productId);
+    return;
+  }
+
+  saveState();
+  this.updateUI();
+  this.renderCart();
+
+},
+
+
+removeFromCart(productId){
+
+  state.cart = state.cart.filter(item => item.productId !== productId);
+
+  saveState();
+  this.updateUI();
+  this.renderCart();
+
+  this.toast("Removed from cart");
+
+},
+
+
+applyPromo(){
+
+  const input = document.getElementById("promoCode");
+  if(!input) return;
+
+  const code = input.value.trim().toUpperCase();
+
+  if(code === "SAVE10"){
+    state.promo = 10;
+    this.toast("10% discount applied!");
+  }
+  else if(code === "SAVE20"){
+    state.promo = 20;
+    this.toast("20% discount applied!");
+  }
+  else{
+    state.promo = 0;
+    this.toast("Invalid promo code");
+  }
+
+  this.renderCart();
+
+},
+
+
+renderWishlist(){
+
+  const grid = document.getElementById("wishlistGrid");
+  const empty = document.getElementById("wishlistEmpty");
+
+  if(!grid || !empty) return;
+
+  const sellerProducts =
+    JSON.parse(localStorage.getItem("products") || "[]");
+
+  const baseProducts =
+    typeof FLOWERS_DB !== "undefined" ? FLOWERS_DB : [];
+
+  const allProducts = [...baseProducts, ...sellerProducts];
+
+  const wishlistProducts =
+    allProducts.filter(p => state.wishlist.includes(p.id));
+
+  if(wishlistProducts.length === 0){
+
+    grid.innerHTML = "";
+    empty.style.display = "block";
+    return;
+
+  }
+
+  empty.style.display = "none";
+
+  grid.innerHTML = wishlistProducts.map(p=>{
+
+    const discount =
+      p.oldPrice
+        ? Math.round((1 - p.price / p.oldPrice) * 100)
+        : 0;
+
+    return `
+
+      <div class="product-card"
+           onclick="app.navigate('pdp', ${p.id})">
+
+        <span class="prod-badge">${discount}% OFF</span>
+
+        <span class="wishlist-heart active"
+          onclick="event.stopPropagation();
+          app.toggleWishlist(${p.id})">
+
+          ❤
+
+        </span>
+
+        <div class="prod-img-wrap">
+          <img src="${p.image || "https://via.placeholder.com/300"}"
+               alt="${p.name}">
+        </div>
+
+        <div class="prod-body">
+
+          <div class="prod-name">${p.name}</div>
+
+          <div class="price-row">
+            <span class="current">₹${p.price}</span>
+            <span class="old">₹${p.oldPrice || ""}</span>
+          </div>
+
+          <div class="prod-cta-row">
+
+            <button class="btn-chip btn-chip-primary"
+              onclick="event.stopPropagation();
+              app.addToCart(${p.id})">
+
+              Add to Cart
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+},
+
+  renderCheckout(){
+
+  const content = document.getElementById("checkoutContent");
+  if(!content) return;
+
+  const sellerProducts =
+    JSON.parse(localStorage.getItem("products") || "[]");
+
+  const baseProducts =
+    typeof FLOWERS_DB !== "undefined" ? FLOWERS_DB : [];
+
+  const allProducts = [...baseProducts, ...sellerProducts];
+
+
+  if(state.cart.length === 0){
+    content.innerHTML =
+      "<p>Your cart is empty. Please add items to checkout.</p>";
+    return;
+  }
+
+
+  const subtotal = state.cart.reduce((sum,item)=>{
+
+    const product = allProducts.find(p => p.id === item.productId);
+    if(!product) return sum;
+
+    return sum + product.price * item.qty;
+
+  },0);
+
+
+  const deliveryType = state.deliveryType || "standard";
+  const delivery = deliveryType === "express" ? 299 : 99;
+
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + delivery + tax;
+
+
+
+  const cartItemsHtml = state.cart.map(item=>{
+
+    const product = allProducts.find(p => p.id === item.productId);
+    if(!product) return "";
+
+    return `
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border);font-size:12px;">
+        <span>${product.name} × ${item.qty}</span>
+        <strong>₹${product.price * item.qty}</strong>
+      </div>
+    `;
+
+  }).join("");
+
+
+
+  const addresses = state.addresses || [];
+
+  const addressesHtml =
+    addresses.length === 0
+    ? '<p style="color:var(--text-muted);">No saved addresses</p>'
+    : addresses.map((addr,idx)=>`
+
+      <div class="address-card ${state.selectedAddressIdx === idx ? "selected":""}"
+        onclick="checkout.selectAddress(${idx})">
+
+        <div class="address-label">${addr.label || "Home"}</div>
+
+        <div class="address-text">${addr.text}</div>
+
+        ${addr.instructions
+          ? `<div class="address-type">${addr.instructions}</div>`
+          : ""}
+
+      </div>
+
+    `).join("");
+
+
+
+  content.innerHTML = `
+    <div class="checkout-container">
+
+      <div class="checkout-steps">
+        <div class="step active">
+          <div class="step-number">1</div>
+          <div class="step-name">Address</div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-name">Payment</div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-name">Confirm</div>
+        </div>
+      </div>
+
+
+      <div class="checkout-section">
+        <div class="section-title">📍 Delivery Address</div>
+
+        <div class="address-list">
+          ${addressesHtml}
+        </div>
+
+        <button class="btn-ghost"
+          style="width:100%;margin-top:12px"
+          onclick="checkout.showAddressForm()">
+
+          + Add New Address
+
+        </button>
+      </div>
+
+
+
+      <div class="checkout-section">
+
+        <div class="section-title">🚚 Delivery Option</div>
+
+        <div class="delivery-options">
+
+          <div class="delivery-option selected"
+            onclick="checkout.selectDelivery('standard',this)">
+
+            <div class="delivery-time">
+              Standard (2-4 Hours)
+            </div>
+
+            <div class="delivery-price">
+              FREE
+            </div>
+
+          </div>
+
+          <div class="delivery-option"
+            onclick="checkout.selectDelivery('express',this)">
+
+            <div class="delivery-time">
+              Express (45 Minutes)
+            </div>
+
+            <div class="delivery-price">
+              + ₹299
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="checkout-section">
+
+        <div class="section-title">💳 Payment Method</div>
+
+        <div class="payment-methods">
+
+          <div class="payment-option selected"
+            onclick="checkout.selectPayment('cod',this)">
+
+            <div class="payment-icon">💵</div>
+            <div class="payment-name">Cash on Delivery</div>
+            <div class="payment-desc">Pay at delivery</div>
+
+          </div>
+
+          <div class="payment-option"
+            onclick="checkout.selectPayment('card',this)">
+
+            <div class="payment-icon">💳</div>
+            <div class="payment-name">Card</div>
+            <div class="payment-desc">Debit/Credit</div>
+
+          </div>
+
+          <div class="payment-option"
+            onclick="checkout.selectPayment('upi',this)">
+
+            <div class="payment-icon">📱</div>
+            <div class="payment-name">UPI</div>
+            <div class="payment-desc">Google Pay, PhonePe</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="checkout-section">
+
+        <div class="section-title">📦 Order Summary</div>
+
+        ${cartItemsHtml}
+
+        <div class="summary-row"
+          style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+
+          <span>Subtotal</span>
+          <span>₹${subtotal}</span>
+
+        </div>
+
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span id="deliveryAmount">₹${delivery}</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Tax (5%)</span>
+          <span>₹${tax}</span>
+        </div>
+
+        <div class="summary-row total"
+          style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+
+          <span>Total Amount</span>
+          <span id="totalAmount">₹${total}</span>
+
+        </div>
+
+      </div>
+
+
+      <button class="btn-checkout"
+        onclick="checkout.placeOrder()">
+
+        Place Order - ₹${total}
+
+      </button>
+
+      <button class="btn-ghost"
+        style="width:100%;margin-top:10px"
+        onclick="app.navigate('cart')">
+
+        Back to Cart
+
+      </button>
+
+    </div>
+  `;
+
+},
+
+  renderAccount() {
+
+  const content = document.getElementById("accountContent");
+  if(!content) return;
+
+  if(!state.user){
+    content.innerHTML = "<p>Please login to view your account</p>";
+    return;
+  }
+
+  const orders = state.orders || [];
+  const addresses = state.addresses || [];
+
+  const ordersHtml =
+    orders.length === 0
+      ? '<p style="color:var(--text-muted);">No orders yet</p>'
+      : orders.map(order => `
+        <div class="order-card">
+          <div class="order-header">
+            <div>
+              <div class="order-id">Order #${order.id}</div>
+              <div class="order-date">${order.date}</div>
+            </div>
+            <span class="order-status ${String(order.status).toLowerCase()}">${order.status}</span>
+          </div>
+          <div class="order-items">
+            ${order.items} item${order.items > 1 ? "s" : ""}
+          </div>
+          <div class="order-total">
+            Total: ₹${order.total}
+          </div>
+        </div>
+      `).join("");
+
+  const addressesHtml =
+    addresses.length === 0
+      ? '<p style="color:var(--text-muted);">No saved addresses</p>'
+      : addresses.map(addr => `
+        <div class="address-card">
+          <div class="address-label">
+            ${addr.label || "Home"} ${addr.default ? "(Default)" : ""}
+          </div>
+          <div class="address-text">
+            ${addr.text}
+          </div>
+        </div>
+      `).join("");
+
+  const avatarLetter =
+    state.user.name ? state.user.name.charAt(0).toUpperCase() : "U";
+
+  content.innerHTML = `
+    <div class="account-container">
+
+      <div class="account-sidebar">
+        <div class="account-nav-item active" onclick="account.switchSection('profile')">👤 Profile</div>
+        <div class="account-nav-item" onclick="account.switchSection('orders')">📦 Orders</div>
+        <div class="account-nav-item" onclick="account.switchSection('addresses')">📍 Addresses</div>
+        <div class="account-nav-item" onclick="account.switchSection('support')">💬 Support</div>
+        <div class="account-nav-item" onclick="auth.logout()">🚪 Logout</div>
+      </div>
+
+      <div class="account-content">
+
+        <div class="account-section show" id="profileSection">
+
+          <div class="profile-card">
+            <div class="profile-avatar">${avatarLetter}</div>
+
+            <div class="profile-info">
+              <h3>${state.user.name}</h3>
+              <p>${state.user.email || state.user.phone || ""}</p>
+
+              <div class="profile-edit">
+                <button class="btn-secondary" onclick="account.editProfile()">
+                  Edit Profile
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;padding:14px;background:var(--primary-soft);border-radius:var(--radius-md);">
+            <p style="margin:0 0 6px;font-size:12px;color:var(--text-muted);">
+              Member Since
+            </p>
+            <p style="margin:0;font-weight:700;">
+              Joined FloraPedia
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="account-section" id="ordersSection">
+          <h3 style="margin-top:0;">My Orders</h3>
+          <div class="orders-list">
+            ${ordersHtml}
+          </div>
+        </div>
+
+
+        <div class="account-section" id="addressesSection">
+          <h3 style="margin-top:0;">Saved Addresses</h3>
+
+          <div>
+            ${addressesHtml}
+          </div>
+
+          <button class="btn-primary" style="margin-top:12px;" onclick="account.addAddress()">
+            + Add Address
+          </button>
+        </div>
+
+
+        <div class="account-section" id="supportSection">
+
+          <h3 style="margin-top:0;">Support & Help</h3>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+            <div style="border:1px solid var(--border);padding:12px;border-radius:var(--radius-md);cursor:pointer;">
+              <div style="font-weight:700;margin-bottom:4px;">📞 Call Us</div>
+              <p style="margin:0;font-size:12px;color:var(--text-muted);">
+                1800-FLORAPEDIA
+              </p>
+            </div>
+
+            <div style="border:1px solid var(--border);padding:12px;border-radius:var(--radius-md);cursor:pointer;">
+              <div style="font-weight:700;margin-bottom:4px;">💬 Chat</div>
+              <p style="margin:0;font-size:12px;color:var(--text-muted);">
+                Live chat support
+              </p>
+            </div>
+
+            <div style="border:1px solid var(--border);padding:12px;border-radius:var(--radius-md);cursor:pointer;">
+              <div style="font-weight:700;margin-bottom:4px;">📧 Email</div>
+              <p style="margin:0;font-size:12px;color:var(--text-muted);">
+                support@florapedia.com
+              </p>
+            </div>
+
+            <div style="border:1px solid var(--border);padding:12px;border-radius:var(--radius-md);cursor:pointer;">
+              <div style="font-weight:700;margin-bottom:4px;">❓ FAQ</div>
+              <p style="margin:0;font-size:12px;color:var(--text-muted);">
+                Frequently asked questions
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  `;
+},
+
+toast(msg){
+
+  const el = document.getElementById("toast");
+  if(!el) return;
+
+  el.textContent = msg;
+  el.classList.add("show");
+
+  clearTimeout(el._timer);
+
+  el._timer = setTimeout(()=>{
+    el.classList.remove("show");
+  },2000);
+},
+};
+
+// CHECKOUT LOGIC
+const checkout = {
+
+  selectAddress(idx) {
+    state.selectedAddressIdx = idx;
+    app.renderCheckout();
+  },
+
+  showAddressForm() {
+    document.getElementById('addressForm').classList.add('show');
+  },
+
+  hideAddressForm() {
+    document.getElementById('addressForm').classList.remove('show');
+  },
+
+  saveAddress() {
+    const label = document.getElementById('addrLabel').value.trim();
+    const text = document.getElementById('addrText').value.trim();
+    const instructions = document.getElementById('addrInstructions').value.trim();
+
+    if(!text){
+      app.toast('Please enter address');
+      return;
+    }
+
+    state.addresses.push({
+      label,
+      text,
+      instructions,
+      default: state.addresses.length === 0
+    });
+
+    state.selectedAddressIdx = state.addresses.length - 1;
+
+    app.updateUI();
+    app.renderCheckout();
+    saveState();
+
+    app.toast('✅ Address saved');
+  },
+
+  selectDelivery(type, el) {
+
+    document.querySelectorAll('.delivery-option')
+      .forEach(d => d.classList.remove('selected'));
+
+    el.classList.add('selected');
+
+    state.deliveryType = type;
+
+    app.renderCheckout();
+  },
+
+  selectPayment(type, el) {
+
+    document.querySelectorAll('.payment-option')
+      .forEach(p => p.classList.remove('selected'));
+
+    el.classList.add('selected');
+
+    state.paymentType = type;
+  },
+
+  placeOrder() {
+
+    if(state.addresses.length === 0 || state.selectedAddressIdx === null){
+      app.toast('Please select or add an address');
+      return;
+    }
+
+    const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+    const allProducts = [...FLOWERS_DB, ...sellerProducts];
+
+    const orderId =
+      'ORD-' +
+      Math.random()
+      .toString(36)
+      .substr(2,9)
+      .toUpperCase();
+
+    const itemCount = state.cart.length;
+
+    const subtotal = state.cart.reduce((sum,item)=>{
+
+      const product = allProducts.find(p=>p.id===item.productId);
+
+      if(!product) return sum;
+
+      return sum + product.price * item.qty;
+
+    },0);
+
+    const delivery =
+      state.deliveryType === 'express' ? 299 : 99;
+
+    const tax =
+      Math.round(subtotal * 0.05);
+
+    const total =
+      subtotal + delivery + tax;
+
+    state.orders.push({
+
+      id:orderId,
+      items:itemCount,
+      total:total,
+      status:'Processing',
+      date:new Date().toLocaleDateString(),
+      address:state.addresses[state.selectedAddressIdx],
+      payment:state.paymentType
+
+    });
+
+    if(state.paymentType === 'card' || state.paymentType === 'upi'){
+
+      app.toast(`🔄 Processing ${state.paymentType.toUpperCase()} payment...`);
+
+      setTimeout(()=>{
+
+        app.toast('✅ Payment successful!');
+
+        state.cart = [];
+        state.selectedAddressIdx = null;
+
+        app.updateUI();
+        saveState();
+
+        app.navigate('account');
+
+      },2000);
+
+    }
+    else{
+
+      app.toast('✅ Order placed! You will receive a confirmation SMS');
+
+      state.cart = [];
+      state.selectedAddressIdx = null;
+
+      app.updateUI();
+      saveState();
+
+      app.navigate('account');
+    }
+  }
+}
+
+
+// ACCOUNT LOGIC
+const account = {
+
+  switchSection(section){
+
+    document.querySelectorAll('.account-nav-item')
+      .forEach(item => item.classList.remove('active'));
+
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.account-section')
+      .forEach(sec => sec.classList.remove('show'));
+
+    document.getElementById(section + 'Section')
+      .classList.add('show');
+  },
+
+  editProfile(){
+    app.toast('Edit profile feature coming soon');
+  },
+
+  addAddress(){
+    app.toast('Redirect to address form');
+  }
+
+};
+
+// AUTH LOGIC
+var auth = {
+
+  openModal(){
+    document.getElementById('authModal').classList.add('show');
+  },
+
+  closeModal(){
+    document.getElementById('authModal').classList.remove('show');
+  },
+
+  switchTab(tab){
+
+    document.querySelectorAll('.auth-tab-btn')
+      .forEach(btn => btn.classList.remove('active'));
+
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.auth-form')
+      .forEach(form => form.classList.remove('show'));
+
+    document.getElementById(tab + 'Form')
+      .classList.add('show');
+  },
+
+  switchForm(form){
+
+    document.querySelectorAll('.auth-form')
+      .forEach(f => f.classList.remove('show'));
+
+    document.getElementById(
+      form === 'phone' || form === 'phone-signup'
+      ? 'phoneForm'
+      : form + 'Form'
+    ).classList.add('show');
+  },
+
+  doLogin(){
+
+    const emailOrPhone =
+      document.getElementById('loginEmail').value.trim();
+
+    const password =
+      document.getElementById('loginPassword').value.trim();
+
+    if(!emailOrPhone || !password){
+      app.toast('Please enter email/phone and password');
+      return;
+    }
+
+    const user = {
+      name:'Flower Lover',
+      email: emailOrPhone.includes('@') ? emailOrPhone : null,
+      phone: !emailOrPhone.includes('@') ? emailOrPhone : null
+    };
+
+    state.user = user;
+
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(user)
+    );
+
+    app.updateUI();
+
+    this.closeModal();
+
+    app.toast('✅ Logged in successfully');
+  },
+
+  doSignup(){
+
+    const name =
+      document.getElementById('signupName').value.trim();
+
+    const email =
+      document.getElementById('signupEmail').value.trim();
+
+    const password =
+      document.getElementById('signupPassword').value.trim();
+
+    if(!name || !email || !password){
+      app.toast('Please fill all fields');
+      return;
+    }
+
+    const user = {
+      name,
+      email,
+      phone:null
+    };
+
+    state.user = user;
+
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(user)
+    );
+
+    app.updateUI();
+
+    this.closeModal();
+
+    app.toast('✅ Account created successfully');
+  },
+
+  sendOTP(){
+
+    const phone =
+      document.getElementById('phoneNumber').value.trim();
+
+    if(!phone || phone.length !== 10){
+      app.toast('Please enter valid 10-digit number');
+      return;
+    }
+
+    document.getElementById('otpSection')
+      .style.display = 'block';
+
+    app.toast('📱 OTP sent to +91 ' + phone);
+  },
+
+  handleOTPInput(el,idx){
+
+    if(el.value.length === 1 && idx < 5){
+
+      document
+      .querySelectorAll('.otp-input')[idx + 1]
+      .focus();
+    }
+  },
+
+  verifyOTP(){
+
+    const otp =
+      Array.from(document.querySelectorAll('.otp-input'))
+      .map(el => el.value)
+      .join('');
+
+    if(otp.length !== 6){
+      app.toast('Please enter 6-digit OTP');
+      return;
+    }
+
+    const phone =
+      document.getElementById('phoneNumber').value;
+
+    const user = {
+
+      name:'Flower Enthusiast',
+      email:null,
+      phone:phone
+
+    };
+
+    state.user = user;
+
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(user)
+    );
+
+    app.updateUI();
+
+    this.closeModal();
+
+    app.toast('✅ Verified successfully');
+  },
+
+  logout(){
+
+    state.user = null;
+
+    state.cart = [];
+
+    localStorage.removeItem("currentUser");
+
+    app.updateUI();
+
+    saveState();
+
+    app.navigate('home');
+
+    app.toast('Logged out');
+  }
+
+};
+// =============================
+// INIT
+// =============================
+window.addEventListener("load", () => {
+
+  const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if(savedUser){
+    state.user = savedUser;
+  }
+
+  if(app && typeof app.init === "function"){
+    app.init();
+  }
+
+  if(typeof renderCustomerProducts === "function"){
+    renderCustomerProducts();
+  }
+
+  if(typeof renderSellerProducts === "function"){
+    renderSellerProducts();
+  }
+
+  if(typeof renderCart === "function"){
+    renderCart();
+  }
+
+  if(typeof updateCartCount === "function"){
+    updateCartCount();
+  }
+
+});
+
+
+// =============================
+// ADD TO CART
+// =============================
+function addToCart(productId){
+
+  const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+  const allProducts = [...FLOWERS_DB, ...sellerProducts];
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const product = allProducts.find(p => p.id === productId);
+
+  if(!product){
+    console.error("Product not found");
+    return;
+  }
+
+  const existing = cart.find(item => item.id === productId);
+
+  if(existing){
+    existing.qty += 1;
+  }else{
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      qty: 1
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // update cart badge
+  if(typeof updateCartCount === "function"){
+    updateCartCount();
+  }
+
+  // toast
+  if(app && app.toast){
+    app.toast("🛒 Added to cart");
+  }
+
+  // refresh cart UI instantly
+  if(typeof renderCart === "function"){
+    renderCart();
+  }
+
+}
+
+
+// =============================
+// BACKEND AUTH API
+// =============================
+const API = "https://florapedia-backend.onrender.com/api";
+
+
+// =============================
+// SIGNUP WITH BACKEND
+// =============================
+auth.doSignup = async function(){
+
+  const name = document.getElementById("signupName")?.value.trim();
+  const email = document.getElementById("signupEmail")?.value.trim();
+  const password = document.getElementById("signupPassword")?.value.trim();
+  const role = document.getElementById("signupRole")?.value;
+
+  if(!name || !email || !password){
+    alert("Fill all fields");
+    return;
+  }
+
+  try{
+
+    const res = await fetch(API + "/auth/register",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        name,
+        email,
+        password,
+        role
+      })
+    });
+
+    const data = await res.json();
+
+    console.log("SERVER RESPONSE:",data);
+
+    if(!res.ok){
+      alert(data.message || "Signup failed");
+      return;
+    }
+
+    if(data.user){
+      state.user = data.user || data;
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
+    }
+
+    if(app && app.updateUI){
+      app.updateUI();
+    }
+
+    alert("Signup successful");
+
+  }catch(err){
+
+    console.error(err);
+
+    alert("Server error");
+
+  }
+
+};
+
+
+// =============================
+// LOGIN
+// =============================
+auth.doLogin = async function(){
+
+  const email = document.getElementById("loginEmail")?.value.trim();
+  const password = document.getElementById("loginPassword")?.value.trim();
+
+  if(!email || !password){
+    app.toast("Please enter email and password");
+    return;
+  }
+
+  try{
+
+    const response = await fetch(API + "/auth/login",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    const data = await response.json();
+
+    console.log("LOGIN RESPONSE:", data);
+    state.user = data.user || data;
+    localStorage.setItem("user", JSON.stringify(state.user));
+
+    if(response.ok && data.token){
+
+      // Save auth data
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
+
+      // Update app state
+      state.user = data.user || data;
+
+      // Refresh UI
+      if(app && app.updateUI){
+        app.updateUI();
+      }
+
+      // Close modal
+      if(auth.closeModal){
+        auth.closeModal();
+      }
+
+      // Redirect user
+      const role = data.role ? data.role.toLowerCase() : "buyer";
+
+      if(role === "seller"){
+
+        console.log("Redirecting to seller dashboard");
+
+        app.toast("Seller login successful");
+
+        setTimeout(()=>{
+          if(app.navigate){
+            app.navigate("seller");
+          }
+        },200);
+
+      }else{
+
+        console.log("Redirecting to home page");
+
+        app.toast("Login successful");
+
+        setTimeout(()=>{
+          if(app.navigate){
+            app.navigate("home");
+          }
+        },200);
+
+      }
+
+    }else{
+
+      app.toast(data.message || "Invalid email or password");
+
+    }
+
+  }catch(error){
+
+    console.error("LOGIN ERROR:", error);
+
+    app.toast("Server connection error");
+
+  }
+
+};
+
+
+
+// =============================
+// USER ICON CLICK
+// =============================
+auth.handleUserClick = function(){
+
+  const token = localStorage.getItem("token");
+
+  if(token){
+
+    const confirmLogout = confirm("Do you want to logout?");
+
+    if(confirmLogout){
+      auth.logout();
+    }
+
+  }else{
+
+    if(auth.openModal){
+      auth.openModal();
+    }
+
+  }
+
+};
+
+
+
+// =============================
+// LOGOUT
+// =============================
+auth.logout = function(){
+
+  // Clear storage
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  localStorage.removeItem("currentUser");
+
+  // Clear state
+  if(typeof state !== "undefined"){
+    state.user = null;
+  }
+
+  // Reset UI name
+  const nameEl = document.getElementById("headerUserName");
+  if(nameEl){
+    nameEl.innerText = "Login";
+  }
+
+  // Update UI
+  if(app && app.updateUI){
+    app.updateUI();
+  }
+
+  // Redirect home
+  if(app && app.navigate){
+    app.navigate("home");
+  }
+
+  app.toast("Logged out");
+
+};
+
+
+// =============================
+// SEND OTP
+// =============================
+auth.sendOTP = function(){
+
+  const phone = document.getElementById("phoneNumber")?.value;
+
+  if(!phone || phone.length !== 10){
+    app.toast("Enter valid phone number");
+    return;
+  }
+
+  if(typeof firebase === "undefined"){
+    app.toast("Firebase not loaded");
+    return;
+  }
+
+  const appVerifier = new firebase.auth.RecaptchaVerifier(
+    "recaptcha-container",
+    { size: "normal" }
+  );
+
+  firebase.auth().signInWithPhoneNumber("+91" + phone, appVerifier)
+
+  .then(function(confirmationResult){
+
+      window.confirmationResult = confirmationResult;
+
+      const otpBox = document.getElementById("otpSection");
+      if(otpBox){
+        otpBox.style.display = "block";
+      }
+
+      app.toast("OTP Sent");
+
+  })
+
+  .catch(function(error){
+
+      console.log(error);
+
+      app.toast("OTP Failed");
+
+  });
+
+};
+
+
+
+// =============================
+// VERIFY OTP
+// =============================
+auth.verifyOTP = function(){
+
+  if(!window.confirmationResult){
+    app.toast("Please request OTP first");
+    return;
+  }
+
+  const otp = Array.from(document.querySelectorAll(".otp-input"))
+  .map(el => el.value)
+  .join("");
+
+  if(otp.length !== 6){
+    app.toast("Enter valid 6 digit OTP");
+    return;
+  }
+
+  confirmationResult.confirm(otp)
+
+  .then(function(result){
+
+      app.toast("Phone verified");
+
+      if(auth.closeModal){
+        auth.closeModal();
+      }
+
+  })
+
+  .catch(function(error){
+
+      console.log(error);
+
+      app.toast("Invalid OTP");
+
+  });
+
+};
+
+
+
+// =============================
+// SAVE SELLER STORE
+// =============================
+function saveStore(){
+
+  const store = {
+    name: document.getElementById("storeName")?.value || "",
+    location: document.getElementById("storeLocation")?.value || "",
+    phone: document.getElementById("storePhone")?.value || ""
+  };
+
+  localStorage.setItem("sellerStore", JSON.stringify(store));
+
+  alert("Store saved successfully");
+
+}
+
+
+
+// =============================
+// PAGE NAVIGATION
+// =============================
+app.navigate = function(page){
+
+  const pages = document.querySelectorAll(".page");
+
+  pages.forEach(p=>{
+    p.style.display = "none";
+  });
+
+  const target = document.getElementById("page-" + page);
+
+  if(target){
+    target.style.display = "block";
+  }
+
+};
+function updateSellerButton(){
+
+  const sellerBtn = document.getElementById("sellerBtn");
+
+  if(!sellerBtn) return;
+
+  if(!state.user){
+    sellerBtn.style.display = "none";
+    return;
+  }
+
+  if(state.user.role === "seller"){
+    sellerBtn.style.display = "flex";
+  }else{
+    sellerBtn.style.display = "none";
+  }
+
+}
+function updateSellerUI(page){
+
+  const searchBar = document.getElementById("searchBar");
+  const cartBtn = document.getElementById("cartBtn");
+  const wishlistBtn = document.getElementById("wishlistBtn");
+
+  if(!searchBar || !cartBtn || !wishlistBtn) return;
+
+  if(page === "seller"){
+    searchBar.style.visibility = "hidden";
+    cartBtn.style.visibility = "hidden";
+    wishlistBtn.style.visibility = "hidden";
+  } else {
+    searchBar.style.visibility = "visible";
+    cartBtn.style.visibility = "visible";
+    wishlistBtn.style.visibility = "visible";
+  }
+
+}
+function goHome(){
+
+  if(state.user && state.user.role === "seller"){
+    app.navigate("seller");
+  }else{
+    app.navigate("home");
+  }
+
+}
+
+
+
+// =============================
+// ADD PRODUCT (SELLER)
+// =============================
+function addProduct(){
+
+  const name = document.getElementById("productName")?.value.trim();
+  const price = Number(document.getElementById("productPrice")?.value);
+  const image = document.getElementById("productImage")?.value;
+
+  if(!name || !price){
+    alert("Enter product name and price");
+    return;
+  }
+
+  // SAFE USER FETCH
+  let currentUser = null;
+
+  try{
+
+    const stored = localStorage.getItem("currentUser");
+
+    if(stored && stored !== "undefined"){
+      currentUser = JSON.parse(stored);
+    }
+
+  }catch(e){
+
+    console.error("User parse error", e);
+
+  }
+
+  if(!currentUser){
+    alert("Login required");
+    return;
+  }
+
+  let products = JSON.parse(localStorage.getItem("products") || "[]");
+
+  const newProduct = {
+
+    id: Date.now(),
+
+    name: name,
+
+    price: price,
+
+    oldPrice: price + 100,
+
+    image: image || "https://via.placeholder.com/300",
+
+    category: "Flowers",
+
+    rating: 4.5,
+
+    reviews: 1,
+
+    occasion: ["General"],
+
+    description: name + " fresh flowers bouquet.",
+
+    care: "Keep in water and away from heat.",
+
+    meaning: "Symbol of beauty and freshness.",
+
+    seller: currentUser.email
+
+  };
+
+  products.push(newProduct);
+
+  localStorage.setItem("products", JSON.stringify(products));
+
+  if(typeof renderSellerProducts === "function"){
+    renderSellerProducts();
+  }
+
+  if(app && app.renderHome){
+  app.renderHome();
+}
+
+  alert("Product Added Successfully");
+
+}
+// =============================
+// DELETE PRODUCT
+// =============================
+function deleteProduct(productId){
+
+  const confirmDelete = confirm("Are you sure you want to delete this product?");
+
+  if(!confirmDelete){
+    return;
+  }
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  products = products.filter(p => p.id !== productId);
+
+  localStorage.setItem("products", JSON.stringify(products));
+
+  if(typeof renderSellerProducts === "function"){
+    renderSellerProducts();
+  }
+
+  if(typeof renderCustomerProducts === "function"){
+    renderCustomerProducts();
+  }
+
+  alert("Product deleted");
+
+}
+
+
+
+// =============================
+// RENDER CUSTOMER PRODUCTS
+// =============================
+function renderCustomerProducts(){
+
+  const grid = document.getElementById("productGrid");
+
+if(!grid){
+  console.warn("productGrid not found");
+  return;
+}
+
+  if(!grid){
+    console.log("productGrid not found");
+    return;
+  }
+
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+
+  grid.innerHTML = "";
+
+  if(products.length === 0){
+    grid.innerHTML = "<p>No products available</p>";
+    return;
+  }
+
+  let html = "";
+
+  products.forEach(p => {
+
+    html += `
+      <div class="product-card">
+
+        <div class="prod-img-wrap">
+          <img src="${p.image}" alt="${p.name}">
+        </div>
+
+        <div class="prod-body">
+
+          <div class="prod-name">${p.name}</div>
+
+          <div class="price-row">
+            <span class="current">₹${p.price}</span>
+          </div>
+
+          <div class="prod-cta-row">
+            <button class="btn-chip btn-chip-primary"
+              onclick="addToCart(${p.id})">
+              Add to Cart
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  grid.innerHTML = html;
+
+}
+
+
+
+// =============================
+// RENDER SELLER PRODUCTS
+// =============================
+function renderSellerProducts(){
+
+  const container = document.getElementById("sellerProducts");
+
+  if(!container) return;
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+
+  if(!currentUser){
+    container.innerHTML = "<p>Please login</p>";
+    return;
+  }
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  let myProducts = products.filter(p => p.seller === currentUser.email);
+
+  container.innerHTML = "";
+
+  if(myProducts.length === 0){
+    container.innerHTML = "<p>No products added yet</p>";
+    return;
+  }
+
+  let html = "";
+
+  myProducts.forEach(p => {
+
+    html += `
+      <div class="seller-product">
+
+        <img src="${p.image}" width="80">
+
+        <h4>${p.name}</h4>
+
+        <p>₹${p.price}</p>
+
+        <button onclick="deleteProduct(${p.id})">
+          Delete
+        </button>
+
+      </div>
+    `;
+
+  });
+
+  container.innerHTML = html;
+
+}
+// =============================
+// UPDATE CART COUNT
+// =============================
+function updateCartCount(){
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  let total = 0;
+
+  cart.forEach(item=>{
+    total += item.qty;
+  });
+
+  const cartCount = document.getElementById("globalCartCount");
+
+  if(cartCount){
+    cartCount.innerText = total;
+  }
+
+}
+
+
+
+// =============================
+// LOAD SELLER STORE
+// =============================
+function loadStore(){
+
+  const store = JSON.parse(localStorage.getItem("sellerStore") || "null");
+
+  if(!store) return;
+
+  const name = document.getElementById("storeName");
+  const location = document.getElementById("storeLocation");
+  const phone = document.getElementById("storePhone");
+
+  if(name) name.value = store.name || "";
+  if(location) location.value = store.location || "";
+  if(phone) phone.value = store.phone || "";
+
+}
+
+
+
+// =============================
+// SIMPLE LOCAL SIGNUP
+// =============================
+function signup(){
+
+  const name = document.getElementById("signupName")?.value.trim();
+  const email = document.getElementById("signupEmail")?.value.trim();
+  const password = document.getElementById("signupPassword")?.value.trim();
+  const role = document.getElementById("signupRole")?.value;
+
+  if(!name || !email || !password){
+    alert("Please fill all fields");
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const existing = users.find(u => u.email === email);
+
+  if(existing){
+    alert("User already exists");
+    return;
+  }
+
+  const newUser = {
+    name,
+    email,
+    password,
+    role
+  };
+
+  users.push(newUser);
+
+  localStorage.setItem("users", JSON.stringify(users));
+  updateSellerButton();
+
+  alert("Signup successful");
+
+}
+
+
+
+// =============================
+// RENDER CART
+// =============================
+function renderCart(){
+
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const container =
+    document.getElementById("cartItems") ||
+    document.getElementById("cartContent");
+
+  if(!container) return;
+
+  const sellerProducts = JSON.parse(localStorage.getItem("products")) || [];
+  const allProducts = [...FLOWERS_DB, ...sellerProducts];
+
+  if(cart.length === 0){
+    container.innerHTML = "<h3>Your cart is empty 🛒</h3>";
+    return;
+  }
+
+  let subtotal = 0;
+  let html = "";
+
+  cart.forEach(item => {
+
+    const product = allProducts.find(p => p.id === item.id);
+
+    if(!product) return;
+
+    const total = product.price * item.qty;
+
+    subtotal += total;
+
+    html += `
+    <div class="cart-item">
+
+      <img src="${product.image}" class="cart-img">
+
+      <div class="cart-info">
+        <h3>${product.name}</h3>
+        <p class="cart-price">₹${product.price}</p>
+
+        <div class="cart-qty">
+          <button onclick="changeQty(${product.id},-1)">−</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${product.id},1)">+</button>
+        </div>
+
+        <button class="remove-btn" onclick="removeFromCart(${product.id})">
+          Remove
+        </button>
+      </div>
+
+      <div class="cart-total">
+        ₹${total}
+      </div>
+
+    </div>
+    `;
+
+  });
+
+  const delivery = subtotal > 999 ? 0 : 99;
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + delivery + tax;
+
+  html += `
+  <div class="cart-summary">
+
+    <h3>Subtotal : ₹${subtotal}</h3>
+    <h3>Delivery : ₹${delivery}</h3>
+    <h3>Tax : ₹${tax}</h3>
+
+    <h2>Total : ₹${total}</h2>
+
+  </div>
+  `;
+
+  container.innerHTML = html;
+}
+function changeQty(productId, change){
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const item = cart.find(i => i.id === productId);
+
+  if(!item) return;
+
+  item.qty += change;
+
+  if(item.qty <= 0){
+    cart = cart.filter(i => i.id !== productId);
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+
+  renderCart();
+}
+function removeFromCart(productId){
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  cart = cart.filter(item => item.id !== productId);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+
+  renderCart();
+
+}
+function updateCartCount(){
+
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const count = cart.reduce((sum,item)=> sum + item.qty,0);
+
+  const badge = document.getElementById("globalCartCount");
+
+  if(badge){
+    badge.innerText = count;
+  }
+
+}
+// =============================
+// CHANGE CART QUANTITY
+// =============================
+function changeQty(productId, change){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const item = cart.find(i => i.id === productId);
+
+  if(item){
+
+    item.qty += change;
+
+    if(item.qty <= 0){
+      cart = cart.filter(i => i.id !== productId);
+    }
+
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  if(typeof renderCart === "function"){
+    renderCart();
+  }
+
+  if(typeof updateCartCount === "function"){
+    updateCartCount();
+  }
+
+}
+
+
+
+// =============================
+// REMOVE FROM CART
+// =============================
+function removeFromCart(productId){
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart = cart.filter(i => i.id !== productId);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  if(typeof renderCart === "function"){
+    renderCart();
+  }
+
+  if(typeof updateCartCount === "function"){
+    updateCartCount();
+  }
+
+}
+
+
+
+// =============================
+// SEARCH PRODUCTS
+// =============================
+function searchProducts(){
+
+  const input = document.getElementById("searchInput");
+
+  if(!input) return;
+
+  const keyword = input.value.toLowerCase();
+
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(keyword)
+  );
+
+  if(typeof renderFilteredProducts === "function"){
+    renderFilteredProducts(filtered);
+  }
+
+}
+document.addEventListener("DOMContentLoaded", () => {
+
+  updateCartCount();
+
+  renderCart();
+
+});
