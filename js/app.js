@@ -11,7 +11,7 @@ import { renderWishlist } from "./pages/wishlist.js";
 import { renderCheckout } from "./pages/checkout.js";
 import { renderAccount } from "./pages/account.js";
 
-import { getProducts } from "./services/productService.js";
+import { productService } from "./services/productService.js";
 
 /* =========================================
    MAIN APP
@@ -48,7 +48,7 @@ async loadProducts(){
 
   try{
 
-    const products = await getProducts();
+    const products = await productService.loadProducts()
 
     state.products = products || [];
 
