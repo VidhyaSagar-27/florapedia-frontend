@@ -2,7 +2,7 @@
    WISHLIST PAGE CONTROLLER
 ====================================================== */
 
-import { state } from "../state/state.js";
+import { state } from "../state.js";
 import { addProductToCart } from "./product.js";
 import { renderHome } from "./product.js";
 

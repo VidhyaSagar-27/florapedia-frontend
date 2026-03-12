@@ -2,7 +2,7 @@
    CART PAGE CONTROLLER
 ====================================================== */
 
-import { state } from "../state/state.js";
+import { state } from "../state.js";
 import {
   addToCart,
   removeItem,

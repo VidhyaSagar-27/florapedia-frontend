@@ -4,7 +4,7 @@
 
 import { state } from "../state.js";
 import * as cartService from "../services/cartService.js";
-import { createCartItem } from "../components/cartItem.js";
+import { createCartItem } from "../components/cartItems.js";
 
 /* ======================================================
    LOAD CART
