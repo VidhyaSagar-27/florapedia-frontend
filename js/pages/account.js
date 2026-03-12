@@ -3,7 +3,7 @@
 ========================================= */
 
 import { state } from "../state.js";
-import { OrderCard } from "../components/orderCard.js";
+import { renderOrderCard } from "../components/orderCard.js";
 
 
 export function renderAccount(){
