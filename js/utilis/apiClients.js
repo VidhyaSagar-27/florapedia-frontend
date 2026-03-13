@@ -60,9 +60,7 @@ async function request(url, options = {}, retry = RETRY_COUNT) {
     if (!response.ok) {
 
       if (response.status === 401) {
-
         handleUnauthorized();
-
       }
 
       const message =
@@ -172,7 +170,6 @@ export const authAPI = {
 
   },
 
-
   async register(data) {
 
     return request(API.REGISTER, {
@@ -182,13 +179,11 @@ export const authAPI = {
 
   },
 
-
   async getProfile() {
 
     return request(API.PROFILE);
 
   },
-
 
   async logout() {
 
@@ -210,22 +205,55 @@ export const authAPI = {
    PRODUCT API
 ====================================================== */
 
+/* ======================================================
+   PRODUCT API
+====================================================== */
+
+function isValidObjectId(id){
+  return typeof id === "string" && /^[0-9a-fA-F]{24}$/.test(id);
+}
+
 export const productAPI = {
 
-  getAll() {
-    return request(API.PRODUCTS);
+  async getAll(){
+
+    const data = await request(API.PRODUCTS);
+
+    if(Array.isArray(data)) return data;
+
+    if(Array.isArray(data?.products)) return data.products;
+
+    return [];
+
   },
 
-  getById(id) {
+  async getById(id){
+
+    if(!isValidObjectId(id)){
+      console.warn("Invalid product ID:", id);
+      throw new Error("Invalid product ID");
+    }
+
     return request(API.PRODUCT_BY_ID(id));
+
   },
 
-  getCategories() {
-    return request(API.CATEGORIES);
+  async getCategories(){
+
+    const data = await request(API.CATEGORIES);
+
+    return Array.isArray(data) ? data : [];
+
   },
 
-  search(query) {
-    return request(API.SEARCH + "?q=" + encodeURIComponent(query));
+  async search(query){
+
+    if(!query) return [];
+
+    return request(
+      API.SEARCH + "?q=" + encodeURIComponent(query)
+    );
+
   }
 
 };

@@ -17,6 +17,7 @@ class ProductService {
   constructor(){
     this.cache = [];
     this.lastFetch = 0;
+    this.cacheDuration = 300000; // 5 minutes
   }
 
 
@@ -31,18 +32,51 @@ class ProductService {
 
       const now = Date.now();
 
-      if(!force && this.cache.length && now - this.lastFetch < 300000){
+      if(
+        !force &&
+        this.cache.length &&
+        now - this.lastFetch < this.cacheDuration
+      ){
         return this.cache;
       }
 
-      const products = await productAPI.getAll();
+      const response = await productAPI.getAll();
 
-      this.cache = products || [];
+      let products = [];
+
+      if(Array.isArray(response)){
+        products = response;
+      }
+      else if(Array.isArray(response?.products)){
+        products = response.products;
+      }
+      else{
+        console.warn("Unexpected product response format", response);
+        products = [];
+      }
+
+      /* Normalize product structure */
+
+      products = products.map(p => {
+
+        const id = p._id || p.id;
+
+        return {
+          ...p,
+          id: String(id),
+          price: Number(p.price) || 0,
+          rating: Number(p.rating) || 0,
+          stock: Number(p.stock ?? 10)
+        };
+
+      });
+
+      this.cache = products;
       this.lastFetch = now;
 
-      state.products = this.cache;
+      state.products = products;
 
-      return this.cache;
+      return products;
 
     }catch(err){
 
@@ -62,9 +96,24 @@ class ProductService {
 
   getAll(){
 
-    return this.cache.length
-      ? this.cache
-      : state.products;
+    if(this.cache.length) return this.cache;
+
+    if(state.products?.length) return state.products;
+
+    return [];
+
+  }
+
+
+
+  /* =========================================
+     VALIDATE MONGODB OBJECTID
+  ========================================= */
+
+  isValidId(id){
+
+    return typeof id === "string" &&
+      /^[0-9a-fA-F]{24}$/.test(id);
 
   }
 
@@ -75,6 +124,8 @@ class ProductService {
   ========================================= */
 
   getById(id){
+
+    if(!id) return null;
 
     return this.getAll().find(p =>
       p.id === id || p._id === id
@@ -90,6 +141,8 @@ class ProductService {
 
   getByCategory(category){
 
+    if(!category) return [];
+
     return this.getAll().filter(p =>
       p.category?.toLowerCase() === category.toLowerCase()
     );
@@ -103,6 +156,8 @@ class ProductService {
   ========================================= */
 
   search(query){
+
+    if(!query) return this.getAll();
 
     return searchProducts(this.getAll(), query);
 
@@ -142,7 +197,7 @@ class ProductService {
 
     let products = this.getAll();
 
-    if(state.filters.search){
+    if(state.filters?.search){
       products = searchProducts(products, state.filters.search);
     }
 
@@ -157,7 +212,7 @@ class ProductService {
 
 
   /* =========================================
-     GET FEATURED PRODUCTS
+     FEATURED PRODUCTS
   ========================================= */
 
   getFeatured(){
@@ -169,13 +224,13 @@ class ProductService {
 
 
   /* =========================================
-     GET TRENDING PRODUCTS
+     TRENDING PRODUCTS
   ========================================= */
 
   getTrending(){
 
     return this.getAll()
-      .filter(p => p.rating >= 4)
+      .filter(p => (p.rating || 0) >= 4)
       .slice(0,10);
 
   }
@@ -183,7 +238,7 @@ class ProductService {
 
 
   /* =========================================
-     GET RELATED PRODUCTS
+     RELATED PRODUCTS
   ========================================= */
 
   getRelated(productId){
@@ -224,7 +279,13 @@ class ProductService {
 
   getPriceRange(){
 
-    const prices = this.getAll().map(p => p.price);
+    const prices = this.getAll()
+      .map(p => p.price)
+      .filter(p => typeof p === "number");
+
+    if(!prices.length){
+      return { min:0, max:0 };
+    }
 
     return {
       min: Math.min(...prices),
@@ -234,6 +295,5 @@ class ProductService {
   }
 
 }
-
 
 export const productService = new ProductService();
