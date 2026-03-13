@@ -1,7 +1,7 @@
 /* =========================================
    FLORAPEDIA MAIN ENTRY
 ========================================= */
-
+import "./auth.js";
 import { app } from "./app.js";
 import { loadState } from "./state.js";
 

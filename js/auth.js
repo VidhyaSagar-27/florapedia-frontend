@@ -308,3 +308,221 @@ var auth = {
   }
 
 };
+/* ================================
+   FLORAPEDIA AUTH CONTROLLER
+================================ */
+
+import { state } from "./state.js";
+
+const auth = firebase.auth();
+
+window.auth = {
+
+  /* =========================
+     USER CLICK
+  ========================= */
+
+  handleUserClick() {
+
+    const modal = document.getElementById("authModal");
+
+    if (state.user) {
+
+      alert("Logged in as " + state.user.email);
+
+    } else {
+
+      modal.style.display = "flex";
+
+    }
+
+  },
+
+  /* =========================
+     CLOSE MODAL
+  ========================= */
+
+  closeModal() {
+
+    document.getElementById("authModal").style.display = "none";
+
+  },
+
+  /* =========================
+     SWITCH TABS
+  ========================= */
+
+  switchTab(tab) {
+
+    document
+      .querySelectorAll(".auth-tab-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    document
+      .querySelectorAll(".auth-form")
+      .forEach(f => f.classList.remove("show"));
+
+    if (tab === "login") {
+
+      document.getElementById("loginForm").classList.add("show");
+
+      document.querySelectorAll(".auth-tab-btn")[0]
+        .classList.add("active");
+
+    }
+
+    if (tab === "signup") {
+
+      document.getElementById("signupForm").classList.add("show");
+
+      document.querySelectorAll(".auth-tab-btn")[1]
+        .classList.add("active");
+
+    }
+
+  },
+
+  /* =========================
+     EMAIL LOGIN
+  ========================= */
+
+  async doLogin() {
+
+    const email =
+      document.getElementById("loginEmail").value;
+
+    const password =
+      document.getElementById("loginPassword").value;
+
+    try {
+
+      const res =
+        await auth.signInWithEmailAndPassword(
+          email,
+          password
+        );
+
+      state.user = res.user;
+
+      alert("Login successful");
+
+      window.app.updateHeader();
+
+      this.closeModal();
+
+    } catch (err) {
+
+      alert(err.message);
+
+    }
+
+  },
+
+  /* =========================
+     SIGNUP
+  ========================= */
+
+  async doSignup() {
+
+    const name =
+      document.getElementById("signupName").value;
+
+    const email =
+      document.getElementById("signupEmail").value;
+
+    const password =
+      document.getElementById("signupPassword").value;
+
+    const role =
+      document.getElementById("signupRole").value;
+
+    try {
+
+      const res =
+        await auth.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+
+      await res.user.updateProfile({
+        displayName: name
+      });
+
+      state.user = res.user;
+
+      alert("Account created");
+
+      window.app.updateHeader();
+
+      this.closeModal();
+
+    } catch (err) {
+
+      alert(err.message);
+
+    }
+
+  },
+
+  /* =========================
+     PHONE OTP LOGIN
+  ========================= */
+
+  async sendOTP() {
+
+    const phone =
+      "+91" + document.getElementById("phoneNumber").value;
+
+    window.recaptchaVerifier =
+      new firebase.auth.RecaptchaVerifier(
+        "recaptcha-container"
+      );
+
+    const confirmation =
+      await auth.signInWithPhoneNumber(
+        phone,
+        window.recaptchaVerifier
+      );
+
+    window.confirmationResult = confirmation;
+
+    document
+      .getElementById("otpSection")
+      .style.display = "block";
+
+  },
+
+  /* =========================
+     VERIFY OTP
+  ========================= */
+
+  async verifyOTP() {
+
+    const inputs =
+      document.querySelectorAll(".otp-input");
+
+    const code =
+      [...inputs].map(i => i.value).join("");
+
+    try {
+
+      const res =
+        await window.confirmationResult.confirm(code);
+
+      state.user = res.user;
+
+      alert("Phone login successful");
+
+      window.app.updateHeader();
+
+      this.closeModal();
+
+    } catch (err) {
+
+      alert("Invalid OTP");
+
+    }
+
+  }
+
+};

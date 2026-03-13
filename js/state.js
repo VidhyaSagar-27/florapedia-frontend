@@ -179,6 +179,26 @@ export function loadState(){
   }
 
 }
+/* =========================================
+   SAVE STATE
+========================================= */
+
+export function saveState(){
+
+  try{
+
+    localStorage.setItem(
+      "florapedia-state",
+      JSON.stringify(state)
+    );
+
+  }catch(err){
+
+    console.error("State save failed",err);
+
+  }
+
+}
 
 
 

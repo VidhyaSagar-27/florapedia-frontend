@@ -51,7 +51,7 @@
 id="mainSearch"
 type="text"
 placeholder="Search roses, lilies, orchids, bouquets…"
-oninput="app.handleSearch(this.value)"
+oninput="handleSearch(this.value)"
 autocomplete="off"
 />
 
@@ -191,15 +191,15 @@ alt="Premium Flowers"
 
 <h4>Category</h4>
 
-<label><input type="checkbox" onchange="app.toggleFilter('category','Roses')"> Roses</label>
+<label><input type="checkbox" onchange="filterCategory('Roses')"> Roses</label>
 
-<label><input type="checkbox" onchange="app.toggleFilter('category','Lilies')"> Lilies</label>
+<label><input type="checkbox" onchange="filterCategory('Lilies')"> Lilies</label>
 
-<label><input type="checkbox" onchange="app.toggleFilter('category','Orchids')"> Orchids</label>
+<label><input type="checkbox" onchange="filterCategory('Orchids')"> Orchids</label>
 
-<label><input type="checkbox" onchange="app.toggleFilter('category','Tulips')"> Tulips</label>
+<label><input type="checkbox" onchange="filterCategory('Tulips')"> Tulips</label>
 
-<label><input type="checkbox" onchange="app.toggleFilter('category','Sunflowers')"> Sunflowers</label>
+<label><input type="checkbox" onchange="filterCategory('Sunflowers')"> Sunflowers</label>
 
 </div>
 
@@ -302,7 +302,7 @@ Handpicked from verified florists
 
 </div>
 
-<div class="product-grid" id="mainProductGrid"></div>
+<div class="product-grid" id="productGrid"></div>
 
 <div id="emptyState" class="empty-state" style="display:none;">
 
