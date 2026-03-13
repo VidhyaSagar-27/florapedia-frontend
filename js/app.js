@@ -12,7 +12,7 @@ import { renderCheckout } from "./pages/checkout.js";
 import { renderAccount } from "./pages/account.js";
 
 import { productService } from "./services/productService.js";
-import { eventBus } from "./utils/eventBus.js";
+import { eventBus } from "./utilis/eventBus.js";
 
 
 /* =========================================
