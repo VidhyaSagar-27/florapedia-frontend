@@ -239,6 +239,7 @@ auth.logout = function(){
 /* =========================================
    GLOBAL EXPORT
 ========================================= */
-
+export { auth };
 window.auth = auth;
+
 ```
