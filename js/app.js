@@ -5,7 +5,7 @@
 import { state } from "./state.js";
 
 import { renderHome } from "./pages/home.js";
-import { renderHome } from "./pages/product.js";
+import { renderPDP } from "./pages/product.js";
 import { renderCart } from "./pages/cart.js";
 import { renderWishlist } from "./pages/wishlist.js";
 import { renderCheckout } from "./pages/checkout.js";
