@@ -1,9 +1,13 @@
 /* =========================================
    FLORAPEDIA MAIN ENTRY
 ========================================= */
-import "./auth.js";
+
+import { auth } from "./auth.js";
 import { app } from "./app.js";
 import { loadState } from "./state.js";
+
+window.auth = auth;
+window.app = app;
 
 
 /* =========================================
@@ -40,12 +44,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 window.goHome = function () {
 
   if (app && app.navigate) {
-
     app.navigate("home");
-
   }
 
 };
+
+
 window.saveStore = function(){
 
   const name = document.getElementById("storeName")?.value;
@@ -59,6 +63,8 @@ window.saveStore = function(){
   }
 
 };
+
+
 window.addProduct = function(){
 
   const name = document.getElementById("productName")?.value;

@@ -1,4 +1,73 @@
+```javascript
+/* =========================================
+   FLORAPEDIA AUTH MODULE
+========================================= */
+
 const auth = {};
+
+/* =========================================
+   OPEN LOGIN / SIGNUP MODAL
+========================================= */
+
+auth.openModal = function(){
+
+  const modal = document.getElementById("authModal");
+
+  if(modal){
+    modal.style.display = "flex";
+  }
+
+};
+
+/* =========================================
+   CLOSE AUTH MODAL
+========================================= */
+
+auth.closeModal = function(){
+
+  const modal = document.getElementById("authModal");
+
+  if(modal){
+    modal.style.display = "none";
+  }
+
+};
+
+/* =========================================
+   SWITCH LOGIN / SIGNUP TAB
+========================================= */
+
+auth.switchTab = function(tab){
+
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+
+  const buttons = document.querySelectorAll(".auth-tab-btn");
+
+  buttons.forEach(btn => btn.classList.remove("active"));
+
+  if(tab === "login"){
+
+    loginForm?.classList.add("show");
+    signupForm?.classList.remove("show");
+
+    buttons[0]?.classList.add("active");
+
+  }else{
+
+    signupForm?.classList.add("show");
+    loginForm?.classList.remove("show");
+
+    buttons[1]?.classList.add("active");
+
+  }
+
+};
+
+/* =========================================
+   LOGIN FUNCTION
+========================================= */
+
 auth.doLogin = async function(){
 
   const email = document.getElementById("loginEmail")?.value.trim();
@@ -25,35 +94,24 @@ auth.doLogin = async function(){
     const data = await response.json();
 
     console.log("LOGIN RESPONSE:", data);
-    state.user = data.user || data;
-    localStorage.setItem("user", JSON.stringify(state.user));
 
     if(response.ok && data.token){
 
-      // Save auth data
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-      // Update app state
       state.user = data.user || data;
 
-      // Refresh UI
       if(app && app.updateUI){
         app.updateUI();
       }
 
-      // Close modal
-      if(auth.closeModal){
-        auth.closeModal();
-      }
+      auth.closeModal();
 
-      // Redirect user
       const role = data.role ? data.role.toLowerCase() : "buyer";
 
       if(role === "seller"){
-
-        console.log("Redirecting to seller dashboard");
 
         app.toast("Seller login successful");
 
@@ -64,8 +122,6 @@ auth.doLogin = async function(){
         },200);
 
       }else{
-
-        console.log("Redirecting to home page");
 
         app.toast("Login successful");
 
@@ -86,36 +142,92 @@ auth.doLogin = async function(){
   }catch(error){
 
     console.error("LOGIN ERROR:", error);
-
     app.toast("Server connection error");
 
   }
 
 };
+
+/* =========================================
+   SIGNUP FUNCTION
+========================================= */
+
+auth.doSignup = async function(){
+
+  const name = document.getElementById("signupName")?.value.trim();
+  const email = document.getElementById("signupEmail")?.value.trim();
+  const password = document.getElementById("signupPassword")?.value.trim();
+  const role = document.getElementById("signupRole")?.value || "buyer";
+
+  if(!name || !email || !password){
+
+    app.toast("Please fill all fields");
+    return;
+
+  }
+
+  try{
+
+    const response = await fetch(API + "/auth/signup",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        role
+      })
+    });
+
+    const data = await response.json();
+
+    if(response.ok){
+
+      app.toast("Account created successfully");
+
+      auth.switchTab("login");
+
+    }else{
+
+      app.toast(data.message || "Signup failed");
+
+    }
+
+  }catch(err){
+
+    console.error(err);
+    app.toast("Server error");
+
+  }
+
+};
+
+/* =========================================
+   LOGOUT
+========================================= */
+
 auth.logout = function(){
 
-  // Clear storage
   localStorage.removeItem("token");
   localStorage.removeItem("role");
   localStorage.removeItem("currentUser");
 
-  // Clear state
   if(typeof state !== "undefined"){
     state.user = null;
   }
 
-  // Reset UI name
   const nameEl = document.getElementById("headerUserName");
+
   if(nameEl){
     nameEl.innerText = "Login";
   }
 
-  // Update UI
   if(app && app.updateUI){
     app.updateUI();
   }
 
-  // Redirect home
   if(app && app.navigate){
     app.navigate("home");
   }
@@ -123,4 +235,10 @@ auth.logout = function(){
   app.toast("Logged out");
 
 };
+
+/* =========================================
+   GLOBAL EXPORT
+========================================= */
+
 window.auth = auth;
+```
