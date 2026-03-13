@@ -46,3 +46,29 @@ window.goHome = function () {
   }
 
 };
+window.saveStore = function(){
+
+  const name = document.getElementById("storeName")?.value;
+  const location = document.getElementById("storeLocation")?.value;
+  const phone = document.getElementById("storePhone")?.value;
+
+  console.log("Store saved:", name, location, phone);
+
+  if(window.app){
+    app.toast("Store saved successfully");
+  }
+
+};
+window.addProduct = function(){
+
+  const name = document.getElementById("productName")?.value;
+  const price = document.getElementById("productPrice")?.value;
+  const image = document.getElementById("productImage")?.value;
+
+  console.log("Product:", name, price, image);
+
+  if(window.app){
+    app.toast("Product added");
+  }
+
+};
