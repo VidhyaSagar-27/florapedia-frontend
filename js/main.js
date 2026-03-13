@@ -2,7 +2,7 @@
    FLORAPEDIA MAIN ENTRY
 ========================================= */
 
-import { auth } from "./auth.js";
+import { auth } from "./auth.js?v=2";
 import { app } from "./app.js";
 import { loadState } from "./state.js";
 
