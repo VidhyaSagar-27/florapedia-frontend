@@ -19,8 +19,6 @@ LOAD CART
 ========================================= */
 
 loadCart(){
-
-```
 try{
   const saved = JSON.parse(localStorage.getItem("cart"));
   state.cart = saved || [];
@@ -28,7 +26,6 @@ try{
 catch{
   state.cart = [];
 }
-```
 
 }
 
