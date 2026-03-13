@@ -1,9 +1,9 @@
-```javascript
+
 /* =========================================
    FLORAPEDIA AUTH MODULE
 ========================================= */
 
-const auth = {};
+export const auth = {}
 
 /* =========================================
    OPEN LOGIN / SIGNUP MODAL
@@ -238,4 +238,3 @@ auth.logout = function(){
 ========================================= */
 
 export { auth };
-```
