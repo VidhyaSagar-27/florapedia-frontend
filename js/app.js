@@ -12,7 +12,7 @@ import { renderCheckout } from "./pages/checkout.js";
 import { renderAccount } from "./pages/account.js";
 
 import { productService } from "./services/productService.js";
-import { eventBus } from "./utilis/eventBus.js";
+import { eventBus } from "./utils/eventBus.js";
 
 
 /* =========================================
@@ -27,22 +27,21 @@ export const app = {
 
   async init(){
 
-  loadState();
+    loadState();
 
-  await this.loadProducts();
+    await this.loadProducts();
 
-  this.bindGlobalEvents();
+    this.bindGlobalEvents();
 
-  /* listen for cart updates */
-  eventBus.on("cart:updated", () => {
+    eventBus.on("cart:updated", () => {
+      this.updateHeader();
+    });
+
+    this.navigate("home");
+
     this.updateHeader();
-  });
 
-  this.navigate("home");
-
-  this.updateHeader();
-
-},
+  },
 
 
   /* =========================================
@@ -51,16 +50,15 @@ export const app = {
 
   async loadProducts(){
 
-  try{
+    try{
 
-    const products = await productService.loadProducts();
+      const products = await productService.loadProducts();
 
-    state.products = products || [];
+      state.products = products || [];
 
-    // build fast product lookup map
-    buildProductMap();
+      buildProductMap();
 
-  }
+    }
     catch(err){
 
       console.error("Product load failed",err);
@@ -92,7 +90,6 @@ export const app = {
     }
 
     window.scrollTo(0,0);
-
 
     switch(page){
 
