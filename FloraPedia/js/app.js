@@ -2,7 +2,7 @@
    FLORAPEDIA APP CONTROLLER
 ========================================= */
 
-import { state, loadState, saveState } from "./state.js";
+import { state, loadState, saveState, buildProductMap } from "./state.js";
 
 import { renderHome } from "./pages/home.js";
 import { renderPDP } from "./pages/product.js";
@@ -12,6 +12,7 @@ import { renderCheckout } from "./pages/checkout.js";
 import { renderAccount } from "./pages/account.js";
 
 import { productService } from "./services/productService.js";
+import { eventBus } from "./utilis/eventBus.js";
 
 
 /* =========================================
@@ -26,17 +27,22 @@ export const app = {
 
   async init(){
 
-    loadState();
+  loadState();
 
-    await this.loadProducts();
+  await this.loadProducts();
 
-    this.bindGlobalEvents();
+  this.bindGlobalEvents();
 
-    this.navigate("home");
-
+  /* listen for cart updates */
+  eventBus.on("cart:updated", () => {
     this.updateHeader();
+  });
 
-  },
+  this.navigate("home");
+
+  this.updateHeader();
+
+},
 
 
   /* =========================================
@@ -45,13 +51,16 @@ export const app = {
 
   async loadProducts(){
 
-    try{
+  try{
 
-      const products = await productService.loadProducts();
+    const products = await productService.loadProducts();
 
-      state.products = products || [];
+    state.products = products || [];
 
-    }
+    // build fast product lookup map
+    buildProductMap();
+
+  }
     catch(err){
 
       console.error("Product load failed",err);

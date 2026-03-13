@@ -10,7 +10,7 @@ import { renderProductCard } from "../components/productCard.js";
    RENDER HOME
 ========================================= */
 
-export function renderHome(){
+export function renderHome() {
 
   renderCategories();
   renderProducts();
@@ -22,17 +22,14 @@ export function renderHome(){
    RENDER PRODUCTS
 ========================================= */
 
-function renderProducts(){
+function renderProducts() {
 
-  const grid =
-    document.getElementById("productGrid");
+  const grid = document.getElementById("productGrid");
+  if (!grid) return;
 
-  if(!grid) return;
+  const products = getFilteredProducts();
 
-  const products =
-    getFilteredProducts();
-
-  if(products.length === 0){
+  if (!products || products.length === 0) {
 
     grid.innerHTML = `
       <div class="empty-state">
@@ -41,13 +38,15 @@ function renderProducts(){
     `;
 
     return;
-
   }
 
-  grid.innerHTML =
-    products
-      .map(p => renderProductCard(p))  // ✅ FIXED
-      .join("");
+  let html = "";
+
+  products.forEach(product => {
+    html += renderProductCard(product);
+  });
+
+  grid.innerHTML = html;
 
 }
 
@@ -56,12 +55,12 @@ function renderProducts(){
    CATEGORY STRIP
 ========================================= */
 
-function renderCategories(){
+function renderCategories() {
 
-  const strip =
-    document.getElementById("categoryStrip");
+  const strip = document.getElementById("categoryStrip");
+  if (!strip) return;
 
-  if(!strip) return;
+  if (!state.products || state.products.length === 0) return;
 
   const categories =
     [...new Set(
@@ -70,14 +69,13 @@ function renderCategories(){
         .filter(Boolean)
     )];
 
-  strip.innerHTML =
-    categories.map(cat => `
+  strip.innerHTML = categories.map(cat => `
 
       <div class="cat-pill"
            onclick="filterCategory('${cat}')">
 
         <div class="cat-icon-wrap">
-          ${cat.charAt(0)}
+          ${cat.charAt(0).toUpperCase()}
         </div>
 
         <div>
@@ -94,7 +92,7 @@ function renderCategories(){
 
       </div>
 
-    `).join("");
+  `).join("");
 
 }
 
@@ -103,7 +101,9 @@ function renderCategories(){
    CATEGORY FILTER
 ========================================= */
 
-window.filterCategory = function(category){
+window.filterCategory = function (category) {
+
+  if (!state.filters) state.filters = {};
 
   state.filters.category = [category];
 
@@ -116,10 +116,11 @@ window.filterCategory = function(category){
    SEARCH
 ========================================= */
 
-window.handleSearch = function(query){
+window.handleSearch = function (query) {
 
-  query =
-    (query || "").toLowerCase();
+  if (!state.filters) state.filters = {};
+
+  query = (query || "").toLowerCase();
 
   state.filters.search = query;
 
@@ -132,7 +133,7 @@ window.handleSearch = function(query){
    SORT
 ========================================= */
 
-window.setSort = function(sort){
+window.setSort = function (sort) {
 
   state.sort = sort;
 
@@ -145,90 +146,79 @@ window.setSort = function(sort){
    FILTER ENGINE
 ========================================= */
 
-function getFilteredProducts(){
+function getFilteredProducts() {
 
-  let products =
-    [...state.products];
+  if (!state.products) return [];
 
-  const filters =
-    state.filters || {};
+  let products = [...state.products];
+
+  const filters = state.filters || {};
 
 
-  /* CATEGORY */
+  /* CATEGORY FILTER */
 
-  if(filters.category?.length){
+  if (filters.category && filters.category.length > 0) {
 
-    products =
-      products.filter(p =>
-        filters.category.includes(
-          p.category
-        )
-      );
+    products = products.filter(p =>
+      filters.category.includes(p.category)
+    );
 
   }
 
 
-  /* SEARCH */
+  /* SEARCH FILTER */
 
-  if(filters.search){
+  if (filters.search) {
 
-    const q =
-      filters.search.toLowerCase();
+    const q = filters.search.toLowerCase();
 
-    products =
-      products.filter(p =>
+    products = products.filter(p =>
 
-        p.name?.toLowerCase()
-          .includes(q)
+      p.name?.toLowerCase().includes(q)
 
-        ||
+      ||
 
-        p.category?.toLowerCase()
-          .includes(q)
+      p.category?.toLowerCase().includes(q)
 
-      );
+      ||
+
+      p.description?.toLowerCase().includes(q)
+
+    );
 
   }
 
 
-  /* PRICE */
+  /* PRICE FILTER */
 
-  if(filters.price){
+  if (filters.price && filters.price.length === 2) {
 
-    products =
-      products.filter(p =>
+    const [min, max] = filters.price;
 
-        p.price >= filters.price[0] &&
-        p.price <= filters.price[1]
-
-      );
+    products = products.filter(p =>
+      p.price >= min && p.price <= max
+    );
 
   }
 
 
   /* SORTING */
 
-  if(state.sort === "price-low"){
+  if (state.sort === "price-low") {
 
-    products.sort(
-      (a,b)=> a.price - b.price
-    );
+    products.sort((a, b) => a.price - b.price);
 
   }
 
-  if(state.sort === "price-high"){
+  else if (state.sort === "price-high") {
 
-    products.sort(
-      (a,b)=> b.price - a.price
-    );
+    products.sort((a, b) => b.price - a.price);
 
   }
 
-  if(state.sort === "rating"){
+  else if (state.sort === "rating") {
 
-    products.sort(
-      (a,b)=> (b.rating||0)-(a.rating||0)
-    );
+    products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
   }
 

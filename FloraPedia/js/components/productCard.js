@@ -14,20 +14,41 @@ import { state } from "../state.js";
 
 export function renderProductCard(product){
 
+  const id = product.id || product._id;
+
   const inWishlist =
-    state.wishlist?.includes(product.id);
+    state.wishlist?.includes(id);
+
+  const rating =
+    product.rating || 4.2;
+
+  const reviews =
+    product.reviews || 12;
+
+  const stock =
+    product.stock ?? 10;
+
+  const price =
+    product.price || 0;
+
+  const oldPrice =
+    product.oldPrice || null;
 
   const badge =
-    product.stock <= 5
+    stock <= 5
       ? `<span class="product-badge low">Low Stock</span>`
-      : product.rating >= 4.5
+      : rating >= 4.5
       ? `<span class="product-badge top">Top Rated</span>`
       : "";
 
 
+  const outOfStock =
+    stock <= 0;
+
+
   return `
 
-  <div class="product-card" data-id="${product.id}">
+  <div class="product-card" data-id="${id}">
 
     <div class="product-image-wrap">
 
@@ -42,9 +63,9 @@ export function renderProductCard(product){
 
       <button
         class="wishlist-btn ${inWishlist ? "active":""}"
-        onclick="toggleWishlist('${product.id}')"
+        onclick="toggleWishlist('${id}')"
       >
-        ❤️
+        ${inWishlist ? "❤️" : "🤍"}
       </button>
 
     </div>
@@ -60,12 +81,13 @@ export function renderProductCard(product){
         ${product.name}
       </h3>
 
+
       <div class="product-rating">
 
-        ⭐ ${product.rating || 4.2}
+        ${renderStars(rating)}
 
         <span class="rating-count">
-          (${product.reviews || 12})
+          (${reviews})
         </span>
 
       </div>
@@ -74,24 +96,45 @@ export function renderProductCard(product){
       <div class="product-footer">
 
         <div class="product-price">
-          ${formatCurrency(product.price)}
+
+          <span class="price-now">
+            ${formatCurrency(price)}
+          </span>
+
+          ${
+            oldPrice
+            ? `<span class="price-old">
+                ${formatCurrency(oldPrice)}
+              </span>`
+            : ""
+          }
+
         </div>
+
 
         <div class="product-actions">
 
-          <button
-            class="btn-cart"
-            onclick="addToCart('${product.id}')"
-          >
-            Add
-          </button>
+          ${
+            outOfStock
+            ? `<button class="btn-out">
+                 Out of Stock
+               </button>`
+            : `
+              <button
+                class="btn-cart"
+                onclick="addToCart('${id}')"
+              >
+                Add
+              </button>
 
-          <button
-            class="btn-buy"
-            onclick="buyNow('${product.id}')"
-          >
-            Buy
-          </button>
+              <button
+                class="btn-buy"
+                onclick="buyNow('${id}')"
+              >
+                Buy
+              </button>
+            `
+          }
 
         </div>
 
@@ -107,6 +150,41 @@ export function renderProductCard(product){
 
 
 /* ======================================================
+   STAR RENDERING
+====================================================== */
+
+function renderStars(rating){
+
+  let stars = "";
+
+  for(let i=1;i<=5;i++){
+
+    if(rating >= i){
+      stars += "⭐";
+    }
+    else if(rating >= i-0.5){
+      stars += "✨";
+    }
+    else{
+      stars += "☆";
+    }
+
+  }
+
+  return `
+    <span class="stars">
+      ${stars}
+      <span class="rating-number">
+        ${rating.toFixed(1)}
+      </span>
+    </span>
+  `;
+
+}
+
+
+
+/* ======================================================
    GLOBAL BUTTON FUNCTIONS
 ====================================================== */
 
@@ -114,27 +192,28 @@ window.addToCart = function(productId){
 
   cartService.add(productId,1);
 
-  if(window.app){
-    window.app.updateHeader();
-    window.app.toast("Added to cart");
-  }
+  window.app?.updateHeader();
+  window.app?.toast("Added to cart");
 
 };
+
 
 
 window.buyNow = function(productId){
 
   cartService.add(productId,1);
 
-  if(window.app){
-    window.app.updateHeader();
-    window.app.navigate("cart");
-  }
+  window.app?.updateHeader();
+  window.app?.navigate("cart");
 
 };
 
 
+
 window.toggleWishlist = function(productId){
+
+  if(!state.wishlist)
+    state.wishlist = [];
 
   const index =
     state.wishlist.indexOf(productId);
@@ -145,7 +224,8 @@ window.toggleWishlist = function(productId){
 
     window.app?.toast("Added to wishlist");
 
-  }else{
+  }
+  else{
 
     state.wishlist.splice(index,1);
 
@@ -154,5 +234,19 @@ window.toggleWishlist = function(productId){
   }
 
   window.app?.updateHeader();
+
+  /* refresh UI instantly */
+
+  document
+    .querySelectorAll(
+      `.product-card[data-id="${productId}"] .wishlist-btn`
+    )
+    .forEach(btn => {
+      btn.classList.toggle("active");
+      btn.innerHTML =
+        btn.classList.contains("active")
+        ? "❤️"
+        : "🤍";
+    });
 
 };

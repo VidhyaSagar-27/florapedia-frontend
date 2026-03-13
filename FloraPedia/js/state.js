@@ -309,16 +309,19 @@ export function buildProductMap(){
 
   const map = {};
 
-  state.products.forEach(p=>{
+  for(const p of state.products){
 
-    map[p.id || p._id] = p;
+    const id = p.id || p._id;
 
-  });
+    if(!id) continue;
+
+    map[id] = p;
+
+  }
 
   state.productMap = map;
 
 }
-
 
 
 /* =====================================================
@@ -342,29 +345,27 @@ export function recalcCart(){
   let items = 0;
   let subtotal = 0;
 
-  state.cart.forEach(item=>{
+  for(const item of state.cart){
 
     const product =
-      state.productMap[item.productId] ||
-      state.products.find(
-        p => p.id === item.productId || p._id === item.productId
-      );
+      state.productMap[item.productId];
 
-    if(!product) return;
+    if(!product) continue;
 
-    items += item.qty;
+    const qty = item.qty || 1;
 
-    subtotal += product.price * item.qty;
+    items += qty;
 
-  });
+    subtotal += (product.price || 0) * qty;
 
+  }
 
   const delivery =
     state.checkout.deliveryType === "express"
       ? 299
       : subtotal > 499
-        ? 0
-        : 99;
+      ? 0
+      : 99;
 
   const tax =
     Math.round(subtotal * 0.05);
@@ -372,15 +373,12 @@ export function recalcCart(){
   const total =
     subtotal + delivery + tax;
 
-
   state.cartSummary = {
-
     items,
     subtotal,
     delivery,
     tax,
     total
-
   };
 
 }
@@ -393,11 +391,15 @@ export function recalcCart(){
 
 export function toggleWishlist(productId){
 
-  const index = state.wishlist.indexOf(productId);
+  if(!productId) return;
 
-  if(index > -1){
+  const exists =
+    state.wishlist.includes(productId);
 
-    state.wishlist.splice(index,1);
+  if(exists){
+
+    state.wishlist =
+      state.wishlist.filter(id => id !== productId);
 
   }
   else{
@@ -409,7 +411,6 @@ export function toggleWishlist(productId){
   save("wishlist", state.wishlist);
 
 }
-
 
 
 /* =====================================================
@@ -454,6 +455,8 @@ export function pushNotification(message){
 ===================================================== */
 
 export function initState(){
+
+  buildProductMap();
 
   recalcCart();
 
