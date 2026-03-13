@@ -188,10 +188,11 @@ auth.doSignup = async function(){
 
   const name = document.getElementById("signupName")?.value.trim();
   const email = document.getElementById("signupEmail")?.value.trim();
+  const phone = document.getElementById("signupPhone")?.value.trim();
   const password = document.getElementById("signupPassword")?.value.trim();
-  const role = document.getElementById("signupRole")?.value || "buyer";
+  const role = document.getElementById("signupRole")?.value || "customer";
 
-  if(!name || !email || !password){
+  if(!name || !email || !phone || !password){
     app.toast("Please fill all fields");
     return;
   }
@@ -206,6 +207,7 @@ auth.doSignup = async function(){
       body: JSON.stringify({
         name,
         email,
+        phone,
         password,
         role
       })
@@ -214,21 +216,15 @@ auth.doSignup = async function(){
     const data = await response.json();
 
     if(response.ok){
-
       app.toast("Account created successfully");
       auth.switchTab("login");
-
     }else{
-
       app.toast(data.message || "Signup failed");
-
     }
 
   }catch(err){
-
     console.error(err);
     app.toast("Server error");
-
   }
 
 };
