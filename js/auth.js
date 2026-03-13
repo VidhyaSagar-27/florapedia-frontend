@@ -232,9 +232,3 @@ auth.logout = function(){
   app.toast("Logged out");
 
 };
-
-/* =========================================
-   EXPORT MODULE
-========================================= */
-
-export { auth };
