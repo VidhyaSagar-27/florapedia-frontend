@@ -50,14 +50,12 @@ auth.switchTab = function(tab){
 
     loginForm?.classList.add("show");
     signupForm?.classList.remove("show");
-
     buttons[0]?.classList.add("active");
 
   }else{
 
     signupForm?.classList.add("show");
     loginForm?.classList.remove("show");
-
     buttons[1]?.classList.add("active");
 
   }
@@ -186,7 +184,6 @@ auth.doSignup = async function(){
     if(response.ok){
 
       app.toast("Account created successfully");
-
       auth.switchTab("login");
 
     }else{
@@ -237,9 +234,8 @@ auth.logout = function(){
 };
 
 /* =========================================
-   GLOBAL EXPORT
+   EXPORT MODULE
 ========================================= */
-export { auth };
-window.auth = auth;
 
+export { auth };
 ```
