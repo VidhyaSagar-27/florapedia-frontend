@@ -6,6 +6,46 @@ import { state } from "../state.js";
 import { addToCart } from "../controllers/cartController.js";
 import { loadProducts } from "../controllers/productController.js";
 
+/* =========================================
+   PRODUCT DETAIL PAGE
+========================================= */
+
+export async function renderPDP(productId){
+
+  await loadProducts();
+
+  const root = document.getElementById("app");
+
+  const product = state.products.find(
+    p => (p._id || p.id) == productId
+  );
+
+  if(!product){
+    root.innerHTML = "<h2>Product not found</h2>";
+    return;
+  }
+
+  root.innerHTML = `
+    <div class="pdp">
+
+      <div class="pdp-image">
+        <img src="${product.image}" alt="${product.name}">
+      </div>
+
+      <div class="pdp-info">
+        <h2>${product.name}</h2>
+
+        <p class="price">₹${product.price}</p>
+
+        <button onclick="addToCart('${product.id}',1)">
+          Add to Cart
+        </button>
+      </div>
+
+    </div>
+  `;
+
+}
 
 /* ======================================================
    RENDER PRODUCT GRID
