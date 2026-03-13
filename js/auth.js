@@ -2,6 +2,7 @@
 /* =========================================
    FLORAPEDIA AUTH MODULE
 ========================================= */
+const API = "https://florapedia-backend.onrender.com/api";
 
 export const auth = {}
 
