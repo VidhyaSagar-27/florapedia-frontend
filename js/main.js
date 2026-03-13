@@ -3,7 +3,7 @@
 ========================================= */
 
 import { app } from "./app.js";
-import { loadState } from "./state.js";
+import { state, loadState } from "./state.js";
 
 
 /* =========================================

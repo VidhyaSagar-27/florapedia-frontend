@@ -159,6 +159,20 @@ export const state = {
   }
 
 };
+export function loadState(){
+
+  const cart = localStorage.getItem("cart");
+  const wishlist = localStorage.getItem("wishlist");
+
+  if(cart){
+    state.cart = JSON.parse(cart);
+  }
+
+  if(wishlist){
+    state.wishlist = JSON.parse(wishlist);
+  }
+
+}
 
 
 
