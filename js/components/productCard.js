@@ -8,6 +8,10 @@ import { formatCurrency, getImage } from "../utilis/helpers.js";
 import { state } from "../state.js";
 
 
+/* ======================================================
+   PRODUCT CARD UI
+====================================================== */
+
 export function renderProductCard(product){
 
   const inWishlist =
@@ -19,7 +23,6 @@ export function renderProductCard(product){
       : product.rating >= 4.5
       ? `<span class="product-badge top">Top Rated</span>`
       : "";
-
 
 
   return `
@@ -47,7 +50,6 @@ export function renderProductCard(product){
     </div>
 
 
-
     <div class="product-body">
 
       <div class="product-category">
@@ -67,7 +69,6 @@ export function renderProductCard(product){
         </span>
 
       </div>
-
 
 
       <div class="product-footer">
@@ -102,3 +103,56 @@ export function renderProductCard(product){
 
   `;
 }
+
+
+
+/* ======================================================
+   GLOBAL BUTTON FUNCTIONS
+====================================================== */
+
+window.addToCart = function(productId){
+
+  cartService.add(productId,1);
+
+  if(window.app){
+    window.app.updateHeader();
+    window.app.toast("Added to cart");
+  }
+
+};
+
+
+window.buyNow = function(productId){
+
+  cartService.add(productId,1);
+
+  if(window.app){
+    window.app.updateHeader();
+    window.app.navigate("cart");
+  }
+
+};
+
+
+window.toggleWishlist = function(productId){
+
+  const index =
+    state.wishlist.indexOf(productId);
+
+  if(index === -1){
+
+    state.wishlist.push(productId);
+
+    window.app?.toast("Added to wishlist");
+
+  }else{
+
+    state.wishlist.splice(index,1);
+
+    window.app?.toast("Removed from wishlist");
+
+  }
+
+  window.app?.updateHeader();
+
+};
