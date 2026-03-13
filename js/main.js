@@ -5,6 +5,7 @@
 import { auth } from "./auth.js?v=2";
 import { app } from "./app.js";
 import { loadState } from "./state.js";
+import "./pages/seller.js";
 
 window.auth = auth;
 window.app = app;

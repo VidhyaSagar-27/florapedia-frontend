@@ -3,6 +3,7 @@
 ========================================= */
 
 import { state, loadState, saveState, buildProductMap } from "./state.js";
+import {auth} from "./auth.js";
 
 import { renderHome } from "./pages/home.js";
 import { renderPDP } from "./pages/product.js";
@@ -27,21 +28,26 @@ export const app = {
 
   async init(){
 
-    loadState();
+  loadState();
 
-    await this.loadProducts();
+  // Restore login from localStorage
+  if(auth && auth.init){
+    auth.init();
+  }
 
-    this.bindGlobalEvents();
+  await this.loadProducts();
 
-    eventBus.on("cart:updated", () => {
-      this.updateHeader();
-    });
+  this.bindGlobalEvents();
 
-    this.navigate("home");
-
+  eventBus.on("cart:updated", () => {
     this.updateHeader();
+  });
 
-  },
+  this.navigate("home");
+
+  this.updateHeader();
+
+},
 
 
   /* =========================================
@@ -78,48 +84,58 @@ export const app = {
 
   navigate(page, id=null){
 
-    document
-      .querySelectorAll(".page")
-      .forEach(p => p.classList.remove("active-page"));
+  // 🔒 Seller page protection
+  if(page === "seller" && state.role !== "seller"){
+    this.toast("Seller access only");
+    this.navigate("home");
+    return;
+  }
 
-    const pageEl =
-      document.getElementById("page-"+page);
+  document
+    .querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active-page"));
 
-    if(pageEl){
-      pageEl.classList.add("active-page");
-    }
+  const pageEl =
+    document.getElementById("page-"+page);
 
-    window.scrollTo(0,0);
+  if(pageEl){
+    pageEl.classList.add("active-page");
+  }
 
-    switch(page){
+  window.scrollTo(0,0);
 
-      case "home":
-        renderHome();
-      break;
+  switch(page){
 
-      case "pdp":
-        renderPDP(id);
-      break;
+    case "home":
+      renderHome();
+    break;
 
-      case "cart":
-        renderCart();
-      break;
+    case "pdp":
+      renderPDP(id);
+    break;
 
-      case "wishlist":
-        renderWishlist();
-      break;
+    case "cart":
+      renderCart();
+    break;
 
-      case "checkout":
-        renderCheckout();
-      break;
+    case "wishlist":
+      renderWishlist();
+    break;
 
-      case "account":
-        renderAccount();
-      break;
+    case "checkout":
+      renderCheckout();
+    break;
 
-    }
+    case "account":
+     renderAccount();
+    break;
 
-  },
+    case "seller":
+      loadSellerProducts();
+    break;
+  }
+
+},
 
 
   /* =========================================

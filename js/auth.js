@@ -2,6 +2,7 @@
 /* =========================================
    FLORAPEDIA AUTH MODULE
 ========================================= */
+import { state, persistState } from "./state.js";
 const API = "https://florapedia-backend.onrender.com/api";
 
 export const auth = {}
@@ -62,6 +63,30 @@ auth.switchTab = function(tab){
   }
 
 };
+auth.init = function(){
+
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  const user = localStorage.getItem("currentUser");
+
+  if(token && user){
+
+    state.token = token;
+    state.role = role;
+    state.user = JSON.parse(user);
+
+    if(app && app.updateUI){
+     app.updateHeader();
+    }
+
+    console.log("Auto login restored");
+
+  }
+  if(app && app.updateHeader){
+  app.updateHeader();
+}
+
+};
 
 /* =========================================
    LOGIN FUNCTION
@@ -96,19 +121,24 @@ auth.doLogin = async function(){
 
     if(response.ok && data.token){
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("currentUser", JSON.stringify(data.user));
+      // Save to state
+      state.user = data.user;
+state.role = data.user.role;
+state.token = data.token;
 
-      state.user = data.user || data;
+localStorage.setItem("token", data.token);
+localStorage.setItem("role", data.user.role);
+localStorage.setItem("currentUser", JSON.stringify(data.user));
+
+persistState();
 
       if(app && app.updateUI){
-        app.updateUI();
+        app.updateHeader();
       }
 
       auth.closeModal();
 
-      const role = data.role ? data.role.toLowerCase() : "buyer";
+      const role = data.user.role ? data.user.role.toLowerCase() : "customer";
 
       if(role === "seller"){
 
@@ -144,6 +174,9 @@ auth.doLogin = async function(){
     app.toast("Server connection error");
 
   }
+  if(app && app.updateHeader){
+  app.updateHeader();
+}
 
 };
 
@@ -155,10 +188,11 @@ auth.doSignup = async function(){
 
   const name = document.getElementById("signupName")?.value.trim();
   const email = document.getElementById("signupEmail")?.value.trim();
+  const phone = document.getElementById("signupPhone")?.value.trim();
   const password = document.getElementById("signupPassword")?.value.trim();
-  const role = document.getElementById("signupRole")?.value || "buyer";
+  const role = document.getElementById("signupRole")?.value || "customer";
 
-  if(!name || !email || !password){
+  if(!name || !email || !phone || !password){
 
     app.toast("Please fill all fields");
     return;
@@ -175,6 +209,7 @@ auth.doSignup = async function(){
       body: JSON.stringify({
         name,
         email,
+        phone,
         password,
         role
       })
@@ -208,22 +243,18 @@ auth.doSignup = async function(){
 
 auth.logout = function(){
 
+  state.user = null;
+  state.token = null;
+  state.role = null;
+
   localStorage.removeItem("token");
   localStorage.removeItem("role");
   localStorage.removeItem("currentUser");
 
-  if(typeof state !== "undefined"){
-    state.user = null;
-  }
+  persistState();
 
-  const nameEl = document.getElementById("headerUserName");
-
-  if(nameEl){
-    nameEl.innerText = "Login";
-  }
-
-  if(app && app.updateUI){
-    app.updateUI();
+  if(app && app.updateHeader){
+    app.updateHeader();
   }
 
   if(app && app.navigate){
