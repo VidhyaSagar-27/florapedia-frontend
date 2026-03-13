@@ -184,19 +184,16 @@ persistState();
    SIGNUP FUNCTION
 ========================================= */
 
-auth.doSignup = async function(){
+;auth.doSignup = async function(){
 
   const name = document.getElementById("signupName")?.value.trim();
   const email = document.getElementById("signupEmail")?.value.trim();
-  const phone = document.getElementById("signupPhone")?.value.trim();
   const password = document.getElementById("signupPassword")?.value.trim();
-  const role = document.getElementById("signupRole")?.value || "customer";
+  const role = document.getElementById("signupRole")?.value || "buyer";
 
-  if(!name || !email || !phone || !password){
-
+  if(!name || !email || !password){
     app.toast("Please fill all fields");
     return;
-
   }
 
   try{
@@ -209,7 +206,6 @@ auth.doSignup = async function(){
       body: JSON.stringify({
         name,
         email,
-        phone,
         password,
         role
       })
