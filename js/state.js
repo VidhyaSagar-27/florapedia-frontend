@@ -138,7 +138,7 @@ export const state = {
      UI STATE
   ====================================== */
 
-  ui: {
+    ui: {
 
     loading: false,
 
@@ -159,6 +159,12 @@ export const state = {
   }
 
 };
+
+
+/* ======================================
+   LOAD STATE FROM LOCAL STORAGE
+====================================== */
+
 export function loadState(){
 
   const cart = localStorage.getItem("cart");
