@@ -190,7 +190,7 @@ auth.doSignup = async function(){
   const email = document.getElementById("signupEmail")?.value.trim();
   const phone = document.getElementById("signupPhone")?.value.trim();
   const password = document.getElementById("signupPassword")?.value.trim();
-  const role = document.getElementById("signupRole")?.value || "customer";
+  const role = (document.getElementById("signupRole")?.value || "customer").toLowerCase();
 
   if(!name || !email || !phone || !password){
     app.toast("Please fill all fields");
@@ -213,7 +213,30 @@ auth.doSignup = async function(){
       })
     });
 
-    const data = await response.json();
+    const response = await fetch(API + "/auth/signup",{
+  method:"POST",
+  headers:{
+    "Content-Type":"application/json"
+  },
+  body: JSON.stringify({
+    name,
+    email,
+    phone,
+    password,
+    role
+  })
+});
+
+const data = await response.json();
+
+console.log("SIGNUP RESPONSE:", data); // ADD THIS
+
+if(response.ok){
+  app.toast("Account created successfully");
+  auth.switchTab("login");
+}else{
+  app.toast(data.message || "Signup failed");
+}
 
     if(response.ok){
       app.toast("Account created successfully");
