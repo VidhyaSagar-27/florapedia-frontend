@@ -3,7 +3,7 @@
 ========================================= */
 
 import { app } from "./app.js";
-import { loadState } from "./state.js";
+import { state, loadState } from "./state.js";
 
 
 /* =========================================
@@ -12,9 +12,7 @@ import { loadState } from "./state.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  try {
-
-    console.log("FloraPedia starting...");
+  try{
 
     /* Load saved local state */
     loadState();
@@ -22,11 +20,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     /* Initialize main app */
     await app.init();
 
-    console.log("FloraPedia initialized");
+  }
+  catch(err){
 
-  } catch (err) {
-
-    console.error("App initialization failed", err);
+    console.error("App initialization failed",err);
 
   }
 
@@ -37,9 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
    GLOBAL HOME FUNCTION
 ========================================= */
 
-window.goHome = function () {
+window.goHome = function(){
 
-  if (app && app.navigate) {
+  if(app && app.navigate){
 
     app.navigate("home");
 

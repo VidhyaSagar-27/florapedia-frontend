@@ -5,7 +5,6 @@
 import { state } from "../state.js";
 import { renderProductCard } from "../components/productCard.js";
 
-
 /* =========================================
    RENDER HOME
 ========================================= */
@@ -16,6 +15,7 @@ export function renderHome(){
   renderProducts();
 
 }
+
 
 
 /* =========================================
@@ -46,10 +46,11 @@ function renderProducts(){
 
   grid.innerHTML =
     products
-      .map(p => renderProductCard(p))  // ✅ FIXED
+      .map(p => ProductCard(p))
       .join("");
 
 }
+
 
 
 /* =========================================
@@ -99,6 +100,7 @@ function renderCategories(){
 }
 
 
+
 /* =========================================
    CATEGORY FILTER
 ========================================= */
@@ -110,6 +112,7 @@ window.filterCategory = function(category){
   renderProducts();
 
 };
+
 
 
 /* =========================================
@@ -128,6 +131,7 @@ window.handleSearch = function(query){
 };
 
 
+
 /* =========================================
    SORT
 ========================================= */
@@ -139,6 +143,7 @@ window.setSort = function(sort){
   renderProducts();
 
 };
+
 
 
 /* =========================================
@@ -154,6 +159,7 @@ function getFilteredProducts(){
     state.filters || {};
 
 
+
   /* CATEGORY */
 
   if(filters.category?.length){
@@ -166,6 +172,7 @@ function getFilteredProducts(){
       );
 
   }
+
 
 
   /* SEARCH */
@@ -191,6 +198,7 @@ function getFilteredProducts(){
   }
 
 
+
   /* PRICE */
 
   if(filters.price){
@@ -204,6 +212,7 @@ function getFilteredProducts(){
       );
 
   }
+
 
 
   /* SORTING */

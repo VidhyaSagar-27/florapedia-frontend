@@ -1,7 +1,8 @@
 /* =========================================
    FLORAPEDIA APP CONTROLLER
 ========================================= */
-import { state, loadState } from "./state.js";
+
+import { state, loadState, saveState } from "./state.js";
 
 import { renderHome } from "./pages/home.js";
 import { renderPDP } from "./pages/product.js";
@@ -12,231 +13,225 @@ import { renderAccount } from "./pages/account.js";
 
 import { productService } from "./services/productService.js";
 
+
 /* =========================================
    MAIN APP
 ========================================= */
 
 export const app = {
 
+  /* =========================================
+     INITIALIZE APPLICATION
+  ========================================= */
 
-/* =========================================
-   INITIALIZE APPLICATION
-========================================= */
+  async init(){
 
-async init(){
+    loadState();
 
-  loadState();
+    await this.loadProducts();
 
-  await this.loadProducts();
+    this.bindGlobalEvents();
 
-  this.bindGlobalEvents();
+    this.navigate("home");
 
-  this.navigate("home");
+    this.updateHeader();
 
-  this.updateHeader();
+  },
 
-},
 
+  /* =========================================
+     LOAD PRODUCTS
+  ========================================= */
 
+  async loadProducts(){
 
-/* =========================================
-   LOAD PRODUCTS
-========================================= */
+    try{
 
-async loadProducts(){
+      const products = await productService.loadProducts();
 
-  try{
+      state.products = products || [];
 
-    const products = await productService.loadProducts()
+    }
+    catch(err){
 
-    state.products = products || [];
+      console.error("Product load failed",err);
 
-  }
-  catch(err){
+      this.toast("Failed to load products");
 
-    console.error("Product load failed",err);
+      state.products = [];
 
-    this.toast("Failed to load products");
+    }
 
-    state.products = [];
+  },
 
-  }
 
-},
+  /* =========================================
+     PAGE NAVIGATION
+  ========================================= */
 
+  navigate(page, id=null){
 
+    document
+      .querySelectorAll(".page")
+      .forEach(p => p.classList.remove("active-page"));
 
-/* =========================================
-   PAGE NAVIGATION
-========================================= */
+    const pageEl =
+      document.getElementById("page-"+page);
 
-navigate(page, id=null){
+    if(pageEl){
+      pageEl.classList.add("active-page");
+    }
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p => p.classList.remove("active-page"));
+    window.scrollTo(0,0);
 
-  const pageEl =
-    document.getElementById("page-"+page);
 
-  if(pageEl){
-    pageEl.classList.add("active-page");
-  }
+    switch(page){
 
-  window.scrollTo(0,0);
+      case "home":
+        renderHome();
+      break;
 
+      case "pdp":
+        renderPDP(id);
+      break;
 
-  switch(page){
+      case "cart":
+        renderCart();
+      break;
 
-    case "home":
-      renderHome();
-    break;
+      case "wishlist":
+        renderWishlist();
+      break;
 
-    case "pdp":
-      renderPDP(id);
-    break;
+      case "checkout":
+        renderCheckout();
+      break;
 
-    case "cart":
-      renderCart();
-    break;
+      case "account":
+        renderAccount();
+      break;
 
-    case "wishlist":
-      renderWishlist();
-    break;
+    }
 
-    case "checkout":
-      renderCheckout();
-    break;
+  },
 
-    case "account":
-      renderAccount();
-    break;
 
-  }
+  /* =========================================
+     UPDATE HEADER UI
+  ========================================= */
 
-},
+  updateHeader(){
 
+    const cartCount =
+      state.cart.reduce(
+        (sum,i)=> sum + i.qty,
+        0
+      );
 
+    const wishCount =
+      state.wishlist.length;
 
-/* =========================================
-   UPDATE HEADER UI
-========================================= */
+    const cartEl =
+      document.getElementById("globalCartCount");
 
-updateHeader(){
+    const wishEl =
+      document.getElementById("globalWishlistCount");
 
-  const cartCount =
-    state.cart.reduce(
-      (sum,i)=> sum + i.qty,
-      0
-    );
+    if(cartEl){
+      cartEl.textContent = cartCount;
+    }
 
-  const wishCount =
-    state.wishlist.length;
+    if(wishEl){
+      wishEl.textContent = wishCount;
+    }
 
-  const cartEl =
-    document.getElementById("globalCartCount");
+    const userName =
+      state.user?.name ||
+      state.user?.email ||
+      "Login";
 
-  const wishEl =
-    document.getElementById("globalWishlistCount");
+    const userEl =
+      document.getElementById("headerUserName");
 
-  if(cartEl){
-    cartEl.textContent = cartCount;
-  }
+    if(userEl){
 
-  if(wishEl){
-    wishEl.textContent = wishCount;
-  }
+      userEl.textContent =
+        userName.includes("@")
+        ? userName.split("@")[0]
+        : userName;
 
-  const userName =
-    state.user?.name ||
-    state.user?.email ||
-    "Login";
+    }
 
-  const userEl =
-    document.getElementById("headerUserName");
+    saveState();
 
-  if(userEl){
+  },
 
-    userEl.textContent =
-      userName.includes("@")
-      ? userName.split("@")[0]
-      : userName;
 
-  }
+  /* =========================================
+     GLOBAL EVENTS
+  ========================================= */
 
-  saveState();
+  bindGlobalEvents(){
 
-},
+    window.app = this;
 
+    document
+      .querySelectorAll("[data-nav]")
+      .forEach(btn=>{
 
+        btn.addEventListener("click",()=>{
 
-/* =========================================
-   GLOBAL EVENTS
-========================================= */
+          const page =
+            btn.dataset.nav;
 
-bindGlobalEvents(){
+          this.navigate(page);
 
-  window.app = this;
-
-  document
-    .querySelectorAll("[data-nav]")
-    .forEach(btn=>{
-
-      btn.addEventListener("click",e=>{
-
-        const page =
-          btn.dataset.nav;
-
-        this.navigate(page);
+        });
 
       });
 
-    });
-
-},
+  },
 
 
+  /* =========================================
+     SEARCH
+  ========================================= */
 
-/* =========================================
-   SEARCH
-========================================= */
+  search(query){
 
-search(query){
+    query =
+      (query || "").toLowerCase();
 
-  query =
-    (query || "").toLowerCase();
+    state.filters.search = query;
 
-  state.filters.search = query;
+    renderHome();
 
-  renderHome();
-
-},
-
+  },
 
 
-/* =========================================
-   TOAST
-========================================= */
+  /* =========================================
+     TOAST
+  ========================================= */
 
-toast(msg){
+  toast(msg){
 
-  const el =
-    document.getElementById("toast");
+    const el =
+      document.getElementById("toast");
 
-  if(!el) return;
+    if(!el) return;
 
-  el.textContent = msg;
+    el.textContent = msg;
 
-  el.classList.add("show");
+    el.classList.add("show");
 
-  clearTimeout(el._timer);
+    clearTimeout(el._timer);
 
-  el._timer = setTimeout(()=>{
+    el._timer = setTimeout(()=>{
 
-    el.classList.remove("show");
+      el.classList.remove("show");
 
-  },2000);
+    },2000);
 
-}
+  }
 
 };
