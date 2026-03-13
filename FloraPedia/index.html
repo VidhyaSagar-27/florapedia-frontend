@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FloraPedia | Premium Online Flower Store</title>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- Performance optimization -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Google Font -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Main CSS -->
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="header-inner">
+
+<div class="logo" onclick="app.navigate('home')" style="cursor:pointer">
+
+<div class="logo-mark">F</div>
+
+<div>
+
+<div class="logo-text-main">FloraPedia</div>
+<div class="logo-text-sub">Premium Blooms</div>
+
+</div>
+
+</div>
+
+<div class="search-wrapper" id="searchBar">
+
+<input
+id="mainSearch"
+type="text"
+placeholder="Search roses, lilies, orchids, bouquets…"
+oninput="handleSearch(this.value)"
+autocomplete="off"
+/>
+
+<span class="search-icon">🔍</span>
+
+<div class="search-suggestions" id="searchSuggestions"></div>
+
+</div>
+
+<div class="nav-links">
+
+<div class="nav-pill" onclick="app.navigate('home')">
+<span class="icon">🏡</span>
+<span class="text-label">Home</span>
+</div>
+
+<div class="nav-pill" id="wishlistBtn" onclick="app.navigate('wishlist')">
+<span class="icon">❤️</span>
+<span class="text-label">Wishlist</span>
+<span class="pill-badge" id="globalWishlistCount">0</span>
+</div>
+
+<div class="nav-pill" onclick="auth.openModal()">
+<span class="icon">👤</span>
+<span id="headerUserName">Login</span>
+</div>
+
+<div class="nav-pill" id="sellerBtn" onclick="app.navigate('seller')">
+<span class="icon">🏪</span>
+<span class="text-label">Seller</span>
+</div>
+
+<div class="nav-pill" id="cartBtn" onclick="app.navigate('cart')">
+<span class="icon">🛒</span>
+<span class="text-label">Cart</span>
+<span class="pill-badge" id="globalCartCount">0</span>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+<div class="page-container">
+
+<!-- HOME PAGE -->
+
+<div id="page-home" class="page active-page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span>
+/ <span>All Flowers</span>
+
+</div>
+
+<section class="hero">
+
+<div class="hero-main">
+
+<div>
+
+<div class="hero-heading">
+
+Send <span class="hero-highlight">fresh flowers</span>
+across India in hours
+
+</div>
+
+<div class="hero-sub">
+
+Curated roses, lilies, orchids and designer bouquets, hand-delivered by premium florists with real-time tracking and secure checkout.
+
+</div>
+
+<div class="hero-cta-row">
+
+<button
+class="btn-primary"
+onclick="document.getElementById('mainProductGrid').scrollIntoView({behavior:'smooth'})"
+
+>
+
+Shop Now </button>
+
+<button
+class="btn-ghost"
+onclick="app.filterCategory('Roses')"
+
+>
+
+Popular Roses </button>
+
+</div>
+
+<div class="hero-meta">
+
+<span class="hero-tag">⚡ Same-day delivery</span> <span class="hero-tag">💳 Secure payments</span> <span class="hero-tag">⭐ 4.8/5 rated</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="hero-side">
+
+<img
+src="https://images.unsplash.com/photo-1520622218231-876ba811608a?auto=format&fit=crop&w=900&q=80"
+alt="Premium Flowers"
+/>
+
+<div class="hero-badge">
+
+✨ Curated by expert florists
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CATEGORY STRIP -->
+
+<div class="category-strip" id="categoryStrip"></div>
+
+<div class="home-layout">
+
+<!-- FILTER SIDEBAR -->
+
+<aside class="filter-card">
+
+<div class="filter-title">Filters</div>
+
+<div class="filter-section">
+
+<h4>Category</h4>
+
+<label><input type="checkbox" onchange="filterCategory('Roses')"> Roses</label>
+
+<label><input type="checkbox" onchange="filterCategory('Lilies')"> Lilies</label>
+
+<label><input type="checkbox" onchange="filterCategory('Orchids')"> Orchids</label>
+
+<label><input type="checkbox" onchange="filterCategory('Tulips')"> Tulips</label>
+
+<label><input type="checkbox" onchange="filterCategory('Sunflowers')"> Sunflowers</label>
+
+</div>
+
+<div class="filter-section">
+
+<h4>Occasion</h4>
+
+<label><input type="checkbox" onchange="app.toggleFilter('occasion','Romantic')"> Romantic</label>
+
+<label><input type="checkbox" onchange="app.toggleFilter('occasion','Birthday')"> Birthday</label>
+
+<label><input type="checkbox" onchange="app.toggleFilter('occasion','Congratulations')"> Congratulations</label>
+
+<label><input type="checkbox" onchange="app.toggleFilter('occasion','Sympathy')"> Sympathy</label>
+
+<label><input type="checkbox" onchange="app.toggleFilter('occasion','Anniversary')"> Anniversary</label>
+
+</div>
+
+<div class="filter-section">
+
+<h4>Price</h4>
+
+<label><input type="radio" name="price" onchange="app.setPriceFilter(null)" checked> Any</label>
+
+<label><input type="radio" name="price" onchange="app.setPriceFilter([0,1000])"> Below ₹1000</label>
+
+<label><input type="radio" name="price" onchange="app.setPriceFilter([1000,1500])"> ₹1000 - ₹1500</label>
+
+<label><input type="radio" name="price" onchange="app.setPriceFilter([1500,2000])"> ₹1500 - ₹2000</label>
+
+<label><input type="radio" name="price" onchange="app.setPriceFilter([2000,10000])"> Above ₹2000</label>
+
+</div>
+
+<div class="filter-section">
+
+<h4>Rating</h4>
+
+<label><input type="radio" name="rating" onchange="app.setRatingFilter(null)" checked> Any</label>
+
+<label><input type="radio" name="rating" onchange="app.setRatingFilter(4.5)"> 4.5★ & above</label>
+
+<label><input type="radio" name="rating" onchange="app.setRatingFilter(4.0)"> 4.0★ & above</label>
+
+</div>
+
+<div class="filter-section">
+
+<h4>Sort</h4>
+
+<select
+onchange="app.setSort(this.value)"
+style="width:100%; padding:8px; border-radius:999px; border:1px solid var(--border); font-size:12px;"
+
+>
+
+<option value="relevance">Relevance</option>
+<option value="popularity">Most Popular</option>
+<option value="price-asc">Price: Low to High</option>
+<option value="price-desc">Price: High to Low</option>
+<option value="rating">Highest Rated</option>
+
+</select>
+
+</div>
+
+<div class="filter-section">
+
+<h4>Active Filters</h4>
+
+<div id="activeFilters" style="margin-bottom:10px;"></div>
+
+<button
+class="btn-ghost"
+style="width:100%; font-size:11px;"
+onclick="app.clearFilters()"
+
+>
+
+Clear All </button>
+
+</div>
+
+</aside>
+
+<!-- ================= PRODUCT AREA ================= -->
+
+<main class="product-area">
+
+<div class="product-grid-header">
+
+<div>
+<b id="productCount"></b>
+</div>
+
+<div>
+Handpicked from verified florists
+</div>
+
+</div>
+
+<div class="product-grid" id="productGrid"></div>
+
+<div id="emptyState" class="empty-state" style="display:none;">
+
+<p>No flowers match your filters. Try adjusting your search.</p>
+
+</div>
+
+</main>
+
+</div>
+
+</div>
+
+<!-- ================= PRODUCT DETAIL PAGE ================= -->
+
+<div id="page-pdp" class="page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span> /
+
+<span id="pdpCategory"></span> /
+
+<span id="pdpBreadcrumbName"></span>
+
+</div>
+
+<div id="pdpContent"></div>
+
+</div>
+
+<!-- ================= CART PAGE ================= -->
+
+<div id="page-cart" class="page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span> /
+
+<span>Shopping Cart</span>
+
+</div>
+
+<h2 style="margin-bottom:20px;">Shopping Cart</h2>
+
+<div id="cartContent"></div>
+
+</div>
+
+<!-- ================= WISHLIST PAGE ================= -->
+
+<div id="page-wishlist" class="page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span> /
+
+<span>Wishlist</span>
+
+</div>
+
+<h2 style="margin-bottom:20px;">My Wishlist</h2>
+
+<div class="product-grid" id="wishlistGrid"></div>
+
+<div id="wishlistEmpty" class="empty-state" style="display:none;">
+
+<p>Your wishlist is empty. Start adding your favorite flowers!</p>
+
+</div>
+
+</div>
+
+<!-- ================= CHECKOUT PAGE ================= -->
+
+<div id="page-checkout" class="page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span> /
+
+<span>Checkout</span>
+
+</div>
+
+<h2 style="margin-bottom:20px;">Complete Your Purchase</h2>
+
+<div id="checkoutContent"></div>
+
+</div>
+
+<!-- ================= ACCOUNT PAGE ================= -->
+
+<div id="page-account" class="page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span> /
+
+<span>My Account</span>
+
+</div>
+
+<h2 style="margin-bottom:20px;">My Account</h2>
+
+<div id="accountContent"></div>
+
+</div>
+
+<!-- ================= SELLER DASHBOARD ================= -->
+
+<div id="page-seller" class="page">
+
+<div class="breadcrumbs">
+
+<span onclick="app.navigate('home')" style="cursor:pointer">Home</span> /
+
+<span>Seller Dashboard</span>
+
+</div>
+
+<h2 style="margin-bottom:20px;">Seller Dashboard</h2>
+
+<div class="seller-card">
+
+<h3>Store Details</h3>
+
+<input id="storeName" placeholder="Store Name">
+
+<input id="storeLocation" placeholder="Store Location">
+
+<input id="storePhone" placeholder="Contact Number">
+
+<button onclick="saveStore()">Save Store</button>
+
+</div>
+
+<div class="seller-card">
+
+<h3>Add Product</h3>
+
+<input id="productName" placeholder="Flower Name">
+
+<input id="productPrice" placeholder="Price">
+
+<input id="productImage" placeholder="Image URL">
+
+<button onclick="addProduct()">Add Product</button>
+
+</div>
+
+<div class="seller-card">
+
+<h3>Your Products</h3>
+
+<div id="sellerProducts"></div>
+
+</div>
+
+</div>
+
+<!-- ================= AUTH MODAL ================= -->
+
+<div class="modal-overlay" id="authModal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<div></div>
+
+<button class="modal-close" onclick="auth.closeModal()">✕</button>
+
+</div>
+
+<div class="modal-body">
+
+<div class="auth-tab-buttons">
+
+<button class="auth-tab-btn active" onclick="auth.switchTab('login')">
+Login
+</button>
+
+<button class="auth-tab-btn" onclick="auth.switchTab('signup')">
+Sign Up
+</button>
+
+</div>
+
+<!-- LOGIN FORM -->
+
+<div class="auth-form show" id="loginForm">
+
+<div class="modal-title">Welcome Back</div>
+
+<div class="form-group">
+
+<label class="form-label">Email or Phone</label>
+
+<div class="form-input-group">
+
+<input
+id="loginEmail"
+type="text"
+class="form-input"
+placeholder="Enter email or phone"
+/>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">Password</label>
+
+<div class="form-input-group">
+
+<input
+id="loginPassword"
+type="password"
+class="form-input"
+placeholder="Enter password"
+/>
+
+</div>
+
+</div>
+
+<button class="btn-submit" onclick="auth.doLogin()">
+Login
+</button>
+
+<div class="auth-divider">
+<span>OR</span>
+</div>
+
+<button
+class="btn-submit"
+style="background:linear-gradient(to right,#f97316,#ea580c);"
+onclick="auth.switchForm('phone')"
+
+>
+
+Continue with Phone
+
+</button>
+
+</div>
+
+
+    <!-- SIGNUP FORM -->
+
+<div class="auth-form" id="signupForm">
+
+<div class="modal-title">Create Account</div>
+
+<div class="form-group">
+<label class="form-label">Full Name</label>
+<div class="form-input-group">
+<input id="signupName" type="text" class="form-input" placeholder="Enter your name">
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">Email</label>
+<div class="form-input-group">
+<input id="signupEmail" type="email" class="form-input" placeholder="Enter email">
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">Password</label>
+<div class="form-input-group">
+<input id="signupPassword" type="password" class="form-input" placeholder="Create password">
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">Account Type</label>
+<div class="form-input-group">
+<select id="signupRole" class="form-input">
+<option value="buyer">Customer</option>
+<option value="seller">Seller</option>
+</select>
+</div>
+</div>
+
+<button class="btn-submit" onclick="auth.doSignup()">
+Create Account
+</button>
+
+<div class="auth-divider">
+<span>OR</span>
+</div>
+
+<button
+class="btn-submit"
+style="background:linear-gradient(to right,#f97316,#ea580c);"
+onclick="auth.switchForm('phone-signup')"
+
+>
+
+Sign Up with Phone </button>
+
+</div>
+
+<!-- PHONE LOGIN -->
+
+<div class="auth-form" id="phoneForm">
+
+<div class="modal-title">Login with Phone</div>
+
+<div class="form-group">
+
+<label class="form-label">Phone Number</label>
+
+<div class="form-input-group phone-input">
+
+<span class="country-code">+91</span>
+
+<input
+id="phoneNumber"
+type="tel"
+class="form-input"
+placeholder="10-digit mobile number"
+maxlength="10"
+
+>
+
+</div>
+
+</div>
+
+<div id="recaptcha-container" style="margin-bottom:12px;"></div>
+
+<button class="btn-submit" onclick="auth.sendOTP()">
+Send OTP
+</button>
+
+<!-- OTP SECTION -->
+
+<div id="otpSection" style="display:none;margin-top:16px;">
+
+<label class="form-label">Enter OTP</label>
+
+<div class="otp-inputs" id="otpInputs">
+
+<input class="otp-input" type="text" maxlength="1" onkeyup="auth.handleOTPInput(this,0)">
+<input class="otp-input" type="text" maxlength="1" onkeyup="auth.handleOTPInput(this,1)">
+<input class="otp-input" type="text" maxlength="1" onkeyup="auth.handleOTPInput(this,2)">
+<input class="otp-input" type="text" maxlength="1" onkeyup="auth.handleOTPInput(this,3)">
+<input class="otp-input" type="text" maxlength="1" onkeyup="auth.handleOTPInput(this,4)">
+<input class="otp-input" type="text" maxlength="1" onkeyup="auth.handleOTPInput(this,5)">
+
+</div>
+
+<button
+class="btn-submit"
+style="margin-top:12px;"
+onclick="auth.verifyOTP()"
+
+>
+
+Verify OTP </button>
+
+<div class="otp-timer">
+Didn't receive OTP?
+<span class="otp-resend" onclick="auth.sendOTP()">Resend</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ================= FIREBASE ================= -->
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+
+
+<!-- ================= MAIN APPLICATION MODULE ================= -->
+
+<script type="module" src="./js/main.js"></script>
+
+
+<!-- ================= OPTIONAL FALLBACK ICON ================= -->
+
+<link rel="icon" href="./favicon.ico">
+
+</body>
+</html>
