@@ -184,7 +184,7 @@ persistState();
    SIGNUP FUNCTION
 ========================================= */
 
-;auth.doSignup = async function(){
+auth.doSignup = async function(){
 
   const name = document.getElementById("signupName")?.value.trim();
   const email = document.getElementById("signupEmail")?.value.trim();
