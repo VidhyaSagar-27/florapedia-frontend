@@ -1,8 +1,7 @@
 /* =========================================
    FLORAPEDIA APP CONTROLLER
 ========================================= */
-
-import { state } from "./state.js";
+import { state, loadState } from "./state.js";
 
 import { renderHome } from "./pages/home.js";
 import { renderPDP } from "./pages/product.js";
