@@ -71,8 +71,8 @@ window.addProduct = async function(){
 
     alert(data.message || "Product added");
 
-    loadSellerProducts();
-
+await productService.loadProducts(true);
+window.app.navigate("home");
   }catch(err){
 
     console.error(err);

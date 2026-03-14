@@ -40,7 +40,7 @@ class ProductService {
         return this.cache;
       }
 
-      const response = await productAPI.getAll();
+      const response = await api.getProducts();
 
       let products = [];
 
@@ -297,3 +297,4 @@ class ProductService {
 }
 
 export const productService = new ProductService();
+export { api };
