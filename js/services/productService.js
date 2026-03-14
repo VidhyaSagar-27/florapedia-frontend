@@ -2,7 +2,7 @@
    FLORAPEDIA PRODUCT SERVICE
    Handles all product catalog logic
 ====================================================== */
-import { api } from "..//apiClients.js";
+import { api } from "../utilis/apiClients.js";
 import { state } from "../state.js";
 import {
   searchProducts,
