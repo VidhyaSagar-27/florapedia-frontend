@@ -15,7 +15,7 @@ class ProductService {
   constructor(){
     this.cache = [];
     this.lastFetch = 0;
-    this.cacheDuration = 300000; // 5 minutes
+    this.cacheDuration = 0;
   }
 
 
