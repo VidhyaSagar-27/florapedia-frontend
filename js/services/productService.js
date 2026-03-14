@@ -2,17 +2,17 @@
    FLORAPEDIA PRODUCT SERVICE
    Handles all product catalog logic
 ====================================================== */
-import { api } from "../utils/apiClients.js";
+import { api } from "..//apiClients.js";
 import { state } from "../state.js";
 import {
   searchProducts,
   filterProducts,
   sortProducts,
   randomItems
-} from "../utils/helpers.js";
+} from "../utilis/helpers.js";
 
 class ProductService {
-
+utilis
   constructor(){
     this.cache = [];
     this.lastFetch = 0;
