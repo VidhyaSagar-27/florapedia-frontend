@@ -34,9 +34,11 @@ async function loadProducts() {
 const products = data.map(p => ({
   ...p,
   id: p._id || p.id,
-  image: p.images ? p.images[0] : p.image
+  image:
+    (Array.isArray(p.images) && p.images.length > 0)
+      ? p.images[0]
+      : (p.image || "/assets/placeholder.png")
 }));
-
 state.products = products;
 
     renderCategories();
