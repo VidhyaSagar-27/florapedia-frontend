@@ -55,7 +55,7 @@ export function renderProductCard(product){
       ${badge}
 
       <img
-        src="${getImage(product.image)}"
+        src="${getImage(product.image || product.images?.[0])}"
         alt="${product.name}"
         class="product-image"
         loading="lazy"

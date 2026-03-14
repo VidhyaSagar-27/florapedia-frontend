@@ -29,9 +29,15 @@ async function loadProducts() {
 
     const res = await fetch(API + "/products");
 
-    const products = await res.json();
+    const data = await res.json();
 
-    state.products = products;
+const products = data.map(p => ({
+  ...p,
+  id: p._id || p.id,
+  image: p.images ? p.images[0] : p.image
+}));
+
+state.products = products;
 
     renderCategories();
     renderProducts();
