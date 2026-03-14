@@ -2,8 +2,7 @@
    FLORAPEDIA PRODUCT SERVICE
    Handles all product catalog logic
 ====================================================== */
-const API_BASE = "https://florapedia-backend.onrender.com/api";
-import { productAPI } from "../utilis/apiClients.js";
+import { api } from "../utilis/apiClients.js";
 import { state } from "../state.js";
 import {
   searchProducts,
