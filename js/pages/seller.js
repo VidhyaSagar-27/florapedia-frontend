@@ -58,21 +58,18 @@ window.addProduct = async function(){
         "Authorization":"Bearer " + localStorage.getItem("token")
       },
       body: JSON.stringify({
-        name,
-        price,
-        description:"Flower product",
-        images:[image],
-        seller: state.user._id,
-        shop: state.user.shop
-      })
+  name,
+  price,
+  description: "Flower product",
+  images: [image]
+})
     });
 
     const data = await res.json();
 
     alert(data.message || "Product added");
 
-await productService.loadProducts(true);
-window.app.navigate("home");
+window.location.href = "/";
   }catch(err){
 
     console.error(err);
