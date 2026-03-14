@@ -91,7 +91,7 @@ export const API = {
 
   SELLER_DASHBOARD: `${base}/seller/dashboard`,
 
-  ADD_PRODUCT: `${base}/seller/product`,
+  ADD_PRODUCT: `${base}/products`,
   UPDATE_PRODUCT: id => `${base}/seller/product/${id}`,
   DELETE_PRODUCT: id => `${base}/seller/product/${id}`,
 
