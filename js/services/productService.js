@@ -2,7 +2,7 @@
    FLORAPEDIA PRODUCT SERVICE
    Handles all product catalog logic
 ====================================================== */
-import { api } from "../utilis/apiClients.js";
+import { api } from "../utils/apiClients.js";
 import { state } from "../state.js";
 import {
   searchProducts,
@@ -39,7 +39,7 @@ class ProductService {
         return this.cache;
       }
 
-      const response = await productAPI.getProducts();
+      const response = await api.getAll();
 
       let products = [];
 

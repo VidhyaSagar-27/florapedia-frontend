@@ -5,8 +5,8 @@
 import { auth } from "./auth.js?v=2";
 import { app } from "./app.js";
 import { loadState } from "./state.js";
+import { productService } from "./services/productService.js";
 import "./pages/seller.js";
-
 window.auth = auth;
 window.app = app;
 
@@ -21,10 +21,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     console.log("FloraPedia starting...");
 
-    /* Load saved local state */
+    /* Load saved state */
     loadState();
 
-    /* Initialize main app */
+    /* Load products from backend */
+    await productService.loadProducts();
+
+    /* Initialize app */
     await app.init();
 
     console.log("FloraPedia initialized");
