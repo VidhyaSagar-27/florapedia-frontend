@@ -2,7 +2,7 @@
    FLORAPEDIA PRODUCT SERVICE
    Handles all product catalog logic
 ====================================================== */
-
+const API_BASE = "https://florapedia-backend.onrender.com/api";
 import { productAPI } from "../utilis/apiClients.js";
 import { state } from "../state.js";
 import {
@@ -40,7 +40,7 @@ class ProductService {
         return this.cache;
       }
 
-      const response = await api.getProducts();
+      const response = await productAPI.getProducts();
 
       let products = [];
 
