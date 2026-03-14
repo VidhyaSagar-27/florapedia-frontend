@@ -17,6 +17,37 @@ class ProductService {
     this.lastFetch = 0;
     this.cacheDuration = 0;
   }
+  /* =========================================
+   CREATE PRODUCT
+========================================= */
+
+async createProduct(productData){
+
+  try{
+
+    const token = localStorage.getItem("token");
+
+    const response = await api.post(
+      "/api/products",
+      productData,
+      {
+        headers:{
+          Authorization:`Bearer ${token}`,
+          "Content-Type":"application/json"
+        }
+      }
+    );
+
+    return response;
+
+  }catch(err){
+
+    console.error("CREATE PRODUCT ERROR:",err);
+    throw err;
+
+  }
+
+}
 
 
 

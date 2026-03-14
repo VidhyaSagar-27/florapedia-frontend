@@ -46,7 +46,7 @@ window.saveStore = async function(){
 window.addProduct = async function(){
 
   const name = document.getElementById("productName").value;
-  const price = document.getElementById("productPrice").value;
+  const price = Number(document.getElementById("productPrice").value);
   const image = document.getElementById("productImage").value;
 
   try{
@@ -69,7 +69,7 @@ window.addProduct = async function(){
 
     alert(data.message || "Product added");
 
-window.location.href = "/";
+window.location.reload();
   }catch(err){
 
     console.error(err);
@@ -203,3 +203,10 @@ window.editProduct = async function(id){
   }
 
 };
+document.addEventListener("DOMContentLoaded", () => {
+
+  if(document.getElementById("sellerProducts")){
+    loadSellerProducts();
+  }
+
+});
