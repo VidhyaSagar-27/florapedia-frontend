@@ -452,3 +452,9 @@ export const uploadAPI = {
   }
 
 };
+export const api = {
+  getAll: () => productAPI.getAll(),
+  getById: (id) => productAPI.getById(id),
+  getCategories: () => productAPI.getCategories(),
+  search: (q) => productAPI.search(q)
+};
