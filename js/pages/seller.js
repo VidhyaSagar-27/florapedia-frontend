@@ -51,7 +51,7 @@ window.addProduct = async function(){
 
   try{
 
-    const res = await fetch(API + "/seller/product",{
+    const res = await fetch(API + "/products",{
       method:"POST",
       headers:{
         "Content-Type":"application/json",
@@ -91,7 +91,7 @@ window.loadSellerProducts = async function(){
 
   try{
 
-    const res = await fetch(API + "/seller/products",{
+    const res = await fetch(API + "/products/seller/my-products",{
       headers:{
         "Authorization":"Bearer " + localStorage.getItem("token")
       }
@@ -144,7 +144,7 @@ window.deleteProduct = async function(id){
 
   try{
 
-    const res = await fetch(API + "/seller/product/" + id,{
+    const res = await fetch(API + "/products/" + id,{
       method:"DELETE",
       headers:{
         "Authorization":"Bearer " + localStorage.getItem("token")
@@ -180,7 +180,7 @@ window.editProduct = async function(id){
 
   try{
 
-    const res = await fetch(API + "/seller/product/" + id,{
+    const res = await fetch(API + "/products/" + id,{
       method:"PUT",
       headers:{
         "Content-Type":"application/json",
