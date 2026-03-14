@@ -213,20 +213,6 @@ auth.doSignup = async function(){
       })
     });
 
-    const response = await fetch(API + "/auth/signup",{
-  method:"POST",
-  headers:{
-    "Content-Type":"application/json"
-  },
-  body: JSON.stringify({
-    name,
-    email,
-    phone,
-    password,
-    role
-  })
-});
-
 const data = await response.json();
 
 console.log("SIGNUP RESPONSE:", data); // ADD THIS
