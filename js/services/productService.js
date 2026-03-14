@@ -9,7 +9,7 @@ import {
   filterProducts,
   sortProducts,
   randomItems
-} from "../utilis/helpers.js";
+} from "../utils/helpers.js";
 
 class ProductService {
 
