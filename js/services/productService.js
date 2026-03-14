@@ -12,7 +12,6 @@ import {
 } from "../utilis/helpers.js";
 
 class ProductService {
-utilis
   constructor(){
     this.cache = [];
     this.lastFetch = 0;
@@ -296,9 +295,3 @@ utilis
 }
 
 export const productService = new ProductService();
-export const api = {
-  getProducts: productAPI.getAll,
-  getProductById: productAPI.getById,
-  getCategories: productAPI.getCategories,
-  searchProducts: productAPI.search
-};
