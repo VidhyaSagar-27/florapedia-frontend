@@ -5,6 +5,8 @@
 import { state } from "../state.js";
 import { renderProductCard } from "../components/productCard.js";
 
+const API = "https://florapedia-backend.onrender.com/api";
+
 
 /* =========================================
    RENDER HOME
@@ -12,8 +14,33 @@ import { renderProductCard } from "../components/productCard.js";
 
 export function renderHome() {
 
-  renderCategories();
-  renderProducts();
+  loadProducts();
+
+}
+
+
+/* =========================================
+   LOAD PRODUCTS FROM BACKEND
+========================================= */
+
+async function loadProducts() {
+
+  try {
+
+    const res = await fetch(API + "/products");
+
+    const products = await res.json();
+
+    state.products = products;
+
+    renderCategories();
+    renderProducts();
+
+  } catch (err) {
+
+    console.error("Failed to load products", err);
+
+  }
 
 }
 
